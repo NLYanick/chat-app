@@ -15,9 +15,9 @@ function handleError(err, req, res, next) {
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
     if(err.status && err.status < 500) {
-        res.status(err.status).send({ error: err.message });
+        res.status(err.status).send({ error: err.message, success: false });
     } else {
-        res.status(500).send({ error: "Internal Server Error" });
+        res.status(500).send({ error: "Internal Server Error", success: false });
     }
 }
 

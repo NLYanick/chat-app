@@ -1,5 +1,6 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthUserContext";
+import { sendRequest } from '../utils/requests';
 import ProfileIcon from "./ProfileIcon"
 import DropDownMenu from "./DropDownMenu";
 import DropDownLink from "./DropDownLink";
@@ -9,12 +10,24 @@ const noBarRoutes = ['/login', '/register'];
 function NavBar() {
   const { user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const { json } = await sendRequest('/authenticate/logout', 'POST', { username: user.username });
+
+    if(json.success) {
+      logout();
+      navigate("/");
+    } else {
+      throw new Error("Could not logout.");
+    }
+  };
 
   return (
-    <div className="flex items-center justify-between p-4 w-full fixed border-b-2" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
+    <div className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
       <p>NAVBAR</p>
       {user ? (
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 mr-2">
           <p>{user.username}</p>
           <DropDownMenu
             buttonContent={user.avatar_url && user.avatar_url !== '' ? (
@@ -24,7 +37,7 @@ function NavBar() {
             )}
           >
             <DropDownLink label="Profile" to="/profile"/>
-            <DropDownLink label="Logout" type="error" action="/logout" />
+            <DropDownLink label="Logout" type="error" action={handleLogout} />
           </DropDownMenu>
         </div>
       ) : (

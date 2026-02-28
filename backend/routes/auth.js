@@ -52,7 +52,7 @@ router.post('/login', async function (req, res, next) {
     if (!user) return res.status(404).json({ message: "Login failed", error: "Username doesn't exist.", success: false });
 
     const isMatch = await bcrypt.compare(password, user.password_hash);
-    if (!isMatch) return res.status(400).json({ message: "Invalid username or password", success: false });
+    if (!isMatch) return res.status(400).json({ message: "Login failed", error: "Invalid username or password", success: false });
 
     const userData = { 
       username: user.username, 
