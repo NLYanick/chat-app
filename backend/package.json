@@ -1,0 +1,29 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "NLYanick",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon -r dotenv/config ./bin/www",
+    "test": "npm test"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "~1.4.4",
+    "cors": "^2.8.6",
+    "debug": "~2.6.9",
+    "express": "^5.2.1",
+    "http-errors": "~1.6.3",
+    "mongoose": "^9.2.1",
+    "morgan": "~1.9.1",
+    "multer": "^2.0.2"
+  },
+  "devDependencies": {
+    "dotenv": "^17.3.1",
+    "mongodb": "^7.1.0",
+    "nodemon": "^3.1.11"
+  }
+}

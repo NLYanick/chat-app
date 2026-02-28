@@ -1,0 +1,9 @@
+- Logout function
+- The user must login before it can access any page
+- The user can't go to the login or registration page when logged in
+
+# Styling
+- Dropdown menu and links 
+
+- Use Tokens to access the backend, since everything in the frontend is public
+- Automatically log in Users
