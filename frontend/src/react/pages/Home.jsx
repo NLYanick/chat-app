@@ -30,10 +30,10 @@ function Home() {
 
   return (
     <>
-      <div className='flex flex-col gap-12'>
+      <div className='flex flex-col gap-12 w-full'>
         <h1 className='mb-4'>Hi</h1>
         <p>{data ?? 'NULL'}</p>
-        <p>{JSON.stringify(user) ?? 'NULL'}</p>
+        <p className='wrap-break-word'>{JSON.stringify(user) ?? 'NULL'}</p>
       </div>
     </>
   );

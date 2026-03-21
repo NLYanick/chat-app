@@ -2,7 +2,7 @@
 function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSubmit = {} }) {
   return (
     <>
-      <form className="p-12 rounded-lg shadow-lg flex flex-col gap-8 w-96"
+      <form className="p-12 rounded-lg shadow-lg flex flex-col gap-8 w-88 sm:w-96"
         style={{ backgroundColor: backgroundColor }}
         onSubmit={onSubmit}
       >

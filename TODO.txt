@@ -1,7 +1,6 @@
 - Show the user that you can't submit the form without adding an avatar image
 - Picking the same image on the profile page doesn't activate the Modal
 
-- The user must login before it can access any page
 - The user can't go to the login or registration page when logged in
 
 # Styling

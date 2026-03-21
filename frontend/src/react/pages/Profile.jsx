@@ -86,8 +86,8 @@ function Profile() {
         />
       </Modal>
 
-      <div className='flex flex-col gap-8'>
-        <h1 className='text-4xl font-semibold mb-4'>Profile</h1>
+      <div className='flex flex-col gap-8 pb-8'>
+        <h1 className='text-4xl font-semibold mt-16 sm:mt-8 mb-4'>Profile</h1>
 
         <div className='bg-(--primary-color-light) rounded-lg shadow-lg p-6 text-left flex flex-col gap-8'>
           <h2 className='text-2xl'>Details</h2>
