@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const roomSchema = new mongoose.Schema({
     room_name: String,
-    createdAt: Date,
+    created_at: Date,
     members: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 

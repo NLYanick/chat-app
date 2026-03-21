@@ -1,6 +1,6 @@
 import Button from './Button';
 
-function Modal({ isOpen, onClose = () => {}, children }) {
+function Modal({ isOpen, onClose = () => {}, buttonLabel = "Close", children }) {
 
   return (
     <>
@@ -17,7 +17,7 @@ function Modal({ isOpen, onClose = () => {}, children }) {
 
               {children}
 
-              <Button label="Close" onClick={onClose} />
+              <Button label={buttonLabel} onClick={onClose} />
             </div>
           </div>
         </div>

@@ -1,19 +1,33 @@
 export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}) {
   try {
-    const apiKey = 'c72e5304-cfc2-4ab5-a74f-4b8da996d9f7'
+    const apiKey = import.meta.env.VITE_API_KEY;
     const url = `http://localhost:3000/api/v1${endpoint}`;
 
-    const newBody = body ? JSON.stringify(body) : null
+    let newBody = null;
+    let contentType = 'application/json';
 
-    const res = await fetch(url, {
+    if (body) {
+      if (body instanceof FormData) {
+        newBody = body;
+        contentType = null;
+      } else 
+        newBody = JSON.stringify(body);
+    }
+
+    const fetchOptions = {
       method,
       headers: {
         ...headers, 
-        'Content-Type': 'application/json',
         'x-api-key': apiKey
       },
       body: newBody
-    });
+    };
+
+    if (contentType) {
+      fetchOptions.headers['Content-Type'] = contentType;
+    }
+
+    const res = await fetch(url, fetchOptions);
 
     return {
       json: await res.json(),

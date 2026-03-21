@@ -22,8 +22,8 @@ router.post('/', uploads.single('avatar_url'), async function (req, res, next) {
 
     const user = {
       username: body.username,
-      avatarURL: imagePath,
-      createdAt: new Date()
+      avatar_url: imagePath,
+      created_at: new Date()
     }
 
     const newUser = await User.create(user);
@@ -40,11 +40,13 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
 
     const imagePath = req.file ? `/images/${req.file.filename}` : '';
 
-    // TODO find user and update avatarURL
-    const user = await User.findOne({ id: req.params.id });
-    console.log(req.file, imagePath, user);
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { avatar_url: imagePath },
+      { returnDocument: 'after' }
+    );
 
-    res.status(201).json({ message: "Successfully uploaded avatar", user: newUser });
+    res.status(201).json({ message: "Successfully uploaded avatar", user });
   } catch (err) {
     next(err);
   }

@@ -7,13 +7,13 @@ const userSchema = new mongoose.Schema({
         unique: true, 
         trim: true 
     },
-    avatarURL: String,
+    avatar_url: String,
     password_hash: {
         type: String,
         required: true,
         select: false
     },
-    createdAt: { 
+    created_at: { 
         required: true, 
         type: Date 
     }

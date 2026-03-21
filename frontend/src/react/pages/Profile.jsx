@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { sendRequest } from '../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import FormButton from "../components/form/FormButton"
@@ -13,6 +13,8 @@ function Profile() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [image, setImage] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState("");
+  const [avatarPreviewIsReady, setAvatarPreviewIsReady] = useState(false);
+  const profileEditorRef = useRef(null);
 
   const { user } = useAuth();
 
@@ -41,23 +43,37 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // TODO Send to backend
-    console.log(image);
+    if(!image) return;
 
-    // const formData = new FormData();
+    const formData = new FormData();
+    formData.append('avatar_url', image);
+    
+    const { json, status } = await sendRequest(`/users/${user.id}/upload-avatar`, 'POST', formData);
 
-    // formData.append('avatar', image);
-    // const { json, status } = await sendRequest(`/${user.id}/upload-avatar`, 'POST');
-
-    // console.log(status, json);
+    console.log(status, json);
 
     // e.target.submit();
   }
 
+  const handleCloseModal = () => {
+    setModalIsOpen(false);
+    
+    const croppedCanvas = profileEditorRef.current?.getCroppedImage();
+    
+    if (croppedCanvas) {
+      croppedCanvas.toBlob((blob) => {
+        setImage(blob);
+
+        setAvatarPreviewIsReady(true);
+      });
+    }
+  }
+
   return (
     <>
-      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
+      <Modal isOpen={modalIsOpen} onClose={handleCloseModal} buttonLabel="Apply">
         <ProfileEditor 
+          ref={profileEditorRef}
           imageSrc={avatarPreview}
         />
       </Modal>
@@ -89,8 +105,8 @@ function Profile() {
           <form className='bg-(--primary-color-light) flex flex-col items-center gap-6' onSubmit={handleSubmit}>
             <span>{image ? image.name : 'No image'}</span>
 
-            {avatarPreview ? (
-              <img src={avatarPreview} alt="Avatar Preview" className="object-cover max-w-60 sm:max-w-70" />
+            {(avatarPreview && avatarPreviewIsReady) ? (
+              <img src={avatarPreview} alt="Avatar Preview" className="object-cover max-w-40 sm:max-w-50 rounded-full" />
             ) : (
               <span className="text-sm text-slate-500">No Image</span>
             )}

@@ -24,16 +24,16 @@ router.post('/register', async function (req, res, next) {
 
     const user = await User.create({
       username,
-      avatarURL: '',
+      avatar_url: '',
       password_hash: hashedPassword,
-      createdAt: new Date()
+      created_at: new Date()
     });
 
     const userData = { 
       id: user._id,
       username: user.username, 
-      avatar_url: user.avatarURL, 
-      created_at: user.createdAt  
+      avatar_url: user.avatar_url, 
+      created_at: user.created_at  
     }
 
     res.status(201).json({ message: "Registered!", success: true, user: userData });
@@ -58,8 +58,8 @@ router.post('/login', async function (req, res, next) {
     const userData = { 
       id: user._id,
       username: user.username, 
-      avatar_url: user.avatarURL, 
-      created_at: user.createdAt  
+      avatar_url: user.avatar_url, 
+      created_at: user.created_at  
     }
     
     res.status(200).json({ message: "Logged In!", success: true, user: userData });
