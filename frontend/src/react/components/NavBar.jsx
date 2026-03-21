@@ -24,8 +24,9 @@ function NavBar() {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
-      <p>NAVBAR</p>
+    <div className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15 bg-(--primary-color)" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
+      <Link to='/'>Homepage</Link>
+      
       {user ? (
         <div className="flex items-center gap-4 mr-2">
           <p>{user.username}</p>

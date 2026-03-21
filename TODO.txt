@@ -1,9 +1,14 @@
+- Finish the avatar editor by saving the cropped image in the database
+- Show the user that you can't submit the form without adding an avatar image
+
 - The user must login before it can access any page
 - The user can't go to the login or registration page when logged in
 
 # Styling
 - Dropdown menu and links 
 - Navigation bar
+- Modal
+- Profile Editor
 
 - Use Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users

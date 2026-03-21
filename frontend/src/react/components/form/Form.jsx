@@ -10,7 +10,7 @@ function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSub
         
         <div className="flex flex-col gap-4">
           {children}
-          </div>
+        </div>
   
         <button type="submit" className="bg-(--secondary-color) text-white p-2 rounded">
           Versturen

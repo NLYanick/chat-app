@@ -5,9 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require('cors');
 
-
 require('./models/database');
-
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
@@ -31,11 +29,15 @@ app.use(cors());
 app.use(verifyApiKey);
 
 
-app.use('/', indexRouter);
-app.use('/authenticate', authRouter);
-app.use('/users', usersRouter);
-app.use('/rooms', roomsRouter);
-app.use('/messages', messagesRouter);
+const v1Router = express.Router();
+
+v1Router.use('/', indexRouter);
+v1Router.use('/authenticate', authRouter);
+v1Router.use('/users', usersRouter);
+v1Router.use('/rooms', roomsRouter);
+v1Router.use('/messages', messagesRouter);
+
+app.use('/api/v1', v1Router);
 
 
 // catch 404 and forward to error handler

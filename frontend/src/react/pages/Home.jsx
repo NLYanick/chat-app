@@ -8,7 +8,7 @@ function Home() {
   
   const [data, setData] = useState(null);
 
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
 
   useEffect(() => {
     (async () => {

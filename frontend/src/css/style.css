@@ -2,6 +2,7 @@
 
 :root {
     --primary-color: #242424;
+    --primary-color-light: #343434;
     --secondary-color: oklch(60.6% 0.25 292.717);
     --text-color: white;
 }

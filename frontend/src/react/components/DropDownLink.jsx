@@ -13,9 +13,9 @@ function DropDownLink({ label, to = '', action = null, type = 'normal' }) {
 
   return (
     <li 
-      className={`p-2 pl-4 w-full text-left ${typeStyling}`}
+      className={`w-full text-left ${typeStyling}`}
     >  
-      <Link to={to} onClick={action}>{label}</Link>
+      <Link to={to} onClick={action} className="size-full block p-2 pl-4">{label}</Link>
     </li>
   )
 }

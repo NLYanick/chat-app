@@ -41,6 +41,8 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
     const imagePath = req.file ? `/images/${req.file.filename}` : '';
 
     // TODO find user and update avatarURL
+    const user = await User.findOne({ id: req.params.id });
+    console.log(req.file, imagePath, user);
 
     res.status(201).json({ message: "Successfully uploaded avatar", user: newUser });
   } catch (err) {
