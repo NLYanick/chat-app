@@ -27,7 +27,6 @@ function Login() {
     if(validationErrors.length > 0) return;
 
     const { json, status } = await sendRequest('/authenticate/login', 'POST', { username, password, staySignedIn: staySignedIn ?? false });
-    console.log(status, json);
 
     if (json.success) {
       login(json.user);

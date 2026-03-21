@@ -22,14 +22,13 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
 
-app.use(verifyApiKey);
-
-
 const v1Router = express.Router();
+
+v1Router.use('/public', express.static(path.join(__dirname, 'public')));
+v1Router.use(verifyApiKey);
 
 v1Router.use('/', indexRouter);
 v1Router.use('/authenticate', authRouter);
@@ -37,7 +36,7 @@ v1Router.use('/users', usersRouter);
 v1Router.use('/rooms', roomsRouter);
 v1Router.use('/messages', messagesRouter);
 
-app.use('/api/v1', v1Router);
+app.use('/api/' + process.env.API_VERSION, v1Router);
 
 
 // catch 404 and forward to error handler

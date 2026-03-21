@@ -16,7 +16,7 @@ function Profile() {
   const [avatarPreviewIsReady, setAvatarPreviewIsReady] = useState(false);
   const profileEditorRef = useRef(null);
 
-  const { user } = useAuth();
+  const { user, login } = useAuth();
 
   useEffect(() => {
     if (!image) {
@@ -45,14 +45,20 @@ function Profile() {
 
     if(!image) return;
 
-    const formData = new FormData();
-    formData.append('avatar_url', image);
-    
-    const { json, status } = await sendRequest(`/users/${user.id}/upload-avatar`, 'POST', formData);
+    try {
+      const formData = new FormData();
+      formData.append('avatar_url', image);
+      
+      const { json, status } = await sendRequest(`/users/${user.id}/upload-avatar`, 'POST', formData);
 
-    console.log(status, json);
-
-    // e.target.submit();
+      if (status === 201 && json.user) {
+        login(json.user);
+      } else {
+        setError(json.error || 'Failed to upload avatar');
+      }
+    } catch (err) {
+      setError(err.message || 'Upload failed');
+    }
   }
 
   const handleCloseModal = () => {
@@ -62,6 +68,8 @@ function Profile() {
     
     if (croppedCanvas) {
       croppedCanvas.toBlob((blob) => {
+        
+        
         setImage(blob);
 
         setAvatarPreviewIsReady(true);
@@ -91,7 +99,7 @@ function Profile() {
 
           <div className='flex justify-center'>
             {user.avatar_url ? (
-              <img src={user.avatar_url} alt="avatar" />
+              <img src={user.avatar_url} alt="avatar" className='rounded-full w-40 sm:w-50' />
             ) : (
               <div>
                 <ProfileIcon size='w-20 h-20' />

@@ -4,7 +4,12 @@ import { createContext, useContext, useState } from "react";
 const AuthUserContext = createContext(null);
 
 export function AuthUserProvider({ children }) {
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user")));
+  const userSessionData = sessionStorage.getItem("user");
+  if(!userSessionData || userSessionData === "undefined") {
+    sessionStorage.removeItem("user");
+  }
+
+  const [user, setUser] = useState(JSON.parse(userSessionData));
 
   const login = (userData) => {
     setUser(userData);

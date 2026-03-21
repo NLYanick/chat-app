@@ -17,7 +17,9 @@ const Editor = forwardRef(({ imageSrc, scale, rotate }, ref) => {
     <AvatarEditor
       ref={editorRef}
       image={imageSrc}
-      borderRadius={100}
+      width={200}
+      height={200}
+      borderRadius={1000}
       border={5}
       scale={scale}
       rotate={rotate}

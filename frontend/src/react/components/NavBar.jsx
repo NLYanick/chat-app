@@ -32,7 +32,7 @@ function NavBar() {
           <p>{user.username}</p>
           <DropDownMenu
             buttonContent={user.avatar_url && user.avatar_url !== '' ? (
-              <img alt="Profile" src={user.avatar_url} />
+              <img alt="Profile" src={user.avatar_url} className="w-10 rounded-full" />
             ) : (
               <ProfileIcon />
             )}
