@@ -30,13 +30,9 @@ function NavBar() {
       {user ? (
         <div className="flex items-center gap-4 mr-2">
           <p>{user.username}</p>
-          <DropDownMenu
-            buttonContent={user.avatar_url && user.avatar_url !== '' ? (
-              <img alt="Profile" src={user.avatar_url} className="w-10 rounded-full" />
-            ) : (
-              <ProfileIcon />
-            )}
-          >
+          <DropDownMenu buttonContent={
+            <ProfileIcon imgSrc={user.avatar_url} />
+          }>
             <DropDownLink label="Profile" to="/profile"/>
             <DropDownLink label="Logout" type="error" action={handleLogout} />
           </DropDownMenu>

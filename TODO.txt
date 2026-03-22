@@ -1,6 +1,6 @@
-- Show the user that you can't submit the form without adding an avatar image
 - Picking the same image on the profile page doesn't activate the Modal
 
+- User can change their user details
 - The user can't go to the login or registration page when logged in
 
 # Styling
@@ -10,10 +10,11 @@
 - Modal
 - Profile Editor
 
-- Remove .env's from GitHub
 - Profile Editor has delay. Let the user see a 'Loading...'
 
 - Use Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
+
+- Sort the files, espescially the frontend components
 
 (- DevOps)

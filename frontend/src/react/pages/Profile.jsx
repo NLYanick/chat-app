@@ -5,10 +5,11 @@ import FormButton from "../components/form/FormButton"
 import ProfileIcon from "../components/ProfileIcon"
 import Modal from '../components/Modal';
 import ProfileEditor from '../components/ProfileEditor';
+import ProfileDetails from '../components/ProfileDetails';
 
 function Profile() {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [userError, setUserError] = useState("");
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [image, setImage] = useState(null);
@@ -30,7 +31,6 @@ function Profile() {
     return () => URL.revokeObjectURL(objectUrl); // Free memory whenever this component is unmounted
   }, [image]);
 
-  if (loading) return (<p className='font-bold'>Loading...</p>);
   if (error) throw new Error(error.message);
 
   const handleInput = async (e) => {
@@ -43,7 +43,10 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!image) return;
+    if(!image) {
+      setUserError('Please select an image');
+      return;
+    }
 
     try {
       const formData = new FormData();
@@ -53,6 +56,7 @@ function Profile() {
 
       if (status === 201 && json.user) {
         login(json.user);
+        setUserError(null);
       } else {
         setError(json.error || 'Failed to upload avatar');
       }
@@ -89,29 +93,19 @@ function Profile() {
       <div className='flex flex-col gap-8 pb-8'>
         <h1 className='text-4xl font-semibold mt-16 sm:mt-8 mb-4'>Profile</h1>
 
-        <div className='bg-(--primary-color-light) rounded-lg shadow-lg p-6 text-left flex flex-col gap-8'>
-          <h2 className='text-2xl'>Details</h2>
-          {/* TODO User Details */}
-        </div>
+        <ProfileDetails user={user} />
 
         <div className='bg-(--primary-color-light) rounded-lg shadow-lg p-6 text-left flex flex-col gap-8'>
           <h2 className='text-2xl'>Avatar</h2>
 
           <div className='flex justify-center'>
-            {user.avatar_url ? (
-              <img src={user.avatar_url} alt="avatar" className='rounded-full w-40 sm:w-50' />
-            ) : (
-              <div>
-                <ProfileIcon size='w-20 h-20' />
-                <p className='text-sm text-center italic mt-1'>No Avatar</p>
-              </div>
-            )}
+            <ProfileIcon imgSrc={user.avatar_url} size={user.avatar_url ? 'w-40 sm:w-50' : 'w-20 h-20'} />
           </div>
 
           <hr className='text-(--secondary-color)' />
 
           <form className='bg-(--primary-color-light) flex flex-col items-center gap-6' onSubmit={handleSubmit}>
-            <span>{image ? image.name : 'No image'}</span>
+            <h3 className='text-xl w-full text-left'>Change Avatar</h3>
 
             {(avatarPreview && avatarPreviewIsReady) ? (
               <img src={avatarPreview} alt="Avatar Preview" className="object-cover max-w-40 sm:max-w-50 rounded-full" />
@@ -121,12 +115,14 @@ function Profile() {
 
             <div>
               <label htmlFor="avatar">
-                <input type="file"  name="avatar" id="avatar" className='absolute opacity-0 size-0' accept="image/*" required onInput={handleInput} />
+                <input type="file"  name="avatar" id="avatar" className='absolute opacity-0 size-0' accept="image/*" onInput={handleInput} />
 
                 <span className='cursor-pointer bg-(--secondary-color) p-2 rounded-md block w-64 text-center'>Choose an image</span>
               </label>
               <span className='text-sm'><em>Rectangular images like 256x256 work best</em></span>
             </div>
+
+            {userError && <p className='text-red-500 text-sm'>{userError}</p>}
 
             <FormButton />
           </form>
