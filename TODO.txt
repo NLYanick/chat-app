@@ -1,5 +1,3 @@
-- Profile Editor has delay. Let the user see a 'Loading...'
-
 - User can change their user details
 - The user can't go to the login or registration page when logged in
 

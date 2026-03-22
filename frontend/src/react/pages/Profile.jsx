@@ -37,7 +37,7 @@ function Profile() {
     const newImage = e.target.files[0];
     setImage(newImage);
 
-    if(newImage) {
+    if (newImage) {
       setModalIsOpen(true);
       e.target.value = ''; // Reset the file input
     }
@@ -46,7 +46,7 @@ function Profile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if(!image) {
+    if (!image) {
       setUserError('Please select an image');
       return;
     }
@@ -54,7 +54,7 @@ function Profile() {
     try {
       const formData = new FormData();
       formData.append('avatar_url', image);
-      
+
       const { json, status } = await sendRequest(`/users/${user.uid}/upload-avatar`, 'POST', formData);
 
       if (status === 201 && json.user) {
@@ -74,7 +74,7 @@ function Profile() {
     setUserError(null);
 
     const croppedCanvas = profileEditorRef.current?.getCroppedImage();
-    
+
     if (croppedCanvas) {
       croppedCanvas.toBlob((blob) => {
         setImage(blob);
@@ -84,10 +84,19 @@ function Profile() {
     }
   }
 
+  function showImagePreview() {
+    if(avatarPreview && avatarPreviewIsReady) 
+      return <img src={avatarPreview} alt="Avatar Preview" className="object-cover max-w-40 sm:max-w-50 rounded-full" />
+    else if (avatarPreview && !avatarPreviewIsReady)
+      return <p className='font-bold'>Loading preview...</p>
+    else 
+      return <span className="text-sm text-slate-500">No Image</span>
+  }
+
   return (
     <>
       <Modal isOpen={modalIsOpen} onClose={handleCloseModal} buttonLabel="Apply">
-        <ProfileEditor 
+        <ProfileEditor
           ref={profileEditorRef}
           imageSrc={avatarPreview}
         />
@@ -110,15 +119,11 @@ function Profile() {
           <form className='bg-(--primary-color-light) flex flex-col items-center gap-6' onSubmit={handleSubmit}>
             <h3 className='text-xl w-full text-left'>Change Avatar</h3>
 
-            {(avatarPreview && avatarPreviewIsReady) ? (
-              <img src={avatarPreview} alt="Avatar Preview" className="object-cover max-w-40 sm:max-w-50 rounded-full" />
-            ) : (
-              <span className="text-sm text-slate-500">No Image</span>
-            )}
+            {showImagePreview()}
 
             <div>
               <label htmlFor="avatar">
-                <input type="file"  name="avatar" id="avatar" className='absolute opacity-0 size-0' accept="image/*" onInput={handleInput} />
+                <input type="file" name="avatar" id="avatar" className='absolute opacity-0 size-0' accept="image/*" onInput={handleInput} />
 
                 <span className='cursor-pointer bg-(--secondary-color) p-2 rounded-md block w-64 text-center'>Choose an image</span>
               </label>
