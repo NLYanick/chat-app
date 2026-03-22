@@ -55,13 +55,14 @@ function Profile() {
       const formData = new FormData();
       formData.append('avatar_url', image);
       
-      const { json, status } = await sendRequest(`/users/${user.id}/upload-avatar`, 'POST', formData);
+      const { json, status } = await sendRequest(`/users/${user.uid}/upload-avatar`, 'POST', formData);
 
       if (status === 201 && json.user) {
         login(json.user);
         setUserError(null);
       } else {
-        setUserError(json.error || 'Failed to upload avatar. Please try again later.');
+        console.error(json.error);
+        setUserError('Failed to upload avatar. Please try again later.');
       }
     } catch (err) {
       setError(err.message || 'Upload failed');

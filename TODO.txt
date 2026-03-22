@@ -1,3 +1,5 @@
+- Profile Editor has delay. Let the user see a 'Loading...'
+
 - User can change their user details
 - The user can't go to the login or registration page when logged in
 
@@ -7,12 +9,10 @@
 - Navigation bar
 - Modal
 - Profile Editor
-
-- Profile Editor has delay. Let the user see a 'Loading...'
+- Profile Details
 
 - Use Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
-
 - Sort the files, espescially the frontend components
 
 (- DevOps)

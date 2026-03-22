@@ -35,7 +35,7 @@ router.post('/', uploads.single('avatar_url'), async function (req, res, next) {
 });
 
 router.get('/:id', async function (req, res, next) {
-  const user = await User.findById(req.params.id);
+  const user = await User.findOne({ uid: req.params.id });
 
   if (!user) return res.status(404).json({ error: "User not found" });
 
@@ -50,8 +50,8 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
       `${process.env.BASE_URL}/api/${process.env.API_VERSION}/public/images/${req.file.filename}` : 
       '';
 
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
+    const user = await User.findOneAndUpdate(
+      { uid: req.params.id },
       { avatar_url: imagePath },
       { returnDocument: 'after' }
     );

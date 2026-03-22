@@ -30,7 +30,7 @@ router.post('/register', async function (req, res, next) {
     });
 
     const userData = { 
-      id: user._id,
+      uid: user.uid,
       username: user.username, 
       avatar_url: user.avatar_url, 
       created_at: user.created_at  
@@ -56,7 +56,7 @@ router.post('/login', async function (req, res, next) {
     if (!isMatch) return res.status(400).json({ message: "Login failed", error: "Invalid username or password", success: false });
 
     const userData = { 
-      id: user._id,
+      uid: user.uid,
       username: user.username, 
       avatar_url: user.avatar_url, 
       created_at: user.created_at  
