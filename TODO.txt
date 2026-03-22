@@ -1,5 +1,4 @@
 - User can change their user details
-- The user can't go to the login or registration page when logged in
 
 # Styling
 - Password inputs need an eye icon for seeing password

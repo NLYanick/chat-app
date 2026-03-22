@@ -9,7 +9,7 @@ import UserErrorsBox from '../../components/form/UserErrorsBox';
 
 function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const [error, setError] = useState(null);
   const [userErrors, setUserErrors] = useState([]);
@@ -19,22 +19,26 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [staySignedIn, setStaySignedIn] = useState(null);
 
+  useEffect(() => {
+    if (user) navigate("/");
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationErrors = checkUserInput(username, password, confirmPassword);
     setUserErrors(validationErrors);
 
-    if(validationErrors.length > 0) return;
+    if (validationErrors.length > 0) return;
 
     const { json, status } = await sendRequest('/authenticate/register', 'POST', { username, password, confirmPassword, staySignedIn: staySignedIn ?? false });
 
     if (json.success) {
       login(json.user);
       navigate("/");
-    } else if(json.error && status < 500) {
+    } else if (json.error && status < 500) {
       setUserErrors([json.error]);
-    } else if(json.error && status >= 500) {
+    } else if (json.error && status >= 500) {
       setError('Server Error | Please try registrating again later');
     }
   }
@@ -63,11 +67,11 @@ function Register() {
 function checkUserInput(username, password, confirmPassword) {
   const errors = []
 
-  if (!username || !password) 
+  if (!username || !password)
     return errors.push('Vul de inloggevens in');
-  
-  if(password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
-  if(password !== confirmPassword) errors.push("'Bevestig Wachtwoord' moet gelijk zijn aan 'Wachtwoord'");
+
+  if (password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
+  if (password !== confirmPassword) errors.push("'Bevestig Wachtwoord' moet gelijk zijn aan 'Wachtwoord'");
 
   return errors;
 }

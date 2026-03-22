@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { sendRequest } from '../../utils/requests';
 import Form from '../../components/form/Form';
@@ -9,7 +9,7 @@ import { useAuth } from '../../AuthUserContext';
 
 function Login() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const [error, setError] = useState('');
   const [userErrors, setUserErrors] = useState([]);
@@ -17,6 +17,10 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [staySignedIn, setStaySignedIn] = useState(null);
+
+  useEffect(() => {
+    if(user) navigate("/");
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
