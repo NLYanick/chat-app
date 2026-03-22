@@ -1,3 +1,4 @@
+import FormButton from "./FormButton";
 
 function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSubmit = {} }) {
   return (
@@ -12,9 +13,7 @@ function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSub
           {children}
         </div>
   
-        <button type="submit" className="bg-(--secondary-color) text-white p-2 rounded">
-          Versturen
-        </button>
+        <FormButton label="Versturen" />
       </form>
     </>
   );
