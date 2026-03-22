@@ -47,7 +47,7 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
     if (!req.file) return res.status(400).json({ error: "No image uploaded" });
 
     const imagePath = req.file ? 
-      `${process.env.BASE_URL}:${process.env.PORT}/api/${process.env.API_VERSION}/public/images/${req.file.filename}` : 
+      `${process.env.BASE_URL}/api/${process.env.API_VERSION}/public/images/${req.file.filename}` : 
       '';
 
     const user = await User.findByIdAndUpdate(
