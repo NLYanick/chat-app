@@ -1,5 +1,3 @@
-- Picking the same image on the profile page doesn't activate the Modal
-
 - User can change their user details
 - The user can't go to the login or registration page when logged in
 

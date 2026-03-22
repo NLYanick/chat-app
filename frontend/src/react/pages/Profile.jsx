@@ -37,7 +37,10 @@ function Profile() {
     const newImage = e.target.files[0];
     setImage(newImage);
 
-    if(newImage) setModalIsOpen(true);
+    if(newImage) {
+      setModalIsOpen(true);
+      e.target.value = ''; // Reset the file input
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -58,7 +61,7 @@ function Profile() {
         login(json.user);
         setUserError(null);
       } else {
-        setError(json.error || 'Failed to upload avatar');
+        setUserError(json.error || 'Failed to upload avatar. Please try again later.');
       }
     } catch (err) {
       setError(err.message || 'Upload failed');
@@ -67,13 +70,12 @@ function Profile() {
 
   const handleCloseModal = () => {
     setModalIsOpen(false);
-    
+    setUserError(null);
+
     const croppedCanvas = profileEditorRef.current?.getCroppedImage();
     
     if (croppedCanvas) {
       croppedCanvas.toBlob((blob) => {
-        
-        
         setImage(blob);
 
         setAvatarPreviewIsReady(true);
