@@ -1,12 +1,16 @@
 - User can change their user details
+- A password-reset page & backend endpoint that uses the reset-token from the email 
 
 # Styling
+- Login + Register pages
 - Password inputs need an eye icon for seeing password
 - Dropdown menu and links 
 - Navigation bar
 - Modal
 - Profile Editor
 - Profile Details
+
+- All frontend text in Dutch
 
 - Use Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users

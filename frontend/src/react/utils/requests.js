@@ -1,8 +1,8 @@
 export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}) {
   try {
     const apiKey = import.meta.env.VITE_API_KEY;
-    const url = `http://localhost:3000/api/v1${endpoint}`;
-
+    const url = import.meta.env.VITE_BACKEND_URL + endpoint;
+    
     let newBody = null;
     let contentType = 'application/json';
 

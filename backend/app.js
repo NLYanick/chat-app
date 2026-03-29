@@ -9,6 +9,7 @@ require('./models/database');
 
 const indexRouter = require('./routes/index');
 const authRouter = require('./routes/auth');
+const mailRouter = require('./routes/mails');
 const usersRouter = require('./routes/users');
 const roomsRouter = require('./routes/rooms');
 const messagesRouter = require('./routes/messages');
@@ -33,6 +34,7 @@ v1Router.use(verifyApiKey);
 v1Router.use('/', indexRouter);
 v1Router.use('/authenticate', authRouter);
 v1Router.use('/users', usersRouter);
+v1Router.use('/mails', mailRouter);
 v1Router.use('/rooms', roomsRouter);
 v1Router.use('/messages', messagesRouter);
 

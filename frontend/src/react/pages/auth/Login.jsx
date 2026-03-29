@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { sendRequest } from '../../utils/requests';
 import Form from '../../components/form/Form';
 import FormInput from '../../components/form/FormInput';
@@ -55,6 +55,8 @@ function Login() {
           <FormInput label="Wachtwoord" subtext="Moet minimaal 5 karakters lang zijn" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
           <FormCheckBox label="Blijf ingelogd" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
         </Form>
+
+        <Link to="/register" className='text-sm hover:underline self-end'>Nog geen account?</Link>
       </div>
     </>
   );

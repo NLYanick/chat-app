@@ -1,5 +1,6 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 
 const router = express.Router();
@@ -8,10 +9,10 @@ const User = mongoose.model('User');
 
 router.post('/register', async function (req, res, next) {
   try {
-    const { username, password, confirmPassword, staySignedIn } = req.body;
+    const { email, username, password, confirmPassword, staySignedIn } = req.body;
 
     // Extra backend validation
-    if (!username || !password || !confirmPassword) return res.status(400).json({ message: "Registration failed", error: "The fields \"username\" and \"password\" are invalid.", success: false });
+    if (!username || !password || !confirmPassword || !email) return res.status(400).json({ message: "Registration failed", error: "The fields \"username\", \"email\", and \"password\" are invalid.", success: false });
     if (password < 5) return res.status(400).json({ message: "Registration failed", error: "Password must be at least 5 characters long.", success: false });
     if (confirmPassword !== password) return res.status(400).json({ message: "Registration failed", error: "\"Confirm Password\" must be equal to \"Password\".", success: false });
 
@@ -22,16 +23,21 @@ router.post('/register', async function (req, res, next) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    const passwordResetToken = crypto.randomBytes(32).toString("hex").slice(0, 16);
+
     const user = await User.create({
       username,
+      email,
       avatar_url: '',
       password_hash: hashedPassword,
+      password_reset_token: passwordResetToken,
       created_at: new Date()
     });
 
     const userData = { 
       uid: user.uid,
-      username: user.username, 
+      username: user.username,
+      email: user.email, 
       avatar_url: user.avatar_url, 
       created_at: user.created_at  
     }
@@ -57,7 +63,8 @@ router.post('/login', async function (req, res, next) {
 
     const userData = { 
       uid: user.uid,
-      username: user.username, 
+      username: user.username,
+      email: user.email, 
       avatar_url: user.avatar_url, 
       created_at: user.created_at  
     }
