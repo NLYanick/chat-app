@@ -1,5 +1,4 @@
 - User can change their user details
-- A password-reset page that uses the reset-token from the email 
 - Forgot password page
 
 # Styling
@@ -18,7 +17,6 @@
 - Use Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
 - Sort the files, espescially the frontend components
-- For password reset, generate a new token per request, not per user. Save that token in the DB with user ID AND expire date. Also check if token is valid first
 - Better avatar naming, so the old avatar can be removed after changing
 
 (- DevOps)

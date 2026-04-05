@@ -22,8 +22,9 @@ function ResetPassword() {
   useEffect(() => {
     async function validateToken() {
       const token = new URLSearchParams(location.search).get('token');
-      
-      setValidToken(token ? true : false);
+      const { json } = await sendRequest(`/authenticate/verify-token/${token}`, 'GET');
+
+      setValidToken(json.success);
     }
     validateToken();
   }, [location.search]);
@@ -37,7 +38,7 @@ function ResetPassword() {
     if (validationErrors.length > 0) return;
 
     const token = new URLSearchParams(location.search).get('token');
-    
+
     const { json, status } = await sendRequest('/authenticate/reset-password', 'POST', { new_password: password, token });
     setValidToken(json.success);
 
@@ -51,7 +52,13 @@ function ResetPassword() {
   }
 
   if (error) throw new Error(error.message);
-  if(!validToken) return <p>Invalid or expired token. <Link to="/login" className='text-blue-500 underline'>Go to Login.</Link></p>
+  if (!validToken) {
+    return (
+      <>
+        <h1 className='mb-8 text-4xl font-bold'>Invalid or expired token</h1><p>Please click the "Reset Password" button again in the profile page. You have 1 hour to reset your password.</p>
+      </>
+    );
+  }
 
   return (
     <>

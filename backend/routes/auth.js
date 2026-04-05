@@ -88,20 +88,40 @@ router.post('/logout', async function (req, res, next) {
 });
 
 
+router.get('/verify-token/:token', async function (req, res, next) {
+  try {
+    const { token } = req.params;
+    if (!token) return res.status(400).json({ error: "Token is required", success: false });
+
+    const user = await User.findOne({ 
+      password_reset_token: token,
+      password_reset_token_expires_at: { $gt: Date.now() }
+    });
+    if (!user) return res.status(404).json({ message: "Token invalid", error: "Invalid or expired token.", success: false });
+    
+    res.status(200).json({ message: "Token is valid", success: true });
+  } catch (err) {
+    next(err);
+  }
+});
 router.post('/reset-password', async function (req, res, next) {
   try {
     const { token, new_password } = req.body;
     if (!new_password || !token) return res.status(400).json({ error: "The fields 'new_password' and 'token' are required", success: false });
 
-    const user = await User.findOne({ password_reset_token: token });
-    if (!user) return res.status(404).json({ message: "Resetting password failed", error: "Invalid token.", success: false });
+    const user = await User.findOne({ 
+      password_reset_token: token,
+      password_reset_token_expires_at: { $gt: Date.now() }
+    });
+    if (!user) return res.status(404).json({ message: "Resetting password failed", error: "Invalid or expired token.", success: false });
 
     user.password = new_password;
-    user.password_reset_token = crypto.randomBytes(32).toString("hex");
+    user.password_reset_token = null;
+    user.password_reset_token_expires_at = null;
 
     await user.save();
     
-    res.status(204).json({ message: "Successfully reset password", success: true });
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

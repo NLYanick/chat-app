@@ -29,7 +29,12 @@ const userSchema = new mongoose.Schema({
     },
     password_reset_token: { 
         type: String,
-        required: true,
+        default: undefined,
+        select: false 
+    },
+    password_reset_token_expires_at: { 
+        type: Date,
+        default: undefined,
         select: false 
     },
     created_at: { 
