@@ -19,7 +19,7 @@ function Login() {
   const [staySignedIn, setStaySignedIn] = useState(null);
 
   useEffect(() => {
-    if(user) navigate("/");
+    if (user) navigate("/");
   });
 
   const handleSubmit = async (e) => {
@@ -28,16 +28,16 @@ function Login() {
     const validationErrors = checkUserInput(username, password);
     setUserErrors(validationErrors);
 
-    if(validationErrors.length > 0) return;
+    if (validationErrors.length > 0) return;
 
     const { json, status } = await sendRequest('/authenticate/login', 'POST', { username, password, staySignedIn: staySignedIn ?? false });
 
     if (json.success) {
       login(json.user);
       navigate("/");
-    } else if(json.error && status < 500) {
+    } else if (json.error && status < 500) {
       setUserErrors([json.error]);
-    } else if(json.error && status >= 500) {
+    } else if (json.error && status >= 500) {
       setError('Server Error | Please try loging in again later');
     }
   }
@@ -56,7 +56,10 @@ function Login() {
           <FormCheckBox label="Blijf ingelogd" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
         </Form>
 
-        <Link to="/register" className='text-sm hover:underline self-end'>Nog geen account?</Link>
+        <div className='flex justify-between'>
+          <Link to="/forgot-password" className='text-sm hover:underline self-end'>Wachtwoord vergeten?</Link>
+          <Link to="/register" className='text-sm hover:underline self-end'>Nog geen account?</Link>
+        </div>
       </div>
     </>
   );
@@ -65,10 +68,10 @@ function Login() {
 function checkUserInput(username, password) {
   const errors = []
 
-  if (!username || !password) 
+  if (!username || !password)
     return errors.push('Vul de inloggevens in');
-  
-  if(password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
+
+  if (password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
 
   return errors;
 }

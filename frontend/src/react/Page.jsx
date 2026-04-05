@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ResetPassword from './pages/auth/ResetPassword';
+import ForgotPassword from './pages/auth/ForgotPassword';
 
 function Page() {
   return (
@@ -17,6 +18,7 @@ function Page() {
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
           <Route path='/reset-password' element={<ResetPassword />}></Route>
+          <Route path='/forgot-password' element={<ForgotPassword />}></Route>
 
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>

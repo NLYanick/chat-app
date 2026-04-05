@@ -1,5 +1,5 @@
 - User can change their user details
-- Forgot password page
+- Combine the /forgot-password and the /reset-password into 1 endpoint. Don't forget to change the frontend
 
 # Styling
 - Login + Register pages
@@ -10,13 +10,13 @@
 - Profile Editor
 - Profile Details
 
-
+# 
 - All frontend text in Dutch
+- Sort the files, espescially the frontend components
 
 # Advanced
 - Use Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
-- Sort the files, espescially the frontend components
 - Better avatar naming, so the old avatar can be removed after changing
 
 (- DevOps)

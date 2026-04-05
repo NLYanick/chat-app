@@ -6,8 +6,7 @@ function ProfileDetails({ user }) {
   const [mailMessage, setMailMessage] = useState("");
 
   const resetPassword = async () => {
-    const { json, status } = await sendRequest('/mails/reset-password', 'POST', { userUid: user.uid });
-    console.log(status, json);
+    const { json } = await sendRequest('/mails/reset-password', 'POST', { userUid: user.uid });
 
     if(json.success)
       setMailMessage("Mail sent successfully!");

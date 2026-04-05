@@ -25,5 +25,24 @@ router.post('/reset-password', async (req, res, next) => {
     next(err);
   }
 });
+router.post('/forgot-password', async (req, res, next) => {
+  try {
+    if (!req.body || !req.body.email) 
+      return res.status(400).json({ error: "Bad Request. The field 'email' is required.", success: false });
+
+    const user = await User.findOne({ email: req.body.email }).select("+password_reset_token");
+    if (!user) return res.status(404).json({ error: "User not found", success: false });
+
+    user.password_reset_token = crypto.randomBytes(32).toString("hex");
+    user.password_reset_token_expires_at = new Date(Date.now() + 3600 * 1000); // seconds * milliseconds
+    await user.save();
+
+    await sendResetPasswordEmail(user);
+
+    res.status(202).json({ message: "Mail sent successfully!", success: true });
+  } catch (err) {
+    next(err);
+  }
+});
 
 module.exports = router;
