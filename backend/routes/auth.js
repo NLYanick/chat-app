@@ -20,16 +20,13 @@ router.post('/register', async function (req, res, next) {
 
     if (existingUser) return res.status(400).json({ message: "Registration failed", error: "Username already exists.", success: false });
 
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
-    const passwordResetToken = crypto.randomBytes(32).toString("hex").slice(0, 16);
+    const passwordResetToken = crypto.randomBytes(32).toString("hex");
 
     const user = await User.create({
       username,
       email,
       avatar_url: '',
-      password_hash: hashedPassword,
+      password: password,
       password_reset_token: passwordResetToken,
       created_at: new Date()
     });
@@ -55,10 +52,10 @@ router.post('/login', async function (req, res, next) {
     // Extra backend validation
     if (!username || !password) return res.status(400).json({ message: "Login failed", error: "The fields \"username\" and \"password\" are invalid.", success: false });
     
-    const user = await User.findOne({ username }).select('+password_hash');
+    const user = await User.findOne({ username }).select('+password');
     if (!user) return res.status(404).json({ message: "Login failed", error: "Username doesn't exist.", success: false });
 
-    const isMatch = await bcrypt.compare(password, user.password_hash);
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Login failed", error: "Invalid username or password", success: false });
 
     const userData = { 

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 
 const userSchema = new mongoose.Schema({
@@ -20,7 +22,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     avatar_url: String,
-    password_hash: {
+    password: {
         type: String,
         required: true,
         select: false
@@ -33,6 +35,17 @@ const userSchema = new mongoose.Schema({
     created_at: { 
         required: true, 
         type: Date 
+    }
+});
+
+// Hash the password
+userSchema.pre('save', async function () {
+    if (!this.isModified('password')) return;
+    try {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    } catch (err) {
+        throw err;
     }
 });
 
