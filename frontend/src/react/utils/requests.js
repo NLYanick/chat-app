@@ -29,8 +29,10 @@ export async function sendRequest(endpoint, method = 'GET', body = null, headers
 
     const res = await fetch(url, fetchOptions);
 
+    const json = res.status !== 204 ? await res.json() : { message: "Success", success: true };
+
     return {
-      json: await res.json(),
+      json,
       status: res.status
     };
   } catch (error) {

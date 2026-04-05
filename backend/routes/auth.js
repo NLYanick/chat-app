@@ -87,4 +87,24 @@ router.post('/logout', async function (req, res, next) {
   }
 });
 
+
+router.post('/reset-password', async function (req, res, next) {
+  try {
+    const { token, new_password } = req.body;
+    if (!new_password || !token) return res.status(400).json({ error: "The fields 'new_password' and 'token' are required", success: false });
+
+    const user = await User.findOne({ password_reset_token: token });
+    if (!user) return res.status(404).json({ message: "Resetting password failed", error: "Invalid token.", success: false });
+
+    user.password = new_password;
+    user.password_reset_token = crypto.randomBytes(32).toString("hex");
+
+    await user.save();
+    
+    res.status(204).json({ message: "Successfully reset password", success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

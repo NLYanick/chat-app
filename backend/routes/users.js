@@ -54,9 +54,7 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
   try {
     if (!req.file) return res.status(400).json({ error: "No image uploaded", success: false });
 
-    const imagePath = req.file ?
-      `${process.env.BASE_URL}/api/${process.env.API_VERSION}/public/images/${req.file.filename}` :
-      '';
+    const imagePath = req.file ? `/images/${req.file.filename}` : '';
 
     const user = await User.findOneAndUpdate(
       { uid: req.params.id },
@@ -65,22 +63,6 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
     );
 
     res.status(201).json({ message: "Successfully uploaded avatar", user, success: true });
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.patch('/:id/reset-password', async function (req, res, next) {
-  try {
-    if (!req.params.id) return res.status(400).json({ error: "Invalid user ID", success: false });
-    if (!req.body.new_password) return res.status(400).json({ error: "New password is required", success: false });
-
-    await User.findOneAndUpdate(
-      { uid: req.params.id },
-      { password: req.body.new_password }
-    );
-
-    res.status(204).json({ message: "Successfully reset password", success: true });
   } catch (err) {
     next(err);
   }

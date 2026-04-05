@@ -43,7 +43,7 @@ app.use('/api/' + process.env.API_VERSION, v1Router);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+  return res.status(404).json({ message: "Not Found", success: false });
 });
 
 app.use(handleError);

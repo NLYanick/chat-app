@@ -6,6 +6,7 @@ import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
+import ResetPassword from './pages/auth/ResetPassword';
 
 function Page() {
   return (
@@ -15,6 +16,7 @@ function Page() {
         <Routes>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
+          <Route path='/reset-password' element={<ResetPassword />}></Route>
 
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
