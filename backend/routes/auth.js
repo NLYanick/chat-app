@@ -103,6 +103,7 @@ router.get('/verify-token/:token', async function (req, res, next) {
     next(err);
   }
 });
+
 router.post('/reset-password', async function (req, res, next) {
   try {
     const { token, new_password } = req.body;

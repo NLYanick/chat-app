@@ -1,5 +1,4 @@
 - User can change their user details
-- Combine the /forgot-password and the /reset-password into 1 endpoint. Don't forget to change the frontend
 
 # Functionality
 - Make rooms
