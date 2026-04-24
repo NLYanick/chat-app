@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "./Button";
+import FormInput from "./form/FormInput";
 import { sendRequest } from "../utils/requests";
 
 function ProfileDetails({ user }) {
@@ -18,13 +19,15 @@ function ProfileDetails({ user }) {
     <div className='bg-(--primary-color-light) rounded-lg shadow-lg p-6 text-left flex flex-col gap-8'>
       <h2 className='text-2xl'>Details</h2>
 
-      <div className='flex justify-between'>
-        <p>{user.username}</p>
+      <form onSubmit={() => console.log('submit')} className='space-y-4'>
+        <div>
+          <FormInput value={user.username} readOnly />
+        </div>
         <Button label="Change" />
-      </div>
+      </form>
 
       <div className='flex flex-col gap-2'>
-        <Button label="Reset Password" onClick={resetPassword}/>
+        <Button label="Reset Password" type="secondary" buttonType="button" onClick={resetPassword}/>
         {mailMessage && <em className="text-sm">{mailMessage}</em>}
       </div>
     </div>

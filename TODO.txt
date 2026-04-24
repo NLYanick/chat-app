@@ -1,3 +1,4 @@
+# Now
 - User can change their user details
 
 # Functionality
@@ -15,7 +16,7 @@
 - Profile Editor
 - Profile Details
 
-# 
+# Tidiness
 - All frontend text in Dutch
 - Sort the files, espescially the frontend components
 

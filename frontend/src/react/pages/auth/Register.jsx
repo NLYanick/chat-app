@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { sendRequest } from '../../utils/requests';
 import { useAuth } from '../../AuthUserContext';
-import Form from '../../components/form/Form';
+import Form from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';
 import UserErrorsBox from '../../components/form/UserErrorsBox';

@@ -1,18 +1,19 @@
 
-function Button({ label, type = "primary", onClick = null }) {
-    let typeStyling;
+const BUTTON_STYLES = {
+    primary: 'bg-(--secondary-color)',
+    secondary: 'bg-(--primary-color) border-2 border-white',
+    secondary_light: 'bg-(--primary-color-light) border-2 border-white',
+    success: 'bg-green-600 text-white',
+    error: 'bg-red-700 text-white'
+};
 
-    switch(type) {
-      case 'primary':
-        typeStyling = 'bg-(--secondary-color)'
-        break;
-      case 'secondary':
-        break;
-    }
+function Button({ label, type = "primary", onClick = null, buttonType = "submit" }) {
+    const typeStyling = BUTTON_STYLES[type] || BUTTON_STYLES.primary;
 
     return (
         <button className={`cursor-pointer px-4 py-2 rounded-lg shadow-lg ${typeStyling}`}
           onClick={onClick}
+          type={buttonType}
         >
           {label}
         </button>

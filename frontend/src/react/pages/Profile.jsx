@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { sendRequest } from '../utils/requests';
 import { useAuth } from "../AuthUserContext";
-import FormButton from "../components/form/FormButton"
+import Button from "../components/Button"
 import ProfileIcon from "../components/ProfileIcon"
 import Modal from '../components/Modal';
 import ProfileEditor from '../components/ProfileEditor';
@@ -90,7 +90,7 @@ function Profile() {
     else if (avatarPreview && !avatarPreviewIsReady)
       return <p className='font-bold'>Loading preview...</p>
     else 
-      return <span className="text-sm text-slate-500">No Image</span>
+      return <span className="text-sm text-slate-500">No Preview Image</span>
   }
 
   return (
@@ -125,14 +125,14 @@ function Profile() {
               <label htmlFor="avatar">
                 <input type="file" name="avatar" id="avatar" className='absolute opacity-0 size-0' accept="image/*" onInput={handleInput} />
 
-                <span className='cursor-pointer bg-(--secondary-color) p-2 rounded-md block w-64 text-center'>Choose an image</span>
+                <span className='cursor-pointer bg-(--primary-color) border-2 border-white p-2 rounded-md block w-64 text-center'>Choose an image</span>
               </label>
               <span className='text-sm'><em>Rectangular images like 256x256 work best</em></span>
             </div>
 
             {userError && <p className='text-red-500 text-sm'>{userError}</p>}
 
-            <FormButton />
+            <Button label="Upload Avatar" type="success" />
           </form>
         </div>
       </div>

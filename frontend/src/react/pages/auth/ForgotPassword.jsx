@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { sendRequest } from '../../utils/requests';
-import Form from '../../components/form/Form';
+import Form from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
 
