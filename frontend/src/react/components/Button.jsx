@@ -11,7 +11,7 @@ function Button({ label, type = "primary", onClick = null, buttonType = "submit"
     const typeStyling = BUTTON_STYLES[type] || BUTTON_STYLES.primary;
 
     return (
-        <button className={`cursor-pointer px-4 py-2 rounded-lg shadow-lg ${typeStyling}`}
+        <button className={`cursor-pointer px-4 py-2 rounded-lg shadow-lg min-w-16 ${typeStyling}`}
           onClick={onClick}
           type={buttonType}
         >

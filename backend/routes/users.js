@@ -80,17 +80,14 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
 router.patch('/:id', async function (req, res, next) {
   try {
     const body = req.body;
-    if (!body || !body.username || !body.email) {
-      return res.status(400).json({ error: "Bad Request. The fields 'username' and 'email' are required.", success: false });
+    if (!body || (!body.username && !body.email)) {
+      return res.status(400).json({ error: "Bad Request. At least one of 'username' or 'email' is required.", success: false });
     }
 
-    const user = {
-      username: body.username,
-      email: body.email
-    }
+    const user = {};
+    if (body.username) user.username = body.username;
+    if (body.email) user.email = body.email;
 
-    console.log(user);
-    
     const userExists = await userExistsInDb(user, req.params.id);
     if (userExists) {
       return res.status(409).json({ error: "Username or email already exists", success: false });
