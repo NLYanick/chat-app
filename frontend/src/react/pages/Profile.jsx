@@ -95,12 +95,15 @@ function Profile() {
 
   return (
     <>
-      <Modal isOpen={modalIsOpen} onClose={handleCloseModal} buttonLabel="Apply">
+      {modalIsOpen && <Modal 
+        onClose={handleCloseModal}
+        footer={<Button label="Apply" type="success" onClick={handleCloseModal} />}
+      >
         <ProfileEditor
           ref={profileEditorRef}
           imageSrc={avatarPreview}
         />
-      </Modal>
+      </Modal> }
 
       <div className='flex flex-col gap-8 pb-8'>
         <h1 className='text-4xl font-semibold mt-16 sm:mt-8 mb-4'>Profile</h1>

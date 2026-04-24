@@ -43,8 +43,9 @@ function ProfileDetails({ user }) {
 
   return (
     <>
-      <Modal isOpen={modalIsOpen} onClose={() => setModalIsOpen(false)}>
-          <p>Are you sure you want to reset your password?</p>
+      {modalIsOpen && <Modal 
+        onClose={() => setModalIsOpen(false)}
+        footer={
           <div className="flex gap-8">
             <Button label="Yes" type="success" onClick={() => {
               resetPassword();
@@ -52,7 +53,10 @@ function ProfileDetails({ user }) {
             }} />
             <Button label="No" type="error" onClick={() => setModalIsOpen(false)} />
           </div>
-      </Modal>
+        }
+      >
+          <p>Are you sure you want to reset your password?</p>
+      </Modal> }
 
       <div className='bg-(--primary-color-light) rounded-lg shadow-lg p-6 text-left flex flex-col gap-8'>
         <h2 className='text-2xl'>Details</h2>
