@@ -1,4 +1,4 @@
-import FormButton from "./FormButton";
+import Button from "../Button";
 
 function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSubmit = {} }) {
   return (
@@ -13,7 +13,7 @@ function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSub
           {children}
         </div>
   
-        <FormButton label="Versturen" />
+        <Button label="Versturen" />
       </form>
     </>
   );

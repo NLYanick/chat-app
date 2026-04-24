@@ -5,6 +5,7 @@ import { sendRequest } from "../utils/requests";
 
 function ProfileDetails({ user }) {
   const [mailMessage, setMailMessage] = useState("");
+  const [userErrors, setUserErrors] = useState([]);
 
   const resetPassword = async () => {
     const { json } = await sendRequest('/mails/reset-password', 'POST', { userUid: user.uid });
@@ -20,9 +21,15 @@ function ProfileDetails({ user }) {
       <h2 className='text-2xl'>Details</h2>
 
       <form onSubmit={() => console.log('submit')} className='space-y-4'>
+        {userErrors.length > 0 && (
+            <UserErrorsBox userErrors={userErrors} />
+        )}
+
         <div>
-          <FormInput value={user.username} readOnly />
+          <FormInput value={user.username} readOnly label="Username" />
+          <FormInput value={user.email} readOnly label="Email" />
         </div>
+
         <Button label="Change" />
       </form>
 
