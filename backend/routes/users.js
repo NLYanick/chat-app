@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const uploads = require('../middleware/uploads');
+const { userExistsInDb } = require('../utils');
 
 const router = express.Router();
 
@@ -15,19 +16,26 @@ router.get('/', async function (req, res, next) {
     next(err);
   }
 });
+// Not used a.t.m. but can be used for admin panel
 router.post('/', uploads.single('avatar_url'), async function (req, res, next) {
   try {
     const body = req.body;
-    if (!body || !body.username) {
-      return res.status(400).json({ error: "Bad Request. The field 'username' is required.", success: false });
+    if (!body || !body.username || !body.email) {
+      return res.status(400).json({ error: "Bad Request. The fields 'username' and 'email' are required.", success: false });
     }
-
-    const imagePath = req.file ? `/images/${req.file.filename}` : '';
 
     const user = {
       username: body.username,
-      avatar_url: imagePath
+      email: body.email
     }
+
+    const userExists = await userExistsInDb(user);
+    if (userExists) {
+      return res.status(409).json({ error: "Username or email already exists", success: false });
+    }
+
+    const imagePath = req.file ? `/images/${req.file.filename}` : '';
+    user.avatar_url = imagePath;
 
     const newUser = await User.create(user);
 
@@ -64,6 +72,33 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
     );
 
     res.status(201).json({ message: "Successfully uploaded avatar", user, success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch('/:id', async function (req, res, next) {
+  try {
+    const body = req.body;
+    if (!body || !body.username || !body.email) {
+      return res.status(400).json({ error: "Bad Request. The fields 'username' and 'email' are required.", success: false });
+    }
+
+    const user = {
+      username: body.username,
+      email: body.email
+    }
+
+    console.log(user);
+    
+    const userExists = await userExistsInDb(user, req.params.id);
+    if (userExists) {
+      return res.status(409).json({ error: "Username or email already exists", success: false });
+    }
+
+    const updatedUser = await User.findOneAndUpdate({ uid: req.params.id }, user, { returnDocument: 'after' });
+
+    res.status(201).json({ message: "Successfully updated user", user: updatedUser, success: true });
   } catch (err) {
     next(err);
   }

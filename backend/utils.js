@@ -1,5 +1,8 @@
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const { sendResetPasswordEmail } = require("./services/mail");
+
+const User = mongoose.model('User');
 
 async function setResetTokenAndSendEmail(user) {
     user.password_reset_token = crypto.randomBytes(32).toString("hex");
@@ -9,6 +12,23 @@ async function setResetTokenAndSendEmail(user) {
     await sendResetPasswordEmail(user);
 }
 
+async function userExistsInDb(userData, excludeUserId = null) {
+    const query = {
+        $or: [
+            { username: userData.username },
+            { email: userData.email }
+        ]
+    };
+    
+    if (excludeUserId) {
+        query.uid = { $ne: excludeUserId };
+    }
+    
+    const user = await User.findOne(query);
+    return user !== null;
+}
+
 module.exports = { 
-    setResetTokenAndSendEmail 
+    setResetTokenAndSendEmail,
+    userExistsInDb
 };

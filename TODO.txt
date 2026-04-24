@@ -1,5 +1,5 @@
 # Now
-- User can change their user details
+- 
 
 # Functionality
 - Make rooms
@@ -13,6 +13,7 @@
 - Dropdown menu and links 
 - Navigation bar
 - Modal
+- UserErrorsBox
 - Profile Editor
 - Profile Details
 
@@ -20,9 +21,10 @@
 - All frontend text in Dutch
 - Sort the files, espescially the frontend components
 
-# Advanced
+# Extra
 - Use JWT Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
 - Better avatar naming, so the old avatar can be removed after changing
+- User can deactivate (not delete) his/her account
 
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
