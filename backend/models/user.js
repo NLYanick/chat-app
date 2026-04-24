@@ -36,12 +36,8 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: undefined,
         select: false 
-    },
-    created_at: { 
-        required: true, 
-        type: Date 
     }
-});
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 // Hash the password
 userSchema.pre('save', async function () {

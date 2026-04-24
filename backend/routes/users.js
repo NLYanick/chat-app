@@ -26,11 +26,12 @@ router.post('/', uploads.single('avatar_url'), async function (req, res, next) {
 
     const user = {
       username: body.username,
-      avatar_url: imagePath,
-      created_at: new Date()
+      avatar_url: imagePath
     }
 
     const newUser = await User.create(user);
+
+    user.created_at = newUser.created_at;
 
     res.status(201).json({ message: "Successfully made user", user: newUser, success: true });
   } catch (err) {

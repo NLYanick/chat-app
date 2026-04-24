@@ -27,8 +27,7 @@ router.post('/register', async function (req, res, next) {
       email,
       avatar_url: '',
       password: password,
-      password_reset_token: passwordResetToken,
-      created_at: new Date()
+      password_reset_token: passwordResetToken
     });
 
     const userData = { 

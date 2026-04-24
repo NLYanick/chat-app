@@ -1,6 +1,12 @@
 - User can change their user details
 - Combine the /forgot-password and the /reset-password into 1 endpoint. Don't forget to change the frontend
 
+# Functionality
+- Make rooms
+- Send messages
+- Edit messages
+- Delete messages
+
 # Styling
 - Login + Register pages
 - Password inputs need an eye icon for seeing password
@@ -15,8 +21,8 @@
 - Sort the files, espescially the frontend components
 
 # Advanced
-- Use Tokens to access the backend, since everything in the frontend is public
+- Use JWT Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
 - Better avatar naming, so the old avatar can be removed after changing
 
-(- DevOps)
+(- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)

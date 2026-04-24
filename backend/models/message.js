@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
     text: String,
-    timestamp: Date,
     sender: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 
@@ -11,6 +10,6 @@ const messageSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Room' 
     }
-});
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 mongoose.model("Message", messageSchema);
