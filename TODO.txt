@@ -1,8 +1,11 @@
 # Now
+- Filter Rooms
 - Change modal behavior (different classes)
 
 # Functionality
 - Make rooms
+- Invite other users
+- Receiving & Accepting Invites in the website (and mail)
 - Send messages
 - Edit messages
 - Delete messages
@@ -24,6 +27,7 @@
 - Move package.json dependencies to devDependencies if they are supposed to be there
 
 # Extra
+- Better error handling
 - Use JWT Tokens to access the backend, since everything in the frontend is public
 - Automatically log in Users
 - Better avatar naming, so the old avatar can be removed after changing

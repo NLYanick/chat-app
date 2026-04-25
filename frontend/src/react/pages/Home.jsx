@@ -1,39 +1,31 @@
 import { useState, useEffect } from 'react';
 import { sendRequest } from '../utils/requests';
 import { useAuth } from "../AuthUserContext";
+import Rooms from './Rooms';
 
 function Home() {
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  const [data, setData] = useState(null);
 
   const { user } = useAuth();
 
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-
-        const { json } = await sendRequest('/rooms');
-        setData(json.message);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  if(loading) return (<p className='font-bold'>Loading...</p>); 
   if(error) throw new Error(error.message); 
 
   return (
     <>
-      <div className='flex flex-col gap-12 w-full'>
-        <h1 className='mb-4'>Hi</h1>
-        <p>{data ?? 'NULL'}</p>
-        <p className='wrap-break-word'>{JSON.stringify(user) ?? 'NULL'}</p>
+      <div className='flex flex-1'>
+        <div className='w-1/4 p-4 border-r'>
+          <Rooms />
+        </div>
+        
+        <div className='w-3/4 p-4 grid grid-rows-[1fr_2fr]'>
+          <div className='flex justify-center items-center'>
+            <h1 className='text-5xl mb-4'>Welcome {user.username}!</h1>
+          </div>
+
+          <div className='p-4'>
+            <p className='wrap-break-word'>{JSON.stringify(user) ?? 'NULL'}</p>
+          </div>
+        </div>
       </div>
     </>
   );

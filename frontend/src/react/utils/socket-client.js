@@ -14,7 +14,7 @@ function getSocket() {
     });
 
     socket.on('connect', () => {
-      console.log('Connected to server:', socket.id);
+      console.log('Connected to server');
     });
 
     socket.on('disconnect', () => {
@@ -37,7 +37,6 @@ export function sendSocketMessage(message) {
   const socket = getSocket();
   if (socket.connected) {
     socket.emit('message', message);
-    console.log('Sent message to server:', message);
   } else {
     console.warn('Cannot send message, socket not connected');
   }
