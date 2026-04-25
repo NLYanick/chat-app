@@ -1,5 +1,5 @@
 # Now
-- 
+- Change modal behavior (different classes)
 
 # Functionality
 - Make rooms
@@ -21,6 +21,7 @@
 # Tidiness
 - All frontend text in Dutch
 - Sort the files, espescially the frontend components
+- Move package.json dependencies to devDependencies if they are supposed to be there
 
 # Extra
 - Use JWT Tokens to access the backend, since everything in the frontend is public

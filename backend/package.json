@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r dotenv/config ./bin/www",
+    "start": "nodemon -r ./bin/www",
     "test": "npm test"
   },
   "dependencies": {
@@ -21,6 +21,7 @@
     "mongoose": "^9.2.1",
     "morgan": "~1.9.1",
     "multer": "^2.0.2",
+    "socket.io": "^4.8.3",
     "uuid": "^13.0.0"
   },
   "devDependencies": {
