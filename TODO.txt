@@ -1,4 +1,5 @@
 # Now
+- Add color and image to rooms
 - Filter Rooms
 - Change modal behavior (different classes)
 
@@ -9,17 +10,6 @@
 - Send messages
 - Edit messages
 - Delete messages
-
-# Styling
-- Login + Register pages
-- Password inputs need an eye icon for seeing password
-- Dropdown menu and links 
-- Navigation bar
-- Modal
-- UserErrorsBox
-- Button (hover)
-- Profile Editor
-- Profile Details
 
 # Tidiness
 - All frontend text in Dutch
@@ -34,3 +24,16 @@
 - User can deactivate (not delete) his/her account
 
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
+
+# Styling
+- Login + Register pages
+- Password inputs need an eye icon for seeing password
+- Dropdown menu and links 
+- Navigation bar
+- Modal
+- UserErrorsBox
+- Button (hover)
+- Profile Editor
+- Profile Details
+- Rooms
+- RoomItem

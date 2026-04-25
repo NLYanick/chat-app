@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react"
 import { sendRequest } from "../utils/requests";
 import Button from "../components/Button";
+import RoomItem from "../components/RoomItem";
 
 function Rooms() {
     const [loading, setLoading] = useState(false);
@@ -44,7 +45,7 @@ function Rooms() {
         {rooms.length > 0 ? (
           <ul>
             {rooms.map((room) => (
-              <li key={room.uid}>{room.room_name}</li>
+              <RoomItem key={room.uid} room={room} />
             ))}
           </ul>
         ) : (
