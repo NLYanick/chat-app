@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Button from "./Button";
-import FormInput from "./form/FormInput";
-import UserErrorsBox from "./form/UserErrorsBox";
-import Modal from '../components/Modal';
-import { sendRequest } from "../utils/requests";
-import { useAuth } from "../AuthUserContext";
+import Button from "../Button";
+import FormInput from "../form/FormInput";
+import UserErrorsBox from "../form/UserErrorsBox";
+import Modal from '../Modal';
+import { sendRequest } from "../../utils/requests";
+import { useAuth } from "../../AuthUserContext";
 
 function ProfileDetails({ user }) {
   const [userErrors, setUserErrors] = useState([]);

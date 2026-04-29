@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from 'react';
 import { sendRequest } from '../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import Button from "../components/Button"
-import ProfileIcon from "../components/ProfileIcon"
+import ProfileIcon from "../components/profile/ProfileIcon"
 import Modal from '../components/Modal';
-import ProfileEditor from '../components/ProfileEditor';
-import ProfileDetails from '../components/ProfileDetails';
+import ProfileEditor from '../components/profile/ProfileEditor';
+import ProfileDetails from '../components/profile/ProfileDetails';
 
 function Profile() {
   const [error, setError] = useState(null);

@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthUserContext";
 import { sendRequest } from '../utils/requests';
-import ProfileIcon from "./ProfileIcon"
+import ProfileIcon from "./profile/ProfileIcon"
 import DropDownMenu from "./DropDownMenu";
 import DropDownLink from "./DropDownLink";
 
