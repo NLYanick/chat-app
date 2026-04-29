@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
+const DEFAULT_ROOM_COLOR = "#343434";
+
 const roomSchema = new mongoose.Schema({
     uid: {
         type: String,
@@ -8,10 +10,19 @@ const roomSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    room_name: String,
+    name: {
+        type: String,
+        required: true
+    },
     members: [{ 
         type: String
-    }]
+    }],
+    color_hex: {
+        type: String,
+        required: false,
+        default: DEFAULT_ROOM_COLOR
+    },
+    image: String,
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 mongoose.model("Room", roomSchema);

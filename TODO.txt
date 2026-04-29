@@ -1,5 +1,4 @@
 # Now
-- Add color and image to rooms
 - Filter Rooms
 - Change modal behavior (different classes)
 
