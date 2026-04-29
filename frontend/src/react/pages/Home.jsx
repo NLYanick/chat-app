@@ -13,7 +13,7 @@ function Home() {
   return (
     <>
       <div className='flex flex-1'>
-        <div className='w-1/4 p-4 border-r'>
+        <div className='w-1/4 p-2 border-r'>
           <Rooms />
         </div>
         

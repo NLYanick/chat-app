@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useEffect } from "react"
 import { sendRequest } from "../utils/requests";
 import Button from "../components/Button";
-import RoomItem from "../components/RoomItem";
+import RoomItem from "../components/room/RoomItem";
 
 function Rooms() {
     const [loading, setLoading] = useState(false);
@@ -43,7 +43,7 @@ function Rooms() {
         <h1 className='text-2xl font-bold'>Rooms</h1>
         
         {rooms.length > 0 ? (
-          <ul>
+          <ul className="space-y-4 border-y p-4 overflow-y-scroll app-scrollbar h-[70vh] w-full">
             {rooms.map((room) => (
               <RoomItem key={room.uid} room={room} />
             ))}
