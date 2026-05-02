@@ -8,6 +8,7 @@ import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ResetPassword from './pages/auth/ResetPassword';
 import ForgotPassword from './pages/auth/ForgotPassword';
+import CreateRoom from './pages/rooms/CreateRoom';
 
 function Page() {
   return (
@@ -22,6 +23,8 @@ function Page() {
 
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
+
+          <Route path='/rooms/create' element={<ProtectedRoute><CreateRoom /></ProtectedRoute>}></Route>
 
           <Route path='*' element={<NotFound />}></Route>
         </Routes>

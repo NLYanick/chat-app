@@ -3,12 +3,15 @@
 - Change modal behavior (different classes)
 
 # Functionality
-- Make rooms
+- Edit room
 - Invite other users
 - Receiving & Accepting Invites in the website (and mail)
 - Send messages
 - Edit messages
 - Delete messages
+- See Users Profile
+- Add Friends
+- See your friendslist on the homepage
 
 # Tidiness
 - Good Homepage
@@ -26,6 +29,7 @@
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
 
 # Styling
+- Required *'s
 - Login + Register pages
 - Password inputs need an eye icon for seeing password
 - Dropdown menu and links 
@@ -37,3 +41,4 @@
 - Profile Details
 - Rooms
 - RoomItem
+- Create Room

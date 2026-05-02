@@ -7,13 +7,14 @@ const BUTTON_STYLES = {
     error: 'bg-red-700 text-white'
 };
 
-function Button({ label, type = "primary", onClick = null, buttonType = "submit" }) {
+function Button({ label, type = "primary", onClick = null, buttonType = "submit", fullWidth = false, fullHeight = false, disabled = false }) {
     const typeStyling = BUTTON_STYLES[type] || BUTTON_STYLES.primary;
 
     return (
-        <button className={`cursor-pointer px-4 py-2 rounded-lg shadow-lg min-w-16 ${typeStyling}`}
+        <button className={`cursor-pointer px-4 py-2 rounded-lg shadow-lg min-w-16 ${typeStyling} ${fullWidth ? 'w-full' : ''} ${fullHeight ? 'h-full' : ''}`}
           onClick={onClick}
           type={buttonType}
+          disabled={disabled}
         >
           {label}
         </button>

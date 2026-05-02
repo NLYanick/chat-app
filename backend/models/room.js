@@ -12,7 +12,12 @@ const roomSchema = new mongoose.Schema({
     },
     name: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 50
+    },
+    description: {
+        type: String,
+        maxlength: 500
     },
     members: [{ 
         type: String

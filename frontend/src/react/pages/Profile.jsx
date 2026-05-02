@@ -6,6 +6,7 @@ import ProfileIcon from "../components/profile/ProfileIcon"
 import Modal from '../components/Modal';
 import ProfileEditor from '../components/profile/ProfileEditor';
 import ProfileDetails from '../components/profile/ProfileDetails';
+import FormFileInput from '../components/form/FormFileInput';
 
 function Profile() {
   const [error, setError] = useState(null);
@@ -124,18 +125,11 @@ function Profile() {
 
             {showImagePreview()}
 
-            <div>
-              <label htmlFor="avatar">
-                <input type="file" name="avatar" id="avatar" className='absolute opacity-0 size-0' accept="image/*" onInput={handleInput} />
-
-                <span className='cursor-pointer bg-(--primary-color) border-2 border-white p-2 rounded-md block w-64 text-center'>Choose an image</span>
-              </label>
-              <span className='text-sm'><em>Rectangular images like 256x256 work best</em></span>
-            </div>
+            <FormFileInput label="Choose an image" name="avatar" onInput={handleInput} accept="image/*" subtext="Rectangular images like 256x256 work best" />
 
             {userError && <p className='text-red-500 text-sm'>{userError}</p>}
 
-            <Button label="Upload Avatar" type="success" />
+            <Button label="Upload Avatar" type="success" disabled={!image} />
           </form>
         </div>
       </div>

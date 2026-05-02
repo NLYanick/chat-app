@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { useEffect } from "react"
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom"
 import { sendRequest } from "../../utils/requests";
 import Button from "../../components/Button";
 import RoomItem from "../../components/room/RoomItem";
 
-function Rooms() {
+function RoomsList() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -52,9 +52,11 @@ function Rooms() {
           <em>No rooms available</em>
         )}
 
-        <Button label="Create Room" />
+        <Link to="/rooms/create" className="w-full block">
+          <Button label="Create Room" fullWidth={true} />
+        </Link>
       </div>
     )
 }
 
-export default Rooms
+export default RoomsList

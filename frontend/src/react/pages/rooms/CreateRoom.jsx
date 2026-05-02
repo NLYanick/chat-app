@@ -1,7 +1,87 @@
+import { useEffect, useState } from "react";
+import Button from "../../components/Button"
+import FormColorField from "../../components/form/FormColorField"
+import FormInput from "../../components/form/FormInput"
+import FormTextField from "../../components/form/FormTextField"
+import { sendRequest } from "../../utils/requests";
+import { useNavigate } from "react-router-dom";
+import UserErrorsBox from "../../components/form/UserErrorsBox";
+import FormFileInput from "../../components/form/FormFileInput";
+
 function CreateRoom() {
+  const [userErrors, setUserErrors] = useState([]);
+
+  const [name, setName] = useState('');
+  const [color, setColor] = useState('#2f6cac');
+  const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!image) {
+      setImagePreview(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(image);
+    setImagePreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl); // Free memory whenever this component is unmounted
+  }, [image]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('room_image', image);
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('color_hex', color);
+
+    const { json } = await sendRequest('/rooms', 'POST', formData);
+
+    if(!json.success) {
+      setUserErrors([json.error]);
+
+      return;
+    }
+
+    setUserErrors([]);
+
+    navigate('/rooms/' + json.room.uid);
+  }
+
   return (
-    <div>
-      <h1 className='text-5xl mb-4'>Create Room</h1>
+    <div className="space-y-12 mb-4">
+      <h1 className='text-4xl sm:text-5xl'>Create Room</h1>
+
+      <form className="w-full sm:max-w-xl bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-4" onSubmit={handleSubmit}>
+        {userErrors.length > 0 && (
+          <UserErrorsBox userErrors={userErrors} />
+        )}
+
+        <FormInput label="Room Name" subtext="Room name can be maximum 50 characters" value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder='Room Name' required />
+
+        <FormColorField label="Color" value={color} onChange={setColor} required />
+
+        <FormTextField label="Description" subtext="Room description can be maximum 500 characters" value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' />
+
+        <div className="mb-6">
+          <FormFileInput label="Room Avatar" name="image" accept="image/*" onInput={(e) => setImage(e.target.files[0])} subtext="Square images are better (e.g. 500x500 px)" />
+
+          {imagePreview ? (
+            <div className="mt-4 flex justify-center">
+              <img src={imagePreview} alt="Avatar Preview" className="object-cover size-40 sm:size-50 rounded-full" />
+            </div>
+          ) : (
+            <p className='text-sm text-slate-500 mt-2'>No preview available</p>
+          )}
+        </div>
+
+        <Button label="Create" type="success" fullWidth={true} />
+      </form>
     </div>
   )
 }
