@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useEffect } from "react"
-import { sendRequest } from "../utils/requests";
-import Button from "../components/Button";
-import RoomItem from "../components/room/RoomItem";
+import { sendRequest } from "../../utils/requests";
+import Button from "../../components/Button";
+import RoomItem from "../../components/room/RoomItem";
 
 function Rooms() {
     const [loading, setLoading] = useState(false);

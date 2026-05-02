@@ -11,6 +11,7 @@
 - Delete messages
 
 # Tidiness
+- Good Homepage
 - All frontend text in Dutch
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
