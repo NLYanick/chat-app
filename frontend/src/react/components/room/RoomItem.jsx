@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import RoomIcon from "./RoomIcon"
 
 function RoomItem({ room }) {
@@ -6,10 +7,10 @@ function RoomItem({ room }) {
       className='rounded-lg shadow-lg py-3 cursor-pointer'
       style={{ backgroundColor: room.color_hex }}
     >
-      <div className="flex items-center justify-between px-6">
+      <Link to={`/rooms/${room.uid}`} className="flex items-center justify-between px-6">
         <RoomIcon room={room} />
         <p>{room.name}</p>
-      </div>
+      </Link>
     </li>
   )
 }
