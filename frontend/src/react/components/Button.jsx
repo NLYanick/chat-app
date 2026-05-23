@@ -4,7 +4,8 @@ const BUTTON_STYLES = {
     secondary: 'bg-(--primary-color) border-2 border-white',
     secondary_light: 'bg-(--primary-color-light) border-2 border-white',
     success: 'bg-green-600 text-white',
-    error: 'bg-red-700 text-white'
+    error: 'bg-red-700 text-white',
+    edit: 'bg-orange-500 text-white',
 };
 
 function Button({ label, type = "primary", onClick = null, buttonType = "submit", fullWidth = false, fullHeight = false, disabled = false }) {

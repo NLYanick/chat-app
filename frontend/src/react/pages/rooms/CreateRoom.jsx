@@ -7,6 +7,7 @@ import { sendRequest } from "../../utils/requests";
 import { useNavigate } from "react-router-dom";
 import UserErrorsBox from "../../components/form/UserErrorsBox";
 import FormFileInput from "../../components/form/FormFileInput";
+import { useAuth } from "../../AuthUserContext";
 
 function CreateRoom() {
   const [userErrors, setUserErrors] = useState([]);
@@ -16,6 +17,8 @@ function CreateRoom() {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
+
+  const { user } = useAuth();
 
   const navigate = useNavigate();
 
@@ -39,6 +42,7 @@ function CreateRoom() {
     formData.append('name', name);
     formData.append('description', description);
     formData.append('color_hex', color);
+    formData.append('room_owner', user.uid);
 
     const { json } = await sendRequest('/rooms', 'POST', formData);
 
@@ -62,11 +66,11 @@ function CreateRoom() {
           <UserErrorsBox userErrors={userErrors} />
         )}
 
-        <FormInput label="Room Name" subtext="Room name can be maximum 50 characters" value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder='Room Name' required />
+        <FormInput label="Room Name" subtext="Room name can be maximum 50 characters" value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder='Room Name' maxLength={50} required />
 
-        <FormColorField label="Color" value={color} onChange={setColor} required />
+        <FormColorField label="Color" value={color} onChange={(newColor) => setColor(newColor)} required />
 
-        <FormTextField label="Description" subtext="Room description can be maximum 500 characters" value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' />
+        <FormTextField label="Description" subtext="Room description can be maximum 500 characters" value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' maxLength={500} />
 
         <div className="mb-6">
           <FormFileInput label="Room Avatar" name="image" accept="image/*" onInput={(e) => setImage(e.target.files[0])} subtext="Square images are better (e.g. 500x500 px)" />

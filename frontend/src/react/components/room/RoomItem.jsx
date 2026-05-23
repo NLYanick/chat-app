@@ -8,7 +8,7 @@ function RoomItem({ room }) {
       style={{ backgroundColor: room.color_hex }}
     >
       <Link to={`/rooms/${room.uid}`} className="flex items-center justify-between px-6">
-        <RoomIcon room={room} />
+        <RoomIcon roomName={room.name} roomImage={room.image} />
         <p>{room.name}</p>
       </Link>
     </li>
