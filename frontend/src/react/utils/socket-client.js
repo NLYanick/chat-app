@@ -17,13 +17,20 @@ function getSocket() {
       console.log('Connected to server');
     });
 
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
       console.log('Disconnected from server');
     });
 
     socket.on('error', (error) => {
       console.error('Socket error:', error);
     });
+
+    socket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error.message);
+    });
+  } else if (!socket.connected) {
+    console.warn('Socket exists but is not connected. Attempting to reconnect...');
+    socket.connect();
   }
 
   return socket;
@@ -33,11 +40,20 @@ export default function initializeSocket() {
   return getSocket();
 }
 
-export function sendSocketMessage(message) {
+// ============================
+//          Functions
+// ============================
+
+export function subscribeToEvent(event, callback) {
   const socket = getSocket();
   if (socket.connected) {
-    socket.emit('message', message);
+    socket.on(event, callback);
   } else {
-    console.warn('Cannot send message, socket not connected');
+    console.warn('Cannot subscribe to event, socket not connected');
   }
+
+  return () => {
+    if (socket) 
+      socket.off(event, callback);
+  };
 }

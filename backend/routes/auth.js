@@ -27,7 +27,8 @@ router.post('/register', async function (req, res, next) {
       email,
       avatar_url: '',
       password: password,
-      password_reset_token: passwordResetToken
+      password_reset_token: passwordResetToken,
+      status: 'online'
     });
 
     const userData = { 
@@ -35,7 +36,7 @@ router.post('/register', async function (req, res, next) {
       username: user.username,
       email: user.email, 
       avatar_url: user.avatar_url, 
-      created_at: user.created_at  
+      created_at: user.created_at
     }
 
     res.status(201).json({ message: "Registered!", success: true, user: userData });
@@ -57,12 +58,15 @@ router.post('/login', async function (req, res, next) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Login failed", error: "Invalid username or password", success: false });
 
+    user.status = 'online';
+    await user.save();
+
     const userData = { 
       uid: user.uid,
       username: user.username,
       email: user.email, 
       avatar_url: user.avatar_url, 
-      created_at: user.created_at  
+      created_at: user.created_at
     }
     
     res.status(200).json({ message: "Logged In!", success: true, user: userData });
@@ -79,6 +83,7 @@ router.post('/logout', async function (req, res, next) {
     if (!username) return res.status(400).json({ message: "Login failed", error: "The fields \"username\" and \"password\" are invalid.", success: false });
     
     // TODO
+    await User.findOneAndUpdate({ username }, { status: 'offline' });
     
     res.status(200).json({ message: "Logged Out!", success: true });
   } catch (err) {

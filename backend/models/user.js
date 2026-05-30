@@ -22,6 +22,11 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     avatar_url: String,
+    status: {
+        enum: ['online', 'offline', 'away'],
+        type: String,
+        default: 'offline'
+    },
     password: {
         type: String,
         required: true,

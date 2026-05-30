@@ -7,11 +7,15 @@ const Room = mongoose.model("Room");
 const User = mongoose.model("User");
 
 router.get('/', async function(req, res, next) {
-  const rooms = await Room.find();
+  try {
+    const rooms = await Room.find();
 
-  if (!rooms) return res.status(404).json({ message: "Not Found", error: "No rooms found", success: false });
-  
-  res.status(200).json({ message: "Rooms retrieved successfully", rooms, success: true });
+    if (!rooms) return res.status(404).json({ message: "Not Found", error: "No rooms found", success: false });
+    
+    res.status(200).json({ message: "Rooms retrieved successfully", rooms, success: true });
+  } catch (error) {
+    next(err);
+  }
 });
 
 router.post('/', uploads.single('room_image'), async function(req, res, next) {
@@ -32,7 +36,7 @@ router.post('/', uploads.single('room_image'), async function(req, res, next) {
 
     res.status(201).json({ message: "Room created successfully", room, success: true });
   } catch (error) {
-    res.status(400).json({ message: "Bad Request", error: error.message, success: false });
+    next(err);
   }
 });
 
@@ -46,7 +50,7 @@ router.get('/:id', async function(req, res, next) {
 
     res.status(200).json({ message: "Room retrieved successfully", room, members, success: true });
   } catch (error) {
-    res.status(500).json({ message: "Internal Server Error", error: error.message, success: false });
+    next(err);
   }
 });
 

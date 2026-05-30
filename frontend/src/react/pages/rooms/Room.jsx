@@ -5,6 +5,7 @@ import RoomsList from "./RoomsList";
 import RoomDetails from "../../components/room/RoomDetails";
 import RoomMembers from "../../components/room/RoomMembers";
 import { useAuth } from "../../AuthUserContext";
+import { subscribeToEvent } from "../../utils/socket-client";
 
 function Room() {
   const { roomId } = useParams();
@@ -17,6 +18,8 @@ function Room() {
   const userIsOwner = user?.uid === room?.owner;
 
   useEffect(() => {
+    let unsubscribe;
+
     async function fetchRoom() {
       try {
         const { json } = await sendRequest(`/rooms/${roomId}`, 'GET');
@@ -28,12 +31,20 @@ function Room() {
 
         setRoom(json.room);
         setMembers(json.members);
+
+        unsubscribe = subscribeToEvent('user-status-changed', ({ userId, status }) => {
+          setMembers(prev =>
+            prev.map(m => m.uid === userId ? { ...m, status } : m)
+          );
+        });
       } catch (err) {
         setError(err.message || "An error occurred while fetching the room");
       }
     }
 
     fetchRoom();
+
+    return () => { if (unsubscribe) unsubscribe() };
   }, [roomId]);
 
   if(error) throw new Error(error);

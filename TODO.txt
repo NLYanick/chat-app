@@ -1,4 +1,6 @@
 # Now
+- Away status
+- Test if statusses change in the backend socket
 - Only room owners can edit the room and invite others
 - Filter Rooms
 - Try to break everything by testing room creation. Fix the bugs
@@ -7,7 +9,7 @@
 - Authorisation
 - Edit room
 - Invite other users
-- Remove users
+- Remove users from room
 - Receiving & Accepting Invites in the website (and mail)
 - Send messages
 - Edit messages
@@ -16,7 +18,8 @@
 - Add Friends
 - See your friendslist on the homepage
 - Logging service
-- Status (Use Websocket connection)
+- Status (Use Websocket connection) (Also 'away')
+- Delete user account
 
 # Tidiness
 - Good Homepage

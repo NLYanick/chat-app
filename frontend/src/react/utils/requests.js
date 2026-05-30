@@ -1,4 +1,4 @@
-export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}) {
+export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}, keepalive = false) {
   try {
     const apiKey = import.meta.env.VITE_API_KEY;
     const url = import.meta.env.VITE_BACKEND_URL + endpoint;
@@ -20,7 +20,8 @@ export async function sendRequest(endpoint, method = 'GET', body = null, headers
         ...headers, 
         'x-api-key': apiKey
       },
-      body: newBody
+      body: newBody,
+      keepalive
     };
 
     if (contentType) {
@@ -37,6 +38,9 @@ export async function sendRequest(endpoint, method = 'GET', body = null, headers
     };
   } catch (error) {
     console.error(error);
-    throw new Error(error);
+    return {
+      json: { error: 'Network Error | Please check your connection and try again' },
+      status: 500
+    };
   }
 }

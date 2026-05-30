@@ -28,7 +28,17 @@ async function userExistsInDb(userData, excludeUserId = null) {
     return user !== null;
 }
 
+function saveParseJson(textBody) {
+    try {
+        return JSON.parse(textBody);
+    } catch (err) {
+        console.error("Error parsing request body:", err);
+        return null;
+    }
+}
+
 module.exports = { 
     setResetTokenAndSendEmail,
-    userExistsInDb
+    userExistsInDb,
+    saveParseJson
 };

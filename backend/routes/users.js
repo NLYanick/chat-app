@@ -101,4 +101,23 @@ router.patch('/:id', async function (req, res, next) {
   }
 });
 
+router.post('/:id/status', async function (req, res, next) {
+  try {
+    const userId = req.params.id;
+    const { status } = req.body;
+    
+    if (!status || !['online', 'offline', 'away'].includes(status)) {
+      return res.status(400).json({ error: "Bad Request. The field 'status' is required and must be one of 'online', 'offline' or 'away'.", success: false });
+    }
+
+    const user = await User.findOneAndUpdate({ uid: userId }, { status: status }, { returnDocument: 'after' });
+
+    if (!user) return res.status(404).json({ error: "User not found", success: false });
+
+    res.status(200).json({ message: "User status updated", success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;
