@@ -56,9 +56,11 @@ export function UserStatusProvider({ children }) {
 
   const updateStatus = useCallback((newStatus) => {
     if (!user || !UserStatus.containsStatus(newStatus)) return;
+    if (newStatus === UserStatus.OFFLINE || statusRef.current === newStatus) return;
+    
     statusRef.current = newStatus;
-
     setStatus(newStatus);
+
     sendRequest(`/users/${user.uid}/status`, 'POST', { status: newStatus })
       .catch((err) => console.error('Failed to update user status:', err));
 

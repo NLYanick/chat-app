@@ -84,7 +84,7 @@ router.post('/logout', async function (req, res, next) {
     if (!username) return res.status(400).json({ message: "Login failed", error: "The fields \"username\" and \"password\" are invalid.", success: false });
     
     // TODO
-    await User.findOneAndUpdate({ username }, { status: 'offline' });
+    await User.findOneAndUpdate({ username }, { status: UserStatus.OFFLINE });
     
     res.status(200).json({ message: "Logged Out!", success: true });
   } catch (err) {

@@ -32,7 +32,7 @@ function initializeSocket(server) {
       const userId = socket.userId;
       console.log('User disconnected:', userId);
 
-      await User.findOneAndUpdate({ uid: userId }, { status: "offline" });
+      await User.findOneAndUpdate({ uid: userId }, { status: UserStatus.OFFLINE });
       socket.broadcast.emit('user_status_change', { userId, status: UserStatus.OFFLINE });
     });
 
