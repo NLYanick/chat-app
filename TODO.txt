@@ -1,6 +1,6 @@
 # Now
-- Test if statusses change from other users in the backend socket
-- Only room owners can edit the room and invite others
+- Only see rooms where the user is member of
+- Only broadcast status change too needed places (like friendlist and rooms)
 - Filter Rooms
 - Try to break everything by testing room creation. Fix the bugs
 
@@ -18,13 +18,14 @@
 - See your friendslist on the homepage
 - Logging service
 - Status (Use Websocket connection) (Also 'away')
-- Delete user account
+- Delete user account (or disable)
 
 # Tidiness
 - Good Homepage
 - All frontend text in Dutch
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
+- 'Stay signed in' checkbox is not focussable
 
 # Extra
 - Better error handling

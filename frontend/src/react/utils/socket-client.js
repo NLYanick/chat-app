@@ -6,11 +6,16 @@ let socket = null;
 
 function getSocket() {
   if (!socket) {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+
     socket = io(BACKEND_BASE_URL, {
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionDelayMax: 5000,
-      reconnectionAttempts: 5
+      reconnectionAttempts: 5,
+      auth: {
+        userId: user?.uid || null,
+      },
     });
 
     socket.on('connect', () => {
@@ -46,14 +51,18 @@ export default function initializeSocket() {
 
 export function subscribeToEvent(event, callback) {
   const socket = getSocket();
-  if (socket.connected) {
-    socket.on(event, callback);
-  } else {
-    console.warn('Cannot subscribe to event, socket not connected');
-  }
+  socket.on(event, callback);
 
-  return () => {
-    if (socket) 
-      socket.off(event, callback);
-  };
+  return () => socket.off(event, callback);
+}
+
+export function emitEvent(event, data) {
+  getSocket().emit(event, data);
+}
+
+export function disconnectSocket() {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
 }

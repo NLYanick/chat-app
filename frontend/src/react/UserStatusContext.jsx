@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef } f
 import { sendRequest } from "./utils/requests";
 import { useAuth } from "./AuthUserContext";
 import UserStatus from "../enums/user-status";
+import { emitEvent } from "./utils/socket-client";
 
 const UserStatusContext = createContext(null);
 
@@ -9,30 +10,16 @@ export function UserStatusProvider({ children }) {
   const { user } = useAuth();
   const [status, setStatus] = useState(UserStatus.ONLINE);
 
-  const apiKey = import.meta.env.VITE_API_KEY;
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
   const statusRef = useRef(status);
 
   useEffect(() => {
     if (!user) return;
 
-    let isUnloading = false;
     let idleTimer;
 
     updateStatus(UserStatus.ONLINE);
 
-    const handleBeforeUnload = () => {
-      isUnloading = true;
-      
-      navigator.sendBeacon(
-        backendUrl + `/users/${user.uid}/status`,
-        JSON.stringify({ status: "offline", 'x-api-key': apiKey, from_beacon: true }),
-      );
-    };
-
     const handleVisibilityChange = () => {
-      if (isUnloading) return;
       updateStatus(document.hidden ? UserStatus.AWAY : UserStatus.ONLINE);
     };
 
@@ -55,7 +42,6 @@ export function UserStatusProvider({ children }) {
     resetIdleTimer();
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("beforeunload", handleBeforeUnload);
 
     // Clear event listeners and timer
     return () => {
@@ -65,7 +51,6 @@ export function UserStatusProvider({ children }) {
       );
 
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [user]);
 
@@ -76,6 +61,8 @@ export function UserStatusProvider({ children }) {
     setStatus(newStatus);
     sendRequest(`/users/${user.uid}/status`, 'POST', { status: newStatus })
       .catch((err) => console.error('Failed to update user status:', err));
+
+    emitEvent('status_change', newStatus);
   }, [user]);
 
   return (

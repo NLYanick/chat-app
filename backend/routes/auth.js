@@ -2,7 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
-const { default: UserStatus } = require('../models/enums/user-status');
+const UserStatus = require('../models/enums/user-status');
 
 const router = express.Router();
 

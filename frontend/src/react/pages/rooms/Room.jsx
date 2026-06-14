@@ -32,7 +32,7 @@ function Room() {
         setRoom(json.room);
         setMembers(json.members);
 
-        unsubscribe = subscribeToEvent('user-status-changed', ({ userId, status }) => {
+        unsubscribe = subscribeToEvent('user_status_change', ({ userId, status }) => {
           setMembers(prev =>
             prev.map(m => m.uid === userId ? { ...m, status } : m)
           );
