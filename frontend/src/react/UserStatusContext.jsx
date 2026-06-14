@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { sendRequest } from "./utils/requests";
 import { useAuth } from "./AuthUserContext";
 
@@ -11,10 +11,13 @@ export function UserStatusProvider({ children }) {
   const apiKey = import.meta.env.VITE_API_KEY;
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+  const statusRef = useRef(status);
+
   useEffect(() => {
     if (!user) return;
 
     let isUnloading = false;
+    let idleTimer;
 
     updateStatus("online");
 
@@ -32,22 +35,48 @@ export function UserStatusProvider({ children }) {
       updateStatus(document.hidden ? "away" : "online");
     };
 
+    const resetIdleTimer = () => {
+      clearTimeout(idleTimer);
+      if (document.hidden) return;
+
+      if(statusRef.current === "away") {
+        console.log(`Updating status to online`);
+        updateStatus("online");
+      }
+
+      idleTimer = setTimeout(() => {
+        updateStatus("away");
+      }, 3 * 60 * 1000);
+    };
+
+    ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(event => {
+      window.addEventListener(event, resetIdleTimer);
+    });
+    resetIdleTimer();
+
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("beforeunload", handleBeforeUnload);
 
+    // Clear event listeners and timer
     return () => {
+      clearTimeout(idleTimer);
+      ["mousemove", "keydown", "click", "scroll", "touchstart"].forEach(e =>
+        window.removeEventListener(e, resetIdleTimer)
+      );
+
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [user]);
 
-  const updateStatus = (newStatus) => {
+  const updateStatus = useCallback((newStatus) => {
     if (!user || !["online", "away", "offline"].includes(newStatus)) return;
+    statusRef.current = newStatus;
 
     setStatus(newStatus);
     sendRequest(`/users/${user.uid}/status`, 'POST', { status: newStatus })
       .catch((err) => console.error('Failed to update user status:', err));
-  };
+  }, [user]);
 
   return (
     <UserStatusContext.Provider value={{ status, updateStatus }}>

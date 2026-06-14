@@ -1,6 +1,5 @@
 # Now
-- Away status
-- Test if statusses change in the backend socket
+- Test if statusses change from other users in the backend socket
 - Only room owners can edit the room and invite others
 - Filter Rooms
 - Try to break everything by testing room creation. Fix the bugs
