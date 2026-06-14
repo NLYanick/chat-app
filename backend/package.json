@@ -7,8 +7,8 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon -r ./bin/www",
-    "production": "node ./bin/www",
+    "start": "node ./bin/www",
+    "dev": "nodemon -r ./bin/www",
     "test": "npm test"
   },
   "dependencies": {
