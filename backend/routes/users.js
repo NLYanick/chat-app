@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const uploads = require('../middleware/uploads');
 const { userExistsInDb } = require('../utils');
+const UserStatus = require('../models/enums/user-status');
 
 const router = express.Router();
 
@@ -106,8 +107,8 @@ router.post('/:id/status', async function (req, res, next) {
     const userId = req.params.id;
     const { status } = req.body;
     
-    if (!status || !['online', 'offline', 'away'].includes(status)) {
-      return res.status(400).json({ error: "Bad Request. The field 'status' is required and must be one of 'online', 'offline' or 'away'.", success: false });
+    if (!status || !UserStatus.containsStatus(status)) {
+      return res.status(400).json({ error: `Bad Request. The field 'status' is required and must be one of ${UserStatus.ALL.join(", ")}.`, success: false });
     }
 
     const user = await User.findOneAndUpdate({ uid: userId }, { status: status }, { returnDocument: 'after' });

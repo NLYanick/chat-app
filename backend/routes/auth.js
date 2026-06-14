@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const { default: UserStatus } = require('../models/enums/user-status');
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.post('/register', async function (req, res, next) {
       avatar_url: '',
       password: password,
       password_reset_token: passwordResetToken,
-      status: 'online'
+      status: UserStatus.ONLINE
     });
 
     const userData = { 
@@ -58,7 +59,7 @@ router.post('/login', async function (req, res, next) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Login failed", error: "Invalid username or password", success: false });
 
-    user.status = 'online';
+    user.status = UserStatus.ONLINE;
     await user.save();
 
     const userData = { 

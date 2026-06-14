@@ -1,12 +1,13 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { sendRequest } from "./utils/requests";
 import { useAuth } from "./AuthUserContext";
+import UserStatus from "../enums/user-status";
 
 const UserStatusContext = createContext(null);
 
 export function UserStatusProvider({ children }) {
   const { user } = useAuth();
-  const [status, setStatus] = useState("online");
+  const [status, setStatus] = useState(UserStatus.ONLINE);
 
   const apiKey = import.meta.env.VITE_API_KEY;
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -19,7 +20,7 @@ export function UserStatusProvider({ children }) {
     let isUnloading = false;
     let idleTimer;
 
-    updateStatus("online");
+    updateStatus(UserStatus.ONLINE);
 
     const handleBeforeUnload = () => {
       isUnloading = true;
@@ -32,20 +33,19 @@ export function UserStatusProvider({ children }) {
 
     const handleVisibilityChange = () => {
       if (isUnloading) return;
-      updateStatus(document.hidden ? "away" : "online");
+      updateStatus(document.hidden ? UserStatus.AWAY : UserStatus.ONLINE);
     };
 
     const resetIdleTimer = () => {
       clearTimeout(idleTimer);
       if (document.hidden) return;
 
-      if(statusRef.current === "away") {
-        console.log(`Updating status to online`);
-        updateStatus("online");
+      if(statusRef.current === UserStatus.AWAY) {
+        updateStatus(UserStatus.ONLINE);
       }
 
       idleTimer = setTimeout(() => {
-        updateStatus("away");
+        updateStatus(UserStatus.AWAY);
       }, 3 * 60 * 1000);
     };
 
@@ -70,7 +70,7 @@ export function UserStatusProvider({ children }) {
   }, [user]);
 
   const updateStatus = useCallback((newStatus) => {
-    if (!user || !["online", "away", "offline"].includes(newStatus)) return;
+    if (!user || !UserStatus.containsStatus(newStatus)) return;
     statusRef.current = newStatus;
 
     setStatus(newStatus);

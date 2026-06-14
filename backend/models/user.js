@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
+const UserStatus = require('./enums/user-status');
 
 const userSchema = new mongoose.Schema({
     uid: {
@@ -23,9 +24,9 @@ const userSchema = new mongoose.Schema({
     },
     avatar_url: String,
     status: {
-        enum: ['online', 'offline', 'away'],
+        enum: [UserStatus.ONLINE, UserStatus.AWAY, UserStatus.OFFLINE],
         type: String,
-        default: 'offline'
+        default: UserStatus.OFFLINE
     },
     password: {
         type: String,
