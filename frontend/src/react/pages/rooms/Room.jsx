@@ -66,11 +66,11 @@ function Room() {
         </div>
       </div>
 
-      <div className='sm:w-1/6 p-2 sm:border-l'>
-        <div className='border-b h-1/2 hidden sm:block'>
+      <div className='sm:w-1/6 p-2 sm:border-l h-[calc(100vh-60px)] overflow-y-scroll app-scrollbar'>
+        <div className='border-b hidden sm:block'>
           <RoomDetails room={room} userIsOwner={userIsOwner} />
         </div>
-        <div className='p-4 h-1/2 hidden sm:block'>
+        <div className='p-4 hidden sm:block'>
           <RoomMembers members={members} userIsOwner={userIsOwner} />
         </div>
       </div>

@@ -8,7 +8,7 @@ function RoomDetails({ room, userIsOwner }) {
   // TODO Edit and delete buttons
   return (
     <div className="p-4 flex flex-col items-center text-center gap-6">
-      <h2 className="text-2xl font-bold block w-full">{room.name}</h2>
+      <h2 className="text-2xl font-bold block w-full wrap-break-word">{room.name}</h2>
       
       <RoomIcon roomName={room.name} roomImage={room.image} size="LARGE" />
       

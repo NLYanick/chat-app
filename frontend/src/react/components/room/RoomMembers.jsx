@@ -9,7 +9,7 @@ function RoomMembers({ members, userIsOwner }) {
     <div className="flex flex-col gap-8">
       <h2 className="text-2xl font-bold">Members</h2>
       
-      <ul>
+      <ul className="space-y-4">
         {members.map(member => (
           <MemberItem key={member.uid} member={member} />
         ))}
