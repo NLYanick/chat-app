@@ -6,7 +6,7 @@ const DEFAULT_ROOM_COLOR = "#343434";
 const roomSchema = new mongoose.Schema({
     uid: {
         type: String,
-        default: uuidv4(),
+        default: uuidv4,
         unique: true,
         required: true
     },

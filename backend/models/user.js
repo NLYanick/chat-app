@@ -28,6 +28,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: UserStatus.OFFLINE
     },
+    friends: [{
+        type: String
+    }],
     password: {
         type: String,
         required: true,
@@ -55,5 +58,15 @@ userSchema.pre('save', async function () {
         throw err;
     }
 });
+
+userSchema.virtual('rooms', {
+  ref: 'Room',
+  localField: 'uid',
+  foreignField: 'members',
+  justOne: false
+});
+
+userSchema.set('toObject', { virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
 
 mongoose.model("User", userSchema);

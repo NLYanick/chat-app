@@ -8,7 +8,9 @@ const User = mongoose.model("User");
 
 router.get('/', async function(req, res, next) {
   try {
-    const rooms = await Room.find();
+    const { user_id } = req.query;
+    
+    const rooms = user_id ? await Room.find({ members: { $in: [user_id] } }) : await Room.find();
 
     if (!rooms) return res.status(404).json({ message: "Not Found", error: "No rooms found", success: false });
     

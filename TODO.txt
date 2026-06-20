@@ -1,8 +1,7 @@
 # Now
-- Only see rooms where the user is member of
-- Only broadcast status change too needed places (like friendlist and rooms)
-- Filter Rooms
+- Only broadcast status change too needed places (like users that are friends of this user and/or are in a chat-room with this user)
 - Try to break everything by testing room creation. Fix the bugs
+- Still some issues with the status, but I don't know what's wrong
 
 # Functionality
 - Authorisation
@@ -17,8 +16,8 @@
 - Add Friends
 - See your friendslist on the homepage
 - Logging service
-- Status (Use Websocket connection) (Also 'away')
 - Delete user account (or disable)
+- 
 
 # Tidiness
 - Good Homepage

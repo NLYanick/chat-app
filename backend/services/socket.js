@@ -25,43 +25,58 @@ function initializeSocket(server) {
     next();
   });
 
-  io.on('connection', (socket) => {
-    console.log('User connected:', socket.userId);
+  io.on('connection', async (socket) => {
+    const userId = socket.userId;
+    console.log('User connected:', userId);
+
+    socket.join(`user:${userId}`);
+
+    const user = await User.findOne({ uid: userId }).populate('rooms');
+    user.rooms.forEach(room => socket.join(`room:${room.uid}`));
 
     socket.on('disconnect', async () => {
       const userId = socket.userId;
       console.log('User disconnected:', userId);
 
       await User.findOneAndUpdate({ uid: userId }, { status: UserStatus.OFFLINE });
-      socket.broadcast.emit('user_status_change', { userId, status: UserStatus.OFFLINE });
+      
+      user.rooms.forEach(room => {
+        io.to(`room:${room.uid}`).emit("user_status_change", { userId, status: UserStatus.OFFLINE });
+      });
+      user.friends.forEach(friend => {
+        io.to(`user:${friend}`).emit("user_status_change", { userId, status: UserStatus.OFFLINE });
+      });
     });
 
     socket.on('error', (error) => {
         console.error('Socket error:', error);
     });
 
-    handleSocket(socket);
+    handleSocket(socket, user.rooms, user.friends);
   });
 
   return io;
 };
 
-function handleSocket(socket) {
-  handleUserStatus(socket);
-  handleMessages(socket);
-}
-
-function handleUserStatus(socket) {
+function handleSocket(socket, userRooms, userFriends) {
   const userId = socket.userId;
 
-  socket.broadcast.emit('user_status_change', { userId, status: UserStatus.ONLINE });
+  userFriends.forEach(friend => {
+    socket.to(`user:${friend}`).emit("user_status_change", { userId, status: UserStatus.ONLINE });
+  });
+  userRooms.forEach(room => {
+    socket.to(`room:${room.uid}`).emit('user_status_change', { userId, status: UserStatus.ONLINE });
+  });
 
   socket.on('status_change', (status) => {
-    socket.broadcast.emit('user_status_change', { userId, status });
+    userFriends.forEach(friend => {
+      socket.to(`user:${friend}`).emit("user_status_change", { userId, status });
+    });
+    userRooms.forEach(room => {
+      socket.to(`room:${room.uid}`).emit('user_status_change', { userId, status });
+    });
   });
-}
 
-function handleMessages(socket) {
   socket.on('message', (message) => {
     console.log('Received message from client:', message);
   });

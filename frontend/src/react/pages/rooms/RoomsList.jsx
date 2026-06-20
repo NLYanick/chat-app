@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { sendRequest } from "../../utils/requests";
 import Button from "../../components/Button";
 import RoomItem from "../../components/room/RoomItem";
+import { useAuth } from "../../AuthUserContext";
 
 function RoomsList() {
     const [loading, setLoading] = useState(false);
@@ -10,12 +11,14 @@ function RoomsList() {
 
     const [rooms, setRooms] = useState([]);
 
+    const { user } = useAuth();
+
     useEffect(() => {
       const fetchRooms = async () => {
         try {
           setLoading(true);
 
-          const { json, status } = await sendRequest('/rooms');
+          const { json, status } = await sendRequest(`/rooms?user_id=${user?.uid}`, 'GET');
   
           if(!json.success) {
             console.error('Failed to fetch rooms:', json.message);
