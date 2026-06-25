@@ -2,6 +2,17 @@
 
 :root {
     --primary-color: #242424;
-    --secondary-color: oklch(60.6% 0.25 292.717);
+    --primary-color-light: #343434;
+    --secondary-color: #8e51ff;
+    --secondary-color-dark: #604393;
     --text-color: white;
+}
+
+.app-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+.app-scrollbar:hover {
+    scrollbar-color: var(--secondary-color-dark) transparent;
 }

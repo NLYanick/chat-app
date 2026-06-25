@@ -1,16 +1,16 @@
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
 
 const messageSchema = new mongoose.Schema({
-    text: String,
-    timestamp: Date,
-    sender: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
+    uid: {
+        type: String,
+        default: uuidv4,
+        unique: true,
+        required: true
     },
-    room: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Room' 
-    }
-});
+    text: String,
+    sender: String,
+    room: String, 
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 mongoose.model("Message", messageSchema);

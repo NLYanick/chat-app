@@ -1,40 +1,46 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { sendRequest } from '../../utils/requests';
 import { useAuth } from '../../AuthUserContext';
-import Form from '../../components/form/Form';
+import Form from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
+import { useEffect } from 'react';
 
 function Register() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   const [error, setError] = useState(null);
   const [userErrors, setUserErrors] = useState([]);
 
+  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [staySignedIn, setStaySignedIn] = useState(null);
 
+  useEffect(() => {
+    if (user) navigate("/");
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = checkUserInput(username, password, confirmPassword);
+    const validationErrors = checkUserInput(username, password, confirmPassword, email);
     setUserErrors(validationErrors);
 
-    if(validationErrors.length > 0) return;
+    if (validationErrors.length > 0) return;
 
-    const { json, status } = await sendRequest('/authenticate/register', 'POST', { username, password, confirmPassword, staySignedIn: staySignedIn ?? false });
+    const { json, status } = await sendRequest('/authenticate/register', 'POST', { email, username, password, confirmPassword, staySignedIn: staySignedIn ?? false });
 
     if (json.success) {
       login(json.user);
       navigate("/");
-    } else if(json.error && status < 500) {
+    } else if (json.error && status < 500) {
       setUserErrors([json.error]);
-    } else if(json.error && status >= 500) {
+    } else if (json.error && status >= 500) {
       setError('Server Error | Please try registrating again later');
     }
   }
@@ -44,10 +50,11 @@ function Register() {
   return (
     <>
       <div className='flex flex-col gap-12'>
-        <Form formLabel='Inloggen' onSubmit={handleSubmit}>
+        <Form formLabel='Registreren' onSubmit={handleSubmit}>
           {userErrors.length > 0 && (
             <UserErrorsBox userErrors={userErrors} />
           )}
+          <FormInput label="Email" type="email" name="email" placeholder="Enter your email..." required autoFocus onChange={(e) => setEmail(e.target.value)} />
           <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
           <div>
             <FormInput label="Wachtwoord" subtext="Moet minimaal 5 karakters lang zijn" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
@@ -55,19 +62,21 @@ function Register() {
           </div>
           <FormCheckBox label="Blijf ingelogd" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
         </Form>
+        
+        <Link to="/login" className='text-sm hover:underline self-end'>Heb je al een account?</Link>
       </div>
     </>
   );
 }
 
-function checkUserInput(username, password, confirmPassword) {
+function checkUserInput(username, password, confirmPassword, email) {
   const errors = []
 
-  if (!username || !password) 
+  if (!username || !password || !email)
     return errors.push('Vul de inloggevens in');
-  
-  if(password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
-  if(password !== confirmPassword) errors.push("'Bevestig Wachtwoord' moet gelijk zijn aan 'Wachtwoord'");
+
+  if (password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
+  if (password !== confirmPassword) errors.push("'Bevestig Wachtwoord' moet gelijk zijn aan 'Wachtwoord'");
 
   return errors;
 }

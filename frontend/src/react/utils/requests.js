@@ -1,26 +1,46 @@
-export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}) {
+export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}, keepalive = false) {
   try {
-    const apiKey = 'c72e5304-cfc2-4ab5-a74f-4b8da996d9f7'
-    const url = `http://localhost:3000${endpoint}`;
+    const apiKey = import.meta.env.VITE_API_KEY;
+    const url = import.meta.env.VITE_BACKEND_URL + endpoint;
+    
+    let newBody = null;
+    let contentType = 'application/json';
 
-    const newBody = body ? JSON.stringify(body) : null
+    if (body) {
+      if (body instanceof FormData) {
+        newBody = body;
+        contentType = null;
+      } else 
+        newBody = JSON.stringify(body);
+    }
 
-    const res = await fetch(url, {
+    const fetchOptions = {
       method,
       headers: {
         ...headers, 
-        'Content-Type': 'application/json',
         'x-api-key': apiKey
       },
-      body: newBody
-    });
+      body: newBody,
+      keepalive
+    };
+
+    if (contentType) {
+      fetchOptions.headers['Content-Type'] = contentType;
+    }
+
+    const res = await fetch(url, fetchOptions);
+
+    const json = res.status !== 204 ? await res.json() : { message: "Success", success: true };
 
     return {
-      json: await res.json(),
+      json,
       status: res.status
     };
   } catch (error) {
     console.error(error);
-    throw new Error(error);
+    return {
+      json: { error: 'Network Error | Please check your connection and try again' },
+      status: 500
+    };
   }
 }

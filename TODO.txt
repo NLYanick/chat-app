@@ -1,9 +1,49 @@
-- Logout function
-- The user must login before it can access any page
-- The user can't go to the login or registration page when logged in
+# Now
+- Try to break everything by testing room creation. Fix the bugs
+- Still some issues with the status, but I don't know what's wrong
+
+# Functionality
+- Edit room
+- Invite other users
+- Remove users from room
+- Receiving & Accepting Invites in the website (and mail)
+- Send messages
+- Edit messages
+- Delete messages
+- See Users Profile
+- Add Friends
+- See your friendslist on the homepage
+- Logging service
+- Delete user account (or disable)
+
+# Tidiness
+- Good Homepage
+- All frontend text in English
+- Sort the files, espescially the frontend components
+- Move package.json dependencies to devDependencies if they are supposed to be there
+- 'Stay signed in' checkbox is not focussable
+
+# Extra
+- Better error handling
+- Use JWT Tokens to access the backend, since everything in the frontend is public
+- Automatically log in Users
+- Better avatar naming, so the old avatar can be removed after changing
+- User can deactivate (not delete) his/her account
+
+(- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
 
 # Styling
+- Required *'s
+- Login + Register pages
+- Password inputs need an eye icon for seeing password
 - Dropdown menu and links 
-
-- Use Tokens to access the backend, since everything in the frontend is public
-- Automatically log in Users
+- Navigation bar
+- Modal
+- UserErrorsBox
+- Button (hover)
+- Profile Editor
+- Profile Details
+- Rooms
+- RoomItem
+- Create Room
+- ToolTip

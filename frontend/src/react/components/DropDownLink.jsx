@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-function DropDownLink({ label, to = '', action = '', type = 'normal' }) {
+function DropDownLink({ label, to = '', action = null, type = 'normal' }) {
   let typeStyling = ""
 
   switch (type.toLowerCase()) {
@@ -13,9 +13,9 @@ function DropDownLink({ label, to = '', action = '', type = 'normal' }) {
 
   return (
     <li 
-      className={`p-2 pl-4 w-full text-left ${typeStyling}`}
+      className={`w-full text-left ${typeStyling}`}
     >  
-      <Link to={to}>{label}</Link>
+      <Link to={to} onClick={action} className="size-full block p-2 pl-4">{label}</Link>
     </li>
   )
 }

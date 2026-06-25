@@ -1,8 +1,9 @@
+import Button from "../Button";
 
 function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSubmit = {} }) {
   return (
     <>
-      <form className="p-12 rounded-lg shadow-lg flex flex-col gap-8 w-96"
+      <form className="p-12 rounded-lg shadow-lg flex flex-col gap-8 w-88 sm:w-96"
         style={{ backgroundColor: backgroundColor }}
         onSubmit={onSubmit}
       >
@@ -10,11 +11,9 @@ function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSub
         
         <div className="flex flex-col gap-4">
           {children}
-          </div>
+        </div>
   
-        <button type="submit" className="bg-(--secondary-color) text-white p-2 rounded">
-          Versturen
-        </button>
+        <Button label="Versturen" />
       </form>
     </>
   );

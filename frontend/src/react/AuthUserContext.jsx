@@ -1,19 +1,33 @@
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import initializeSocket, { disconnectSocket } from "./utils/socket-client";
 
 const AuthUserContext = createContext(null);
 
 export function AuthUserProvider({ children }) {
-  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user")));
+  const userSessionData = sessionStorage.getItem("user");
+  if(!userSessionData || userSessionData === "undefined") {
+    sessionStorage.removeItem("user");
+  }
+
+  const [user, setUser] = useState(JSON.parse(userSessionData));
+
+  useEffect(() => {
+    if (!user) return;
+    
+    initializeSocket();
+  }, [user]);
 
   const login = (userData) => {
     setUser(userData);
     sessionStorage.setItem("user", JSON.stringify(userData));
+    // initializeSocket();
   };
 
   const logout = () => {
     setUser(null);
     sessionStorage.removeItem("user");
+    disconnectSocket();
   };
 
   return (
