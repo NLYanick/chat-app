@@ -24,7 +24,7 @@ const userSchema = new mongoose.Schema({
     },
     avatar_url: String,
     status: {
-        enum: [UserStatus.ONLINE, UserStatus.AWAY, UserStatus.OFFLINE],
+        enum: UserStatus.ALL,
         type: String,
         default: UserStatus.OFFLINE
     },

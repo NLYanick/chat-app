@@ -71,7 +71,7 @@ function Room() {
           <RoomDetails room={room} userIsOwner={userIsOwner} />
         </div>
         <div className='p-4 hidden sm:block'>
-          <RoomMembers members={members} userIsOwner={userIsOwner} />
+          <RoomMembers members={members} userIsOwner={userIsOwner} owner={room?.owner} />
         </div>
       </div>
     </div>

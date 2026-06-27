@@ -31,6 +31,8 @@
 - Better avatar naming, so the old avatar can be removed after changing
 - User can deactivate (not delete) his/her account
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
+- Searchable Dropdown for user inviting
+- Invite Friends to room (easier then searching for username)
 
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
 
