@@ -10,6 +10,7 @@ import FormFileInput from "../../components/form/FormFileInput";
 import Modal from "../../components/Modal";
 import { useAuth } from "../../AuthUserContext";
 import { useImagePreview } from "../../../hooks/useImagePreview";
+import LinkButton from "../../components/LinkButton";
 
 function EditRoom() {
   const { roomId } = useParams();
@@ -118,7 +119,7 @@ function EditRoom() {
 
         <div className="flex justify-between">
           <Button label="Save Changes" type="success" />
-          <Button label="Cancel" type="secondary" buttonType="button" onClick={() => navigate('/rooms/' + roomId)} />
+          <LinkButton label="Cancel" type="secondary" to={`/rooms/${roomId}`} />
         </div>
       </form>
       

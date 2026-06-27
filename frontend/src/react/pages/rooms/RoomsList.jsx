@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom"
 import { sendRequest } from "../../utils/requests";
 import Button from "../../components/Button";
 import RoomItem from "../../components/room/RoomItem";
 import { useAuth } from "../../AuthUserContext";
+import LinkButton from "../../components/LinkButton";
 
 function RoomsList() {
     const [loading, setLoading] = useState(false);
@@ -55,9 +55,7 @@ function RoomsList() {
           <em>No rooms available</em>
         )}
 
-        <Link to="/rooms/create" className="w-full block">
-          <Button label="Create Room" fullWidth={true} />
-        </Link>
+        <LinkButton to="/rooms/create" className="w-full block" label="Create Room" fullWidth={true} />
       </div>
     )
 }

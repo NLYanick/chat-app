@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import UserErrorsBox from "../../components/form/UserErrorsBox";
 import FormFileInput from "../../components/form/FormFileInput";
 import { useAuth } from "../../AuthUserContext";
+import { useImagePreview } from "../../../hooks/useImagePreview";
 
 function CreateRoom() {
   const [userErrors, setUserErrors] = useState([]);
@@ -19,20 +20,10 @@ function CreateRoom() {
   const [imagePreview, setImagePreview] = useState("");
 
   const { user } = useAuth();
-
   const navigate = useNavigate();
+  const hookImagePreview = useImagePreview(image);
 
-  useEffect(() => {
-    if (!image) {
-      setImagePreview(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(image);
-    setImagePreview(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl); // Free memory whenever this component is unmounted
-  }, [image]);
+  const displayPreview = hookImagePreview || imagePreview;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,9 +65,9 @@ function CreateRoom() {
         <div className="mb-6 flex flex-col items-center">
           <FormFileInput label="Room Avatar" name="image" accept="image/*" onInput={(e) => setImage(e.target.files[0])} subtext="Square images are better (e.g. 500x500 px)" />
 
-          {imagePreview ? (
+          {displayPreview ? (
             <div className="mt-4 flex justify-center">
-              <img src={imagePreview} alt="Avatar Preview" className="object-cover size-40 sm:size-50 rounded-full" />
+              <img src={displayPreview} alt="Avatar Preview" className="object-cover size-40 sm:size-50 rounded-full" />
             </div>
           ) : (
             <p className='text-sm text-slate-500 mt-2'>No preview available</p>

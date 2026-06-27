@@ -1,5 +1,4 @@
 # Now
-- Replace Links that look like buttons with LinkButtons
 - Still some issues with the status, but I don't know what's wrong
 
 # Functionality
