@@ -24,7 +24,7 @@ function RoomMembers({ members, userIsOwner, owner }) {
     }
     setError("");
     
-    const { json } = await sendRequest(`/invites/rooms/${roomId}/invite`, 'POST', { username, invited_by: user.uid });
+    const { json } = await sendRequest(`/room-invites/rooms/${roomId}`, 'POST', { username, invited_by: user.uid });
     
     if(!json.success) {
       setError(json.error || "Failed to send invite");

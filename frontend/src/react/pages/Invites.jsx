@@ -10,7 +10,7 @@ function Invites() {
   useEffect(() => {
     const fetchInvites = async () => {
       try {
-        const { json } = await sendRequest(`/invites/user/${user.uid}`, 'GET');
+        const { json } = await sendRequest(`/room-invites/user/${user.uid}`, 'GET');
 
         if (!json.success) {
           console.error("Failed to fetch invites:", json.error);
@@ -28,7 +28,7 @@ function Invites() {
 
   const handleAccept = async (inviteId) => {
     try {
-      const { json } = await sendRequest(`/invites/${inviteId}/accept`, 'POST', { userUid: user.uid });
+      const { json } = await sendRequest(`/room-invites/${inviteId}/accept`, 'POST', { userUid: user.uid });
       
       if (!json.success) {
         console.error("Failed to accept invite:", json.error);
@@ -43,7 +43,7 @@ function Invites() {
 
   const handleDecline = async (inviteId) => {
     try {
-      const { json } = await sendRequest(`/invites/${inviteId}/decline`, 'POST', { userUid: user.uid });
+      const { json } = await sendRequest(`/room-invites/${inviteId}/decline`, 'POST', { userUid: user.uid });
       
       if (!json.success) {
         console.error("Failed to decline invite:", json.error);

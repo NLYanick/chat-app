@@ -7,7 +7,7 @@ const RoomInvite = mongoose.model("RoomInvite");
 const Room = mongoose.model("Room");
 const User = mongoose.model("User");
 
-router.post('/rooms/:roomId/invite', async function(req, res, next) {
+router.post('/rooms/:roomId', async function(req, res, next) {
     try {
         const { roomId } = req.params;
         const { username, invited_by } = req.body;
