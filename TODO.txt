@@ -1,11 +1,11 @@
 # Now
 - Still some issues with the status, but I don't know what's wrong
+- Send mail to invited user
 
 # Functionality
 - Room authorization in backend
-- Invite other users
 - Remove users from room (only as owner)
-- Receiving & Accepting Invites in the website (and mail)
+- Receiving & Accepting Friend Requests in the website (and mail)
 - Send messages
 - Edit messages
 - Delete messages
@@ -33,6 +33,8 @@
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
 - Searchable Dropdown for user inviting
 - Invite Friends to room (easier then searching for username)
+- Circle at the mail icon when user has new invites or friend requests
+- Send an email when the user gets an invite
 
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
 
@@ -51,3 +53,5 @@
 - RoomItem
 - Create Room
 - ToolTip
+- Invites
+- InviteItem

@@ -28,4 +28,29 @@ const roomInviteSchema = new mongoose.Schema({
     },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
+roomInviteSchema.set('toObject', { virtuals: true });
+roomInviteSchema.set('toJSON', { virtuals: true });
+
+
+roomInviteSchema.virtual('room_details', {
+  ref: 'Room',
+  localField: 'room',
+  foreignField: 'uid',
+  justOne: true
+});
+
+roomInviteSchema.virtual('invited_user_details', {
+  ref: 'User',
+  localField: 'invited',
+  foreignField: 'uid',
+  justOne: true
+});
+
+roomInviteSchema.virtual('inviter_details', {
+  ref: 'User',
+  localField: 'invited_by',
+  foreignField: 'uid',
+  justOne: true
+});
+
 mongoose.model("RoomInvite", roomInviteSchema);
