@@ -115,7 +115,7 @@ function Profile() {
           <h2 className='text-2xl'>Avatar</h2>
 
           <div className='flex justify-center'>
-            <ProfileIcon imgSrc={user.avatar_url} size={user.avatar_url ? 'w-40 sm:w-50' : 'w-20 h-20'} />
+            <ProfileIcon imgSrc={user.avatar_url} size={user.avatar_url ? 'large' : 'medium'} />
           </div>
 
           <hr className='text-(--secondary-color)' />

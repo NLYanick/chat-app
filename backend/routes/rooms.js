@@ -57,8 +57,10 @@ router.get('/:id', async function(req, res, next) {
 });
 
 router.patch('/:id', uploads.single('room_image'), async function(req, res, next) {
-  const { name, description, color_hex } = req.body;
+  const { name, description, color_hex, sender } = req.body;
 
+  const room = await Room.findOne({ uid: req.params.id, owner: sender });
+  if (!room || !sender === room.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
   if(!name || !description || !color_hex) return res.status(400).json({ message: "Bad Request", error: "The fields 'name', 'description', and 'color_hex' are required", success: false });
 
   if(name.length > 50) return res.status(400).json({ message: "Bad Request", error: "The 'name' field must be maximum 50 characters long", success: false });
@@ -79,6 +81,9 @@ router.patch('/:id', uploads.single('room_image'), async function(req, res, next
 });
 
 router.delete('/:id', async function(req, res, next) {
+  const room = await Room.findOne({ uid: req.params.id, owner: req.body.sender });
+  if (!room || !req.body.sender === room.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
+
   try {
     const room = await Room.findOne({ uid: req.params.id });
 

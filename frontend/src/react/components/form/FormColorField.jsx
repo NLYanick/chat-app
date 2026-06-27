@@ -6,10 +6,12 @@ function FormColorField({ label, value, onChange = () => {}, ...props }) {
         type="color"
         className="border-2 border-slate-300 p-2 rounded-lg focus:ring-2 focus:ring-(--secondary-color) outline-none h-12 w-full cursor-pointer"
         value={value}
-        onChange={() => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         {...props}
       />
       {<span className="text-sm"><em>{value?.toUpperCase()}</em></span>}
     </div>
   );
 }
+
+export default FormColorField;

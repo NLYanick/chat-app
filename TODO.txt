@@ -3,8 +3,9 @@
 - Still some issues with the status, but I don't know what's wrong
 
 # Functionality
+- Room authorization in backend
 - Invite other users
-- Remove users from room
+- Remove users from room (only as owner)
 - Receiving & Accepting Invites in the website (and mail)
 - Send messages
 - Edit messages
@@ -21,6 +22,7 @@
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
 - 'Stay signed in' checkbox is not focussable
+- Skeleton pages
 - Make reusable layouts for certain page groups like Auth, Rooms, etc.
 
 # Extra

@@ -35,6 +35,16 @@ function EditRoom() {
     async function fetchRoom() {
       const { json } = await sendRequest(`/rooms/${roomId}`, 'GET');
 
+      if(!json.success) {
+        setUserErrors([json.error || "Failed to fetch room details"]);
+        return;
+      }
+
+      if(json.room.owner !== user.uid) {
+        navigate('/rooms/' + roomId);
+        return;
+      }
+
       setName(json.room.name);
       setColor(json.room.color_hex);
       setDescription(json.room.description);
@@ -54,6 +64,7 @@ function EditRoom() {
     formData.append('name', name);
     formData.append('description', description);
     formData.append('color_hex', color);
+    formData.append('sender', user.uid);
     formData.append('room_image', image);
 
     const { json } = await sendRequest(`/rooms/${roomId}`, 'PATCH', formData);
@@ -69,7 +80,7 @@ function EditRoom() {
   }
 
   const onDelete = async () => {
-    const { json } = await sendRequest(`/rooms/${roomId}`, 'DELETE');
+    const { json } = await sendRequest(`/rooms/${roomId}`, 'DELETE', { sender: user.uid });
     
     if (json.success) {
       navigate('/rooms');
