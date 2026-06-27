@@ -49,7 +49,7 @@ function Room() {
 
   if(error) throw new Error(error);
 
-  // TODO: Edit button, Logo bar, messages
+  // TODO: Logo bar, messages
   return (
     <div className='w-full flex sm:flex-1 sm:flex-row flex-col-reverse'>
       <div className='sm:w-1/6 p-2 sm:border-r'>

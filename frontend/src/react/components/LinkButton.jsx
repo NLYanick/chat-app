@@ -1,18 +1,18 @@
+import { Link } from "react-router-dom";
 import { BUTTON_STYLES } from "../../enums/button-styles";
 
-function Button({ label, type = "primary", onClick = null, buttonType = "submit", fullWidth = false, fullHeight = false, disabled = false }) {
+function LinkButton({ label, to, type = "primary", onClick = null, fullWidth = false, fullHeight = false }) {
   const typeStyling = BUTTON_STYLES[type] || BUTTON_STYLES.primary;
 
   return (
-    <button
+    <Link
+      to={to}
       className={`cursor-pointer px-4 py-2 rounded-lg shadow-lg min-w-16 ${typeStyling} ${fullWidth ? 'w-full' : ''} ${fullHeight ? 'h-full' : ''}`}
       onClick={onClick}
-      type={buttonType}
-      disabled={disabled}
     >
       {label}
-    </button>
+    </Link>
   )
 }
 
-export default Button
+export default LinkButton

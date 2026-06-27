@@ -48,7 +48,6 @@ function CreateRoom() {
 
     if(!json.success) {
       setUserErrors([json.error]);
-
       return;
     }
 
@@ -61,7 +60,7 @@ function CreateRoom() {
     <div className="space-y-12 mb-4">
       <h1 className='text-4xl sm:text-5xl'>Create Room</h1>
 
-      <form className="w-full sm:max-w-xl bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form className="w-full sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-4" onSubmit={handleSubmit}>
         {userErrors.length > 0 && (
           <UserErrorsBox userErrors={userErrors} />
         )}
@@ -72,7 +71,7 @@ function CreateRoom() {
 
         <FormTextField label="Description" subtext="Room description can be maximum 500 characters" value={description} onChange={(e) => setDescription(e.target.value)} placeholder='Description' maxLength={500} />
 
-        <div className="mb-6">
+        <div className="mb-6 flex flex-col items-center">
           <FormFileInput label="Room Avatar" name="image" accept="image/*" onInput={(e) => setImage(e.target.files[0])} subtext="Square images are better (e.g. 500x500 px)" />
 
           {imagePreview ? (
@@ -84,7 +83,10 @@ function CreateRoom() {
           )}
         </div>
 
-        <Button label="Create" type="success" fullWidth={true} />
+        <div className="flex justify-between">
+          <Button label="Create" type="success" />
+          <Button label="Cancel" type="secondary" buttonType="button" onClick={() => navigate('/')} />
+        </div>
       </form>
     </div>
   )

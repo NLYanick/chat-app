@@ -1,9 +1,8 @@
 # Now
-- Try to break everything by testing room creation. Fix the bugs
+- Replace Links that look like buttons with LinkButtons
 - Still some issues with the status, but I don't know what's wrong
 
 # Functionality
-- Edit room
 - Invite other users
 - Remove users from room
 - Receiving & Accepting Invites in the website (and mail)
@@ -22,6 +21,7 @@
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
 - 'Stay signed in' checkbox is not focussable
+- Make reusable layouts for certain page groups like Auth, Rooms, etc.
 
 # Extra
 - Better error handling
@@ -29,6 +29,7 @@
 - Automatically log in Users
 - Better avatar naming, so the old avatar can be removed after changing
 - User can deactivate (not delete) his/her account
+- Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
 
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
 

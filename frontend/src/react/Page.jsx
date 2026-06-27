@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './ProtectedRoute';
 import NotFound from './pages/NotFound';
@@ -10,6 +10,7 @@ import ResetPassword from './pages/auth/ResetPassword';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import CreateRoom from './pages/rooms/CreateRoom';
 import Room from './pages/rooms/Room';
+import EditRoom from './pages/rooms/EditRoom';
 
 function Page() {
   return (
@@ -26,8 +27,11 @@ function Page() {
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
 
           <Route path='/rooms'>
+            <Route index element={<Navigate to="/" replace />} />
+
             <Route path='create' element={<ProtectedRoute><CreateRoom /></ProtectedRoute>}></Route>
             <Route path=':roomId' element={<ProtectedRoute><Room /></ProtectedRoute>}></Route>
+            <Route path=':roomId/edit' element={<ProtectedRoute><EditRoom /></ProtectedRoute>}></Route>
           </Route>
 
           <Route path='*' element={<NotFound />}></Route>
