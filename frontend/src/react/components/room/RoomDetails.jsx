@@ -1,10 +1,32 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../Button";
 import DescriptionBox from "../DescriptionBox";
 import RoomIcon from "./RoomIcon";
 import LinkButton from "../LinkButton";
+import { useState } from "react";
+import Modal from "../Modal";
+import { useAuth } from "../../AuthUserContext";
+import { sendRequest } from "../../utils/requests";
 
 function RoomDetails({ room, userIsOwner }) {
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const onLeaveRoom = async () => {
+    const { json } = await sendRequest(`/rooms/${room.uid}/leave`, 'POST', { user_id: user.uid });
+    
+    if (!json.success) {
+      console.error("Failed to leave room:", json.error);
+      alert("Failed to leave room");
+      return;
+    }
+
+    setModalOpen(false);
+    navigate('/rooms');
+  }
+
   if (!room) return <p>No room details available.</p>;
 
   return (
@@ -15,8 +37,25 @@ function RoomDetails({ room, userIsOwner }) {
       
       <DescriptionBox description={room.description} borderColorHex={room.color_hex} />
 
-      {userIsOwner && (
+      {userIsOwner ? (
         <LinkButton type="edit" label="Edit" to={`/rooms/${room.uid}/edit`} fullWidth />
+      ) : (
+        <Button type="error" label="Leave Room" fullWidth onClick={() => setModalOpen(true)} />
+      )}
+
+      {modalOpen && (
+        <Modal
+          onClose={() => setModalOpen(false)}
+          footer={
+            <div className="flex justify-center gap-4">
+              <Button type="secondary" label="Cancel" onClick={() => setModalOpen(false)} />
+              <Button type="error" label="Leave Room" onClick={onLeaveRoom} />
+            </div>
+          }
+        >
+          <h3 className="text-xl font-bold mb-4">Leaving Room</h3>
+          <p>Are you sure you want to leave <strong>{room.name}</strong>?</p>
+        </Modal>
       )}
     </div>
   )

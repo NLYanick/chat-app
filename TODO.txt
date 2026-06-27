@@ -1,6 +1,5 @@
 # Now
 - Still some issues with the status, but I don't know what's wrong
-- Send mail to invited user
 
 # Functionality
 - Room authorization in backend

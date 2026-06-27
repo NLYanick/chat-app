@@ -81,15 +81,31 @@ router.patch('/:id', uploads.single('room_image'), async function(req, res, next
 });
 
 router.delete('/:id', async function(req, res, next) {
-  const room = await Room.findOne({ uid: req.params.id, owner: req.body.sender });
-  if (!room || !req.body.sender === room.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
-
   try {
+    const ownedRoom = await Room.findOne({ uid: req.params.id, owner: req.body.sender });
+    if (!ownedRoom || !req.body.sender === ownedRoom.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
+    
     const room = await Room.findOne({ uid: req.params.id });
-
     if (!room) return res.status(404).json({ message: "Not Found", error: "Room not found", success: false });
 
     await Room.deleteOne({ uid: req.params.id });
+
+    res.status(204).send();
+  } catch (error) {
+    next(err);
+  }
+});
+
+router.post('/:id/leave', async function(req, res, next) {
+  const { user_id } = req.body;
+  if (!user_id) return res.status(400).json({ message: "Bad Request", error: "The field 'user_id' is required", success: false });
+
+  try {
+    const room = await Room.findOne({ uid: req.params.id });
+    if (!room) return res.status(404).json({ message: "Not Found", error: "Room not found", success: false });
+
+    room.members.pull(user_id);
+    await room.save();
 
     res.status(204).send();
   } catch (error) {
