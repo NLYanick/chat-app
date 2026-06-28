@@ -15,7 +15,7 @@ function RoomDetails({ room, userIsOwner }) {
   const navigate = useNavigate();
 
   const onLeaveRoom = async () => {
-    const { json } = await sendRequest(`/rooms/${room.uid}/leave`, 'POST', { user_id: user.uid });
+    const { json } = await sendRequest(`/rooms/${room.uid}/members/leave`, 'DELETE', { user_id: user.uid });
     
     if (!json.success) {
       console.error("Failed to leave room:", json.error);

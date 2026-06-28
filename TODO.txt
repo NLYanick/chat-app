@@ -3,7 +3,6 @@
 
 # Functionality
 - Room authorization in backend
-- Remove users from room (only as owner)
 - Receiving & Accepting Friend Requests in the website (and mail)
 - Send messages
 - Edit messages
@@ -34,6 +33,7 @@
 - Invite Friends to room (easier then searching for username)
 - Circle at the mail icon when user has new invites or friend requests
 - Send an email when the user gets an invite
+- Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
 
 (- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
 

@@ -96,13 +96,33 @@ router.delete('/:id', async function(req, res, next) {
   }
 });
 
-router.post('/:id/leave', async function(req, res, next) {
+router.delete('/:id/members/leave', async function(req, res, next) {
   const { user_id } = req.body;
   if (!user_id) return res.status(400).json({ message: "Bad Request", error: "The field 'user_id' is required", success: false });
 
   try {
     const room = await Room.findOne({ uid: req.params.id });
     if (!room) return res.status(404).json({ message: "Not Found", error: "Room not found", success: false });
+
+    room.members.pull(user_id);
+    await room.save();
+
+    res.status(204).send();
+  } catch (error) {
+    next(err);
+  }
+});
+
+router.delete('/:id/members/:user_id', async function(req, res, next) {
+  const { user_id, id } = req.params;
+  const { removed_by } = req.body;
+  if (!removed_by) return res.status(400).json({ message: "Bad Request", error: "The field 'removed_by' is required (uid of the user removing the member)", success: false });
+
+  try {
+    const room = await Room.findOne({ uid: req.params.id });
+    if (!room) return res.status(404).json({ message: "Not Found", error: "Room not found", success: false });
+
+    if (removed_by !== room.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
 
     room.members.pull(user_id);
     await room.save();
