@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const UserStatus = require('../models/enums/user-status');
 
 const User = mongoose.model('User');
+const Room = mongoose.model('Room');
 
 function initializeSocket(server) {
   const io = new socketIO.Server(server, {
@@ -34,6 +35,9 @@ function initializeSocket(server) {
     const user = await User.findOne({ uid: userId }).populate('rooms');
     user.rooms.forEach(room => socket.join(`room:${room.uid}`));
 
+    const rooms = await Room.find();
+    rooms.forEach(room => socket.join(`room:${room.uid}`));
+
     socket.on('disconnect', async () => {
       const userId = socket.userId;
       console.log('User disconnected:', userId);
@@ -52,14 +56,16 @@ function initializeSocket(server) {
         console.error('Socket error:', error);
     });
 
-    handleSocket(socket, user.rooms, user.friends);
+    handleSocket(socket, user.rooms, user.friends, rooms);
   });
 
   return io;
 };
 
-function handleSocket(socket, userRooms, userFriends) {
+function handleSocket(socket, userRooms, userFriends, allRooms) {
   const userId = socket.userId;
+
+  
 
   userFriends.forEach(friend => {
     socket.to(`user:${friend}`).emit("user_status_change", { userId, status: UserStatus.ONLINE });
@@ -74,6 +80,14 @@ function handleSocket(socket, userRooms, userFriends) {
     });
     userRooms.forEach(room => {
       socket.to(`room:${room.uid}`).emit('user_status_change', { userId, status });
+    });
+  });
+
+  socket.on('send_message', (data) => {
+    const { message, roomId } = data;
+
+    allRooms.forEach(room => {
+      socket.to(`room:${room.uid}`).emit('message_sent', { message, roomId });
     });
   });
 
