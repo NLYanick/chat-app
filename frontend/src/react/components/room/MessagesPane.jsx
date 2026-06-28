@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../AuthUserContext";
 import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
 import { sendRequest } from "../../utils/requests";
@@ -11,6 +11,8 @@ function MessagesPane({ room, members }) {
   const [error, setError] = useState(null);
   
   const { user } = useAuth();
+
+  const messagesEndRef = useRef(null);
 
   useEffect(() => {
     let unsubscribe;
@@ -44,6 +46,14 @@ function MessagesPane({ room, members }) {
     return () => { if (unsubscribe) unsubscribe() };
   }, [room?.uid]);
 
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   const handleSendMessage = async () => {
     if (!newMessage.trim()) return;
 
@@ -69,7 +79,7 @@ function MessagesPane({ room, members }) {
 
   return (
     <div className='grid grid-rows-[1fr_60px] h-full'>
-      <div className='flex flex-col gap-4 py-4 h-full overflow-y-scroll app-scrollbar'>
+      <div className='flex flex-col gap-4 py-4 h-full overflow-y-scroll overflow-x-hidden app-scrollbar'>
         <h1 className='text-3xl sm:text-4xl font-bold my-6'>Welcome to {room?.name || 'the room'}</h1>
         
         {error && <p className='text-red-500'>{error}</p>}
@@ -80,6 +90,8 @@ function MessagesPane({ room, members }) {
             <MessageItem key={message.uid} message={message} member={members?.find(m => m.uid === message.sender)} />
           ))
         )}
+
+        <div ref={messagesEndRef} />
       </div>
       <div className="p-4 flex gap-2 items-center">
         <input 

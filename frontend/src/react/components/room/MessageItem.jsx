@@ -7,7 +7,7 @@ function MessageItem({ message, member }) {
   const formattedDate = new Date(message.updated_at).toTimeString().slice(0, 5);
 
   return (
-    <div className={`flex ${member?.uid === user?.uid ? 'flex-row-reverse' : ''} gap-2 mb-2`}>
+    <div className={`flex ${member?.uid === user?.uid ? 'flex-row-reverse' : ''} gap-2`}>
       <div className="shrink-0">
         <ProfileIcon imgSrc={member?.avatar_url} size="sm" />
       </div>
