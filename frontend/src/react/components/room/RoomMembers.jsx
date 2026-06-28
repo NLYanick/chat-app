@@ -16,6 +16,7 @@ function RoomMembers({ members, userIsOwner, owner }) {
   const [removeUsername, setRemoveUsername] = useState("");
 
   const [error, setError] = useState("");
+  const [inviteSuccess, setInviteSuccess] = useState("");
 
   const inviteInputRef = useRef(null);
   const removeUserInputRef = useRef(null);
@@ -37,7 +38,7 @@ function RoomMembers({ members, userIsOwner, owner }) {
       return;
     }
 
-    setInviteModalOpen(false);
+    setInviteSuccess("Invite sent successfully!");
   }
 
   const onRemoveUser = async (username) => {
@@ -60,7 +61,16 @@ function RoomMembers({ members, userIsOwner, owner }) {
       return;
     }
 
+    setRemoveUsername("");
     setRemoveUserModalOpen(false);
+  }
+
+  const onInviteClose = () => {
+    setInviteModalOpen(false);
+    setInviteUsername("");
+    inviteInputRef.current.value = "";
+    setError("");
+    setInviteSuccess("");
   }
 
   const onClear = (ref) => {
@@ -105,8 +115,13 @@ function RoomMembers({ members, userIsOwner, owner }) {
 
           {inviteModalOpen && (
             <Modal
-              onClose={() => setInviteModalOpen(false)}
-              footer={<Button type="primary" label="Invite" onClick={() => onInviteUser(inviteUsername)} />}
+              onClose={onInviteClose}
+              footer={
+                <div className="flex gap-3">
+                  <Button type="secondary" label="Cancel" onClick={onInviteClose} />
+                  <Button type="primary" label="Invite" onClick={() => onInviteUser(inviteUsername)} />
+                </div>
+              }
             >
               <h3 className="text-xl font-bold mb-4">Invite User</h3>
               <p>Enter the username of the user you want to invite to this room.</p>
@@ -117,6 +132,7 @@ function RoomMembers({ members, userIsOwner, owner }) {
               </div>
 
               {error && <p className="text-red-500 mt-2">{error}</p>}
+              {inviteSuccess && <p className="text-green-500 mt-2">{inviteSuccess}</p>}
             </Modal>
           )}
 

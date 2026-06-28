@@ -2,28 +2,37 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../AuthUserContext";
 import { sendRequest } from "../utils/requests";
 import InviteItem from "../components/InviteItem";
+import Button from "../components/Button";
 
 function Invites() {
   const [invites, setInvites] = useState([]);
   const { user } = useAuth();
 
-  useEffect(() => {
-    const fetchInvites = async () => {
-      try {
-        const { json } = await sendRequest(`/room-invites/user/${user.uid}`, 'GET');
+  const fetchInvites = async () => {
+    try {
+      const { json } = await sendRequest(`/room-invites/user/${user.uid}`, 'GET');
 
-        if (!json.success) {
-          console.error("Failed to fetch invites:", json.error);
-          return;
-        }
-
-        setInvites(json.data);
-      } catch (err) {
-        console.error("Error fetching invites:", err);
+      if (!json.success) {
+        console.error("Failed to fetch invites:", json.error);
+        return;
       }
-    };
 
+      setInvites(json.data);
+    } catch (err) {
+      console.error("Error fetching invites:", err);
+    }
+  };
+
+  useEffect(() => {
     fetchInvites();
+
+    setTimeout(() => {
+      fetchInvites();
+    }, 10000);
+
+    return () => {
+      clearTimeout();
+    }
   }, [user.uid]);
 
   const handleAccept = async (inviteId) => {
@@ -59,6 +68,7 @@ function Invites() {
   return (
     <div className="space-y-12 mb-4">
       <h1 className='text-4xl sm:text-5xl'>Invites</h1>
+      
       <div className="w-full sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-4">
         {invites.length === 0 ? (
           <p>No invites found.</p>
@@ -70,6 +80,8 @@ function Invites() {
           </ul>
         )}
       </div>
+
+      <Button type="primary" label="Refresh" onClick={fetchInvites} />
     </div>
   )
 }
