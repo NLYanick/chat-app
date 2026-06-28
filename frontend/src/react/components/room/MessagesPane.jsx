@@ -5,7 +5,7 @@ import { sendRequest } from "../../utils/requests";
 import Button from "../Button";
 import MessageItem from "./MessageItem";
 
-function MessagesPane({ room }) {
+function MessagesPane({ room, members }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [error, setError] = useState(null);
@@ -18,7 +18,6 @@ function MessagesPane({ room }) {
     async function fetchMessages() {
       try {
         const { json } = await sendRequest(`/messages/rooms/${room?.uid}`, 'GET');
-        console.log("Fetched messages:", json);
         if (!json.success) {
           setError("Could not load messages:", json.error);
           return;
@@ -46,7 +45,6 @@ function MessagesPane({ room }) {
   }, [room?.uid]);
 
   const handleSendMessage = async () => {
-    console.log("Sending message:", newMessage);
     if (!newMessage.trim()) return;
 
     try {
@@ -70,7 +68,7 @@ function MessagesPane({ room }) {
   };
 
   return (
-    <div className='flex flex-col flex-1 h-full gap-4'>
+    <div className='grid grid-rows-[1fr_60px] h-full'>
       <div className='flex flex-col gap-4 py-4 h-full overflow-y-scroll app-scrollbar'>
         <h1 className='text-3xl sm:text-4xl font-bold my-6'>Welcome to {room?.name || 'the room'}</h1>
         
@@ -79,7 +77,7 @@ function MessagesPane({ room }) {
           <p>No messages yet. Start the conversation!</p>
         ) : (
           messages.map((message) => (
-            <MessageItem key={message.uid} message={message} member={room?.members?.find(m => m.uid === message.sender)} />
+            <MessageItem key={message.uid} message={message} member={members?.find(m => m.uid === message.sender)} />
           ))
         )}
       </div>

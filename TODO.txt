@@ -1,10 +1,11 @@
 # Now
 - Still some issues with the status, but I don't know what's wrong
+- Try breaking message sending and fix the errors
+- Always scroll down to the bottom when entering a room
 
 # Functionality
 - Room authorization in backend
 - Receiving & Accepting Friend Requests in the website (and mail)
-- Send messages
 - Edit messages
 - Delete messages
 - See Users Profile

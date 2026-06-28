@@ -56,8 +56,8 @@ function Room() {
         <RoomsList />
       </div>
       
-      <div className='sm:w-4/6 p-4 sm:grid sm:grid-rows-[1fr_2fr]'>
-        <MessagesPane room={room} />
+      <div className='sm:w-4/6 p-4 h-[calc(100vh-60px)]'>
+        <MessagesPane room={room} members={members} />
       </div>
 
       <div className='sm:w-1/6 p-2 sm:border-l h-[calc(100vh-60px)] overflow-y-scroll app-scrollbar'>
