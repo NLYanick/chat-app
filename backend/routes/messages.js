@@ -31,4 +31,34 @@ router.post('/rooms/:room_id', async function(req, res, next) {
   }
 });
 
+router.put('/:id', async function(req, res, next) {
+  const { text } = req.body;
+
+  try {
+    const updatedMessage = await Message.findOneAndUpdate({ uid: req.params.id }, { text }, { new: true });
+
+    if (!updatedMessage) {
+      return res.status(404).json({ message: "Not Found", error: "Message not found", success: false });
+    }
+
+    res.status(200).json({ message: "Message updated successfully", data: updatedMessage, success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/:id', async function(req, res, next) {
+  try {
+    const deletedMessage = await Message.findOneAndDelete({ uid: req.params.id });
+
+    if (!deletedMessage) {
+      return res.status(404).json({ message: "Not Found", error: "Message not found", success: false });
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

@@ -15,7 +15,9 @@ function MessagesPane({ room, members }) {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    let unsubscribe;
+    let unsubscribeSend;
+    let unsubscribeEdit;
+    let unsubscribeDelete;
 
     async function fetchMessages() {
       try {
@@ -27,12 +29,26 @@ function MessagesPane({ room, members }) {
 
         setMessages(json.messages);
         
-        unsubscribe = subscribeToEvent('message_sent', ({ message, roomId }) => {
-          if (roomId === room?.uid) {
+        unsubscribeSend = subscribeToEvent('message_sent', ({ message, room_id }) => {
+          if (room_id === room?.uid) {
             setMessages(prev => {
               const exists = prev.some(m => m.uid === message.uid);
               if (exists) return prev; 
               return [...prev, message];
+            });
+          }
+        });
+        unsubscribeEdit = subscribeToEvent('message_edited', ({ message_id, text, room_id }) => {
+          if (room_id === room?.uid) {
+            setMessages(prev => {
+              return prev.map(m => m.uid === message_id ? { ...m, text } : m);
+            });
+          }
+        });
+        unsubscribeDelete = subscribeToEvent('message_deleted', ({ message_id, room_id }) => {
+          if (room_id === room?.uid) {
+            setMessages(prev => {
+              return prev.filter(m => m.uid !== message_id);
             });
           }
         });
@@ -43,7 +59,11 @@ function MessagesPane({ room, members }) {
 
     fetchMessages();
 
-    return () => { if (unsubscribe) unsubscribe() };
+    return () => { 
+      if (unsubscribeSend) unsubscribeSend() 
+      if (unsubscribeEdit) unsubscribeEdit() 
+      if (unsubscribeDelete) unsubscribeDelete() 
+    };
   }, [room?.uid]);
 
   const scrollToBottom = () => {
@@ -68,7 +88,7 @@ function MessagesPane({ room, members }) {
         return;
       }
 
-      emitEvent('send_message', { message: json.data, roomId: room?.uid });
+      emitEvent('send_message', { message: json.data, room_id: room?.uid });
 
       setMessages(prev => [...prev, json.data]);
       setNewMessage("");
@@ -76,6 +96,16 @@ function MessagesPane({ room, members }) {
       console.error("Error sending message:", error);
     }
   };
+
+  const onEditMessage = (message) => {
+    console.log("Edit message:", message);
+    closeMenu();
+  }
+
+  const onDeleteMessage = (message) => {
+    console.log("Delete message:", message);
+    closeMenu();
+  }
 
   return (
     <div className='grid grid-rows-[1fr_60px] h-full'>
@@ -87,7 +117,11 @@ function MessagesPane({ room, members }) {
           <p>No messages yet. Start the conversation!</p>
         ) : (
           messages.map((message) => (
-            <MessageItem key={message.uid} message={message} member={members?.find(m => m.uid === message.sender)} />
+            <MessageItem 
+              key={message.uid} 
+              message={message} 
+              member={members?.find(m => m.uid === message.sender)} 
+            />
           ))
         )}
 

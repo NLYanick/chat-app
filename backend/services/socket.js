@@ -56,16 +56,14 @@ function initializeSocket(server) {
         console.error('Socket error:', error);
     });
 
-    handleSocket(socket, user.rooms, user.friends, rooms);
+    handleSocket(io, socket, user.rooms, user.friends, rooms);
   });
 
   return io;
 };
 
-function handleSocket(socket, userRooms, userFriends, allRooms) {
+function handleSocket(io, socket, userRooms, userFriends, allRooms) {
   const userId = socket.userId;
-
-  
 
   userFriends.forEach(friend => {
     socket.to(`user:${friend}`).emit("user_status_change", { userId, status: UserStatus.ONLINE });
@@ -84,15 +82,19 @@ function handleSocket(socket, userRooms, userFriends, allRooms) {
   });
 
   socket.on('send_message', (data) => {
-    const { message, roomId } = data;
+    const { message, room_id } = data;
 
-    allRooms.forEach(room => {
-      socket.to(`room:${room.uid}`).emit('message_sent', { message, roomId });
-    });
+    io.to(`room:${room_id}`).emit('message_sent', { message, room_id });
   });
+  socket.on('edit_message', (data) => {
+    const { message_id, text, room_id } = data;
 
-  socket.on('message', (message) => {
-    console.log('Received message from client:', message);
+    io.to(`room:${room_id}`).emit('message_edited', { message_id, text, room_id });
+  });
+  socket.on('delete_message', (data) => {
+    const { message_id, room_id } = data;
+
+    io.to(`room:${room_id}`).emit('message_deleted', { message_id, room_id });
   });
 }
 

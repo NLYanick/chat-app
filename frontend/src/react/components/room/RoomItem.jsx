@@ -3,9 +3,16 @@ import RoomIcon from "./RoomIcon";
 import Tooltip from "../Tooltip";
 
 function RoomItem({ room }) {
+  const tooltipContent = (
+    <div className="space-y-2 text-center">
+      <p className="font-bold text-sm">{room.name}</p>
+      <p className="text-xs text-gray-400 truncate">{room.description}</p>
+    </div>
+  );
+
   return (
     <li>
-      <Tooltip title={room.name} description={room.description}>
+      <Tooltip content={tooltipContent}>
         <Link 
           to={`/rooms/${room.uid}`} 
           style={{ backgroundColor: room.color_hex }} 

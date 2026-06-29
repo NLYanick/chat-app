@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
-function Tooltip({ children, title, description, backgroundColor = "bg-slate-800", textColor = "text-white" }) {
+function Tooltip({ children, content, backgroundColor = "bg-slate-800", textColor = "text-white" }) {
   const [visible, setVisible] = useState(false);
   
   const triggerRef = useRef(null);
@@ -50,12 +50,7 @@ function Tooltip({ children, title, description, backgroundColor = "bg-slate-800
               left: `${absolutePos.left}px`,
             }}
           >
-            <div className="space-y-2 text-center">
-              <p className="font-bold text-sm">{title}</p>
-              {description && (
-                <p className="text-xs text-gray-400 truncate">{description}</p>
-              )}
-            </div>
+            {content}
           </div>,
           document.body
         )}

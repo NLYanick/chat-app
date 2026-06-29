@@ -1,5 +1,8 @@
 # Now
 - Still some issues with the status, but I don't know what's wrong
+- The deletion and editing must be real-time
+- Make the message an input field on Edit
+- The Modal must go on top of all items when deleting, not the messages so far
 
 # Functionality
 - Room authorization in backend
