@@ -42,11 +42,16 @@ function NavBar() {
   return (
     <div className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15 bg-(--primary-color)" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
       <div>
-        <Link to='/'>Homepage</Link>
+        <Link to='/'>ChatApp</Link>
       </div>
       
       {user ? (
         <div className="flex items-center gap-4 mr-2">
+          <Link to="/friends" className="hover:underline relative" onClick={() => setHasNotifications(false)}>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className="w-8 h-8 fill-white">
+              <path d="M96 192C96 130.1 146.1 80 208 80C269.9 80 320 130.1 320 192C320 253.9 269.9 304 208 304C146.1 304 96 253.9 96 192zM32 528C32 430.8 110.8 352 208 352C305.2 352 384 430.8 384 528L384 534C384 557.2 365.2 576 342 576L74 576C50.8 576 32 557.2 32 534L32 528zM464 128C517 128 560 171 560 224C560 277 517 320 464 320C411 320 368 277 368 224C368 171 411 128 464 128zM464 368C543.5 368 608 432.5 608 512L608 534.4C608 557.4 589.4 576 566.4 576L421.6 576C428.2 563.5 432 549.2 432 534L432 528C432 476.5 414.6 429.1 385.5 391.3C408.1 376.6 435.1 368 464 368z"/>
+            </svg>
+          </Link>
           <Link to="/notifications" className="hover:underline relative" onClick={() => setHasNotifications(false)}>
             {hasNotifications && (
               <div className="w-3 h-3 rounded-full bg-red-500 absolute top-0 right-1"></div>

@@ -7,16 +7,16 @@
 - File upload (or at least image upload)
 - See Users Profile
 - Add Friends
-- See your friendslist on the homepage
+- Friendslist
 - Logging service
 - Delete user account (or disable)
 - Automatically log in Users
 
 # Tidiness
 - Good Homepage
+- Resizable
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
-- 'Stay signed in' checkbox is not focussable
 - Skeleton pages
 - Make reusable layouts for certain page groups like Auth, Rooms, etc.
 
@@ -27,7 +27,6 @@
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
 - Searchable Dropdown for user inviting
 - Invite Friends to room (easier then searching for username)
-- Circle at the mail icon when user has new invites or friend requests
 - Send an email when the user gets an invite
 - Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
 

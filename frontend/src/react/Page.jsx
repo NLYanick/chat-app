@@ -12,6 +12,7 @@ import CreateRoom from './pages/rooms/CreateRoom';
 import Room from './pages/rooms/Room';
 import EditRoom from './pages/rooms/EditRoom';
 import Notifications from './pages/Notifications';
+import Friends from './pages/Friends';
 
 function Page() {
   return (
@@ -27,6 +28,7 @@ function Page() {
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
           <Route path='/notifications' element={<ProtectedRoute><Notifications /></ProtectedRoute>}></Route>
+          <Route path='/friends' element={<ProtectedRoute><Friends /></ProtectedRoute>}></Route>
 
           <Route path='/rooms'>
             <Route index element={<Navigate to="/" replace />} />
