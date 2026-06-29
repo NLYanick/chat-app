@@ -38,10 +38,10 @@ function MessagesPane({ room, members }) {
             });
           }
         });
-        unsubscribeEdit = subscribeToEvent('message_edited', ({ message_id, text, room_id }) => {
+        unsubscribeEdit = subscribeToEvent('message_edited', ({ message_id, text, room_id, updated_at }) => {
           if (room_id === room?.uid) {
             setMessages(prev => {
-              return prev.map(m => m.uid === message_id ? { ...m, text } : m);
+              return prev.map(m => m.uid === message_id ? { ...m, text, updated_at } : m);
             });
           }
         });

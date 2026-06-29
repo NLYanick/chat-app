@@ -1,20 +1,17 @@
 # Now
 - Still some issues with the status, but I don't know what's wrong
-- The deletion and editing must be real-time
-- Make the message an input field on Edit
 - The Modal must go on top of all items when deleting, not the messages so far
 
 # Functionality
 - Room authorization in backend
 - Receiving & Accepting Friend Requests in the website (and mail)
-- Edit messages
-- Delete messages
 - File upload (or at least image upload)
 - See Users Profile
 - Add Friends
 - See your friendslist on the homepage
 - Logging service
 - Delete user account (or disable)
+- Automatically log in Users
 
 # Tidiness
 - Good Homepage
@@ -28,7 +25,6 @@
 # Extra
 - Better error handling
 - Use JWT Tokens to access the backend, since everything in the frontend is public
-- Automatically log in Users
 - Better avatar naming, so the old avatar can be removed after changing
 - User can deactivate (not delete) his/her account
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.

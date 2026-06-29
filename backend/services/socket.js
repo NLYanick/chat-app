@@ -87,9 +87,9 @@ function handleSocket(io, socket, userRooms, userFriends, allRooms) {
     io.to(`room:${room_id}`).emit('message_sent', { message, room_id });
   });
   socket.on('edit_message', (data) => {
-    const { message_id, text, room_id } = data;
+    const { message_id, text, room_id, updated_at } = data;
 
-    io.to(`room:${room_id}`).emit('message_edited', { message_id, text, room_id });
+    io.to(`room:${room_id}`).emit('message_edited', { message_id, text, room_id, updated_at });
   });
   socket.on('delete_message', (data) => {
     const { message_id, room_id } = data;
