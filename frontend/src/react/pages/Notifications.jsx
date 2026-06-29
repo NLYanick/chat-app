@@ -4,7 +4,7 @@ import { sendRequest } from "../utils/requests";
 import InviteItem from "../components/InviteItem";
 import Button from "../components/Button";
 
-function Invites() {
+function Notifications() {
   const [invites, setInvites] = useState([]);
   const [friendRequests, setFriendRequests] = useState([]);
 
@@ -112,4 +112,4 @@ function Invites() {
   )
 }
 
-export default Invites;
+export default Notifications;

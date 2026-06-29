@@ -11,7 +11,7 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import CreateRoom from './pages/rooms/CreateRoom';
 import Room from './pages/rooms/Room';
 import EditRoom from './pages/rooms/EditRoom';
-import Invites from './pages/Invites';
+import Notifications from './pages/Notifications';
 
 function Page() {
   return (
@@ -26,7 +26,7 @@ function Page() {
 
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
           <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
-          <Route path='/invites' element={<ProtectedRoute><Invites /></ProtectedRoute>}></Route>
+          <Route path='/notifications' element={<ProtectedRoute><Notifications /></ProtectedRoute>}></Route>
 
           <Route path='/rooms'>
             <Route index element={<Navigate to="/" replace />} />
