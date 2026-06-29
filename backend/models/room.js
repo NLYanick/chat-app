@@ -31,4 +31,14 @@ const roomSchema = new mongoose.Schema({
     image: String,
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
+roomSchema.virtual('members_details', {
+  ref: 'User',
+  localField: 'members',
+  foreignField: 'uid',
+  justOne: false
+});
+
+roomSchema.set('toObject', { virtuals: true });
+roomSchema.set('toJSON', { virtuals: true });
+
 mongoose.model("Room", roomSchema);

@@ -8,3 +8,4 @@ mongoose.connect(`${process.env.MONGODB_URL || fallbackURL}/${process.env.DATABA
 require('./user');
 require('./message');
 require('./room');
+require('./room-invite');

@@ -12,10 +12,16 @@ router.post('/register', async function (req, res, next) {
   try {
     const { email, username, password, confirmPassword, staySignedIn } = req.body;
 
+    const minimumPasswordLength = 5;
+    const maximumUsernameLength = 30;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     // Extra backend validation
     if (!username || !password || !confirmPassword || !email) return res.status(400).json({ message: "Registration failed", error: "The fields \"username\", \"email\", and \"password\" are invalid.", success: false });
-    if (password < 5) return res.status(400).json({ message: "Registration failed", error: "Password must be at least 5 characters long.", success: false });
+    if (password.length < minimumPasswordLength) return res.status(400).json({ message: "Registration failed", error: `Password must be at least ${minimumPasswordLength} characters long.`, success: false });
     if (confirmPassword !== password) return res.status(400).json({ message: "Registration failed", error: "\"Confirm Password\" must be equal to \"Password\".", success: false });
+    if (!emailRegex.test(email)) return res.status(400).json({ message: "Registration failed", error: "Invalid email format.", success: false });
+    if (username.length > maximumUsernameLength) return res.status(400).json({ message: "Registration failed", error: `Username must be maximum ${maximumUsernameLength} characters long.`, success: false });
 
     const existingUser = await User.findOne({ username });
 

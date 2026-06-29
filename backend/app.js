@@ -15,6 +15,8 @@ const mailRouter = require('./routes/mails');
 const usersRouter = require('./routes/users');
 const roomsRouter = require('./routes/rooms');
 const messagesRouter = require('./routes/messages');
+const roomInvitesRouter = require('./routes/room-invites');
+const friendRequestRouter = require('./routes/friend-requests');
 
 const { handleError, verifyApiKey } = require('./middleware/middleware');
 
@@ -40,6 +42,8 @@ v1Router.use('/users', usersRouter);
 v1Router.use('/mails', mailRouter);
 v1Router.use('/rooms', roomsRouter);
 v1Router.use('/messages', messagesRouter);
+v1Router.use('/room-invites', roomInvitesRouter);
+v1Router.use('/friend-requests', friendRequestRouter);
 
 app.use('/api/' + process.env.API_VERSION, v1Router);
 

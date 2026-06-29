@@ -38,7 +38,7 @@ function Login() {
     } else if (json.error && status < 500) {
       setUserErrors([json.error]);
     } else if (json.error && status >= 500) {
-      setError('Server Error | Please try loging in again later');
+      setError('Server Error | Please try logging in again later');
     }
   }
 
@@ -47,18 +47,18 @@ function Login() {
   return (
     <>
       <div className='flex flex-col gap-12'>
-        <Form formLabel='Inloggen' onSubmit={handleSubmit}>
+        <Form formLabel='Login' onSubmit={handleSubmit}>
           {userErrors.length > 0 && (
             <UserErrorsBox userErrors={userErrors} />
           )}
           <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
-          <FormInput label="Wachtwoord" subtext="Moet minimaal 5 karakters lang zijn" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
-          <FormCheckBox label="Blijf ingelogd" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
+          <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
+          <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
         </Form>
 
         <div className='flex justify-between'>
-          <Link to="/forgot-password" className='text-sm hover:underline self-end'>Wachtwoord vergeten?</Link>
-          <Link to="/register" className='text-sm hover:underline self-end'>Nog geen account?</Link>
+          <Link to="/forgot-password" className='text-sm hover:underline self-end'>Forgot Your Password?</Link>
+          <Link to="/register" className='text-sm hover:underline self-end'>No account yet?</Link>
         </div>
       </div>
     </>
@@ -69,9 +69,9 @@ function checkUserInput(username, password) {
   const errors = []
 
   if (!username || !password)
-    return errors.push('Vul de inloggevens in');
+    return errors.push('Fill in your login credentials');
 
-  if (password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
+  if (password.length < 5) errors.push("Password must be at least 5 characters long");
 
   return errors;
 }

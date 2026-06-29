@@ -41,7 +41,7 @@ function Register() {
     } else if (json.error && status < 500) {
       setUserErrors([json.error]);
     } else if (json.error && status >= 500) {
-      setError('Server Error | Please try registrating again later');
+      setError('Server Error | Please try registering again later');
     }
   }
 
@@ -50,20 +50,20 @@ function Register() {
   return (
     <>
       <div className='flex flex-col gap-12'>
-        <Form formLabel='Registreren' onSubmit={handleSubmit}>
+        <Form formLabel='Register' onSubmit={handleSubmit}>
           {userErrors.length > 0 && (
             <UserErrorsBox userErrors={userErrors} />
           )}
           <FormInput label="Email" type="email" name="email" placeholder="Enter your email..." required autoFocus onChange={(e) => setEmail(e.target.value)} />
           <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
           <div>
-            <FormInput label="Wachtwoord" subtext="Moet minimaal 5 karakters lang zijn" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
-            <FormInput label="Bevestig Wachtwoord" subtext="Moet gelijk zijn aan 'Wachtwoord'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
+            <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
+            <FormInput label="Confirm Password" subtext="Must be equal to 'Password'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
-          <FormCheckBox label="Blijf ingelogd" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
+          <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
         </Form>
         
-        <Link to="/login" className='text-sm hover:underline self-end'>Heb je al een account?</Link>
+        <Link to="/login" className='text-sm hover:underline self-end'>Already have an account?</Link>
       </div>
     </>
   );
@@ -73,10 +73,10 @@ function checkUserInput(username, password, confirmPassword, email) {
   const errors = []
 
   if (!username || !password || !email)
-    return errors.push('Vul de inloggevens in');
+    return errors.push('Fill in your registration credentials');
 
-  if (password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
-  if (password !== confirmPassword) errors.push("'Bevestig Wachtwoord' moet gelijk zijn aan 'Wachtwoord'");
+  if (password.length < 5) errors.push("Password must be at least 5 characters long");
+  if (password !== confirmPassword) errors.push("'Confirm Password' must be equal to 'Password'");
 
   return errors;
 }

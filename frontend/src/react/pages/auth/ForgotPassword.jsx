@@ -32,7 +32,7 @@ function ForgotPassword() {
   return (
     <>
       <div className='flex flex-col gap-12'>
-        <Form formLabel='Reset Password' onSubmit={handleSubmit}>
+        <Form formLabel='Forgot Password' onSubmit={handleSubmit}>
           {userErrors.length > 0 && (
             <UserErrorsBox userErrors={userErrors} />
           )}
@@ -50,7 +50,7 @@ function checkUserInput(email) {
   const errors = []
 
   if (!email)
-    return errors.push('Vul het email adres in');
+    return errors.push('Fill in your email address');
 
   return errors;
 }

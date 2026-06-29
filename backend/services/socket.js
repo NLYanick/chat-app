@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const UserStatus = require('../models/enums/user-status');
 
 const User = mongoose.model('User');
+const Room = mongoose.model('Room');
 
 function initializeSocket(server) {
   const io = new socketIO.Server(server, {
@@ -34,6 +35,9 @@ function initializeSocket(server) {
     const user = await User.findOne({ uid: userId }).populate('rooms');
     user.rooms.forEach(room => socket.join(`room:${room.uid}`));
 
+    const rooms = await Room.find();
+    rooms.forEach(room => socket.join(`room:${room.uid}`));
+
     socket.on('disconnect', async () => {
       const userId = socket.userId;
       console.log('User disconnected:', userId);
@@ -52,13 +56,13 @@ function initializeSocket(server) {
         console.error('Socket error:', error);
     });
 
-    handleSocket(socket, user.rooms, user.friends);
+    handleSocket(io, socket, user.rooms, user.friends, rooms);
   });
 
   return io;
 };
 
-function handleSocket(socket, userRooms, userFriends) {
+function handleSocket(io, socket, userRooms, userFriends, allRooms) {
   const userId = socket.userId;
 
   userFriends.forEach(friend => {
@@ -77,8 +81,26 @@ function handleSocket(socket, userRooms, userFriends) {
     });
   });
 
-  socket.on('message', (message) => {
-    console.log('Received message from client:', message);
+  socket.on('send_message', (data) => {
+    const { message, room_id } = data;
+
+    io.to(`room:${room_id}`).emit('message_sent', { message, room_id });
+  });
+  socket.on('edit_message', (data) => {
+    const { message_id, text, room_id, updated_at } = data;
+
+    io.to(`room:${room_id}`).emit('message_edited', { message_id, text, room_id, updated_at });
+  });
+  socket.on('delete_message', (data) => {
+    const { message_id, room_id } = data;
+
+    io.to(`room:${room_id}`).emit('message_deleted', { message_id, room_id });
+  });
+
+  socket.on('notification', (data) => {
+    const { user_id, notification } = data;
+
+    socket.to(`user:${user_id}`).emit('notification_received', { user_id, notification });
   });
 }
 
