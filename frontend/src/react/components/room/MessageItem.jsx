@@ -3,13 +3,11 @@ import { useAuth } from "../../AuthUserContext";
 import { sendRequest } from "../../utils/requests";
 import ProfileIcon from "../profile/ProfileIcon";
 import MessageToolsBubble from "./MessageToolsBubble";
-import Modal from "../Modal";
 import Button from "../Button";
 import { emitEvent } from "../../utils/socket-client";
 
-function MessageItem({ message, member }) {
+function MessageItem({ message, member, onOpenModal }) {
   const [barVisible, setBarVisible] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.text);
@@ -19,8 +17,6 @@ function MessageItem({ message, member }) {
   const formattedDate = new Date(message.created_at).toLocaleString().slice(0, 16).replace(',', ' ');
 
   const onEdit = async () => {
-    console.log("Edit message:", editText);
-
     if (!editText.trim() || editText.trim() === message.text) {
       setIsEditing(false);
       return;
@@ -42,25 +38,8 @@ function MessageItem({ message, member }) {
     }
   }
 
-  const onDelete = async () => {
-    try {
-      const { json } = await sendRequest(`/messages/${message.uid}`, 'DELETE');
-
-      if (!json.success) {
-        console.error("Failed to delete message:", json.error);
-        return;
-      }
-
-      emitEvent('delete_message', { message_id: message.uid, room_id: message.room, updated_at: json.data.updated_at });
-    } catch (err) {
-      console.error("Failed to delete message:", err);
-    } finally {
-      setShowModal(false);
-    }
-  }
-
   const onDeleteClick = () => { 
-    setShowModal(true); 
+    onOpenModal(message);
     setBarVisible(false); 
   }
 
@@ -72,6 +51,11 @@ function MessageItem({ message, member }) {
   const onCancelEdit = () => {
     setIsEditing(false);
     setEditText(message.text);
+  }
+
+  const onEditInputKeyDown = (e) => {
+    if (e.key === 'Enter') onEdit();
+    if (e.key === 'Escape') { setIsEditing(false); setEditText(message.text); }
   }
   
   return (
@@ -94,10 +78,7 @@ function MessageItem({ message, member }) {
               className="bg-gray-700 p-2 rounded-md border-2 border-gray-500 focus:outline-none w-full"
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') onEdit();
-                if (e.key === 'Escape') { setIsEditing(false); setEditText(message.text); }
-              }}
+              onKeyDown={onEditInputKeyDown}
               autoFocus
             />
             <div className="flex gap-2 text-xs">
@@ -118,22 +99,6 @@ function MessageItem({ message, member }) {
 
       {barVisible && member?.uid === user?.uid && (
         <MessageToolsBubble onEdit={onEditClicked} onDelete={onDeleteClick} />
-      )}
-
-      {showModal && (
-        <Modal 
-          onClose={() => setShowModal(false)}
-          footer={
-            <div className="flex gap-2 justify-end">
-              <Button type="secondary" label="Cancel" onClick={() => setShowModal(false)} />
-              <Button type="error" label="Delete" onClick={onDelete} />
-            </div>
-          }
-        >
-          <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
-          <p>Are you sure you want to delete this message?</p>
-          <p className="text-sm text-gray-300 italic truncate w-full">"{message.text}"</p>
-        </Modal>
       )}
     </div>
   )

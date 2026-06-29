@@ -4,12 +4,16 @@ import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
 import { sendRequest } from "../../utils/requests";
 import Button from "../Button";
 import MessageItem from "./MessageItem";
+import Modal from "../Modal";
 
 function MessagesPane({ room, members }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [error, setError] = useState(null);
   
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
+
   const { user } = useAuth();
 
   const messagesEndRef = useRef(null);
@@ -97,14 +101,26 @@ function MessagesPane({ room, members }) {
     }
   };
 
-  const onEditMessage = (message) => {
-    console.log("Edit message:", message);
-    closeMenu();
+  const onDelete = async () => {
+    try {
+      const { json } = await sendRequest(`/messages/${selectedMessage?.uid}`, 'DELETE');
+
+      if (!json.success) {
+        console.error("Failed to delete message:", json.error);
+        return;
+      }
+
+      emitEvent('delete_message', { message_id: selectedMessage?.uid, room_id: selectedMessage?.room });
+    } catch (err) {
+      console.error("Failed to delete message:", err);
+    } finally {
+      setShowModal(false);
+    }
   }
 
-  const onDeleteMessage = (message) => {
-    console.log("Delete message:", message);
-    closeMenu();
+  const onOpenModal = (message) => {
+    setSelectedMessage(message);
+    setShowModal(true);
   }
 
   return (
@@ -121,11 +137,28 @@ function MessagesPane({ room, members }) {
               key={message.uid} 
               message={message} 
               member={members?.find(m => m.uid === message.sender)} 
+              onOpenModal={onOpenModal}
             />
           ))
         )}
 
         <div ref={messagesEndRef} />
+
+        {showModal && (
+          <Modal 
+            onClose={() => setShowModal(false)}
+            footer={
+              <div className="flex gap-2 justify-end">
+                <Button type="secondary" label="Cancel" onClick={() => setShowModal(false)} />
+                <Button type="error" label="Delete" onClick={onDelete} />
+              </div>
+            }
+          >
+            <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
+            <p>Are you sure you want to delete this message?</p>
+            <p className="text-sm text-gray-300 italic truncate w-full">"{selectedMessage?.text}"</p>
+          </Modal>
+        )}
       </div>
       <div className="p-4 flex gap-2 items-center">
         <input 
