@@ -96,6 +96,12 @@ function handleSocket(io, socket, userRooms, userFriends, allRooms) {
 
     io.to(`room:${room_id}`).emit('message_deleted', { message_id, room_id });
   });
+
+  socket.on('notification', (data) => {
+    const { user_id, notification } = data;
+
+    socket.to(`user:${user_id}`).emit('notification_received', { user_id, notification });
+  });
 }
 
 module.exports = initializeSocket

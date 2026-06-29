@@ -7,6 +7,7 @@ import { useAuth } from "../../AuthUserContext";
 import { sendRequest } from "../../utils/requests";
 import { useParams } from "react-router-dom";
 import MembersChoiceChipGrid from "./MembersChoiceChipGrid";
+import { emitEvent } from "../../utils/socket-client";
 
 function RoomMembers({ members, userIsOwner, owner }) {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
@@ -38,6 +39,9 @@ function RoomMembers({ members, userIsOwner, owner }) {
       return;
     }
 
+    emitEvent('notification', { user_id: json.data.invited, notification: `You have been invited to join room ${roomId}` });
+
+    setInviteUsername("");
     setInviteSuccess("Invite sent successfully!");
   }
 
