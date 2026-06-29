@@ -55,7 +55,8 @@ function ResetPassword() {
   if (!validToken) {
     return (
       <>
-        <h1 className='mb-8 text-4xl font-bold'>Invalid or expired token</h1><p>Please click the "Reset Password" button again in the profile page. You have 1 hour to reset your password.</p>
+        <h1 className='mb-8 text-4xl font-bold'>Invalid or expired token</h1>
+        <p>Please click the "Reset Password" button again in the profile page. You have 1 hour to reset your password.</p>
       </>
     );
   }
@@ -68,8 +69,8 @@ function ResetPassword() {
             <UserErrorsBox userErrors={userErrors} />
           )}
           <div>
-            <FormInput label="Wachtwoord" subtext="Moet minimaal 5 karakters lang zijn" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
-            <FormInput label="Bevestig Wachtwoord" subtext="Moet gelijk zijn aan 'Wachtwoord'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
+            <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
+            <FormInput label="Confirm Password" subtext="Must be equal to 'Password'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
         </Form>
       </div>
@@ -81,10 +82,10 @@ function checkUserInput(password, confirmPassword) {
   const errors = []
 
   if (!password || !confirmPassword)
-    return errors.push('Vul de wachtwoorden in');
+    return errors.push('Fill in the passwords');
 
-  if (password.length < 5) errors.push("Wachtwoord moet minimaal 5 karakters lang zijn");
-  if (password !== confirmPassword) errors.push("'Bevestig Wachtwoord' moet gelijk zijn aan 'Wachtwoord'");
+  if (password.length < 5) errors.push("Password must be at least 5 characters long");
+  if (password !== confirmPassword) errors.push("'Confirm Password' must be equal to 'Password'");
 
   return errors;
 }
