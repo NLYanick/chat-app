@@ -31,10 +31,12 @@ function Notifications() {
 
   useEffect(() => {
     fetchInvites();
+    fetchFriendRequests();
 
     setTimeout(() => {
       fetchInvites();
-    }, 10000);
+      fetchFriendRequests();
+    }, 10_000);
 
     return () => {
       clearTimeout();
