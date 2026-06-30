@@ -3,6 +3,7 @@ import { useAuth } from "../AuthUserContext";
 import { sendRequest } from "../utils/requests";
 import InviteItem from "../components/InviteItem";
 import Button from "../components/Button";
+import FriendRequestItem from "../components/FriendRequestItem";
 
 function Notifications() {
   const [invites, setInvites] = useState([]);
@@ -26,8 +27,19 @@ function Notifications() {
   };
 
   const fetchFriendRequests = async () => {
-    // TODO
-  }
+    try {
+      const { json } = await sendRequest(`/friend-requests/user/${user.uid}`, 'GET');
+
+      if (!json.success) {
+        console.error("Failed to fetch friend requests:", json.error);
+        return;
+      }
+
+      setFriendRequests(json.friend_requests);
+    } catch (err) {
+      console.error("Error fetching friend requests:", err);
+    }
+  };
 
   useEffect(() => {
     fetchInvites();
@@ -43,7 +55,7 @@ function Notifications() {
     }
   }, [user.uid]);
 
-  const handleAccept = async (inviteId) => {
+  const handleAcceptRoomInvite = async (inviteId) => {
     try {
       const { json } = await sendRequest(`/room-invites/${inviteId}/accept`, 'POST', { userUid: user.uid });
       
@@ -58,7 +70,7 @@ function Notifications() {
     }
   };
 
-  const handleDecline = async (inviteId) => {
+  const handleDeclineRoomInvite = async (inviteId) => {
     try {
       const { json } = await sendRequest(`/room-invites/${inviteId}/decline`, 'POST', { userUid: user.uid });
       
@@ -70,6 +82,35 @@ function Notifications() {
       setInvites(prev => prev.filter(invite => invite.uid !== inviteId));
     } catch (err) {
       console.error("Error declining invite:", err);
+    }
+  };
+
+  const handleAcceptFriendRequest = async (requestId) => {
+    try {
+      const { json } = await sendRequest(`/friend-requests/${requestId}/accept`, 'POST');
+
+      if (!json.success) {
+        console.error("Failed to accept friend request:", json.error);
+        return;
+      }
+
+      setFriendRequests(prev => prev.filter(request => request.uid !== requestId));
+    } catch (err) {
+      console.error("Error accepting friend request:", err);
+    }
+  };
+
+  const handleDeclineFriendRequest = async (requestId) => {
+    try {
+      const { json } = await sendRequest(`/friend-requests/${requestId}/decline`, 'POST');
+
+      if (!json.success) {
+        console.error("Failed to decline friend request:", json.error);
+        return;
+      }
+      setFriendRequests(prev => prev.filter(request => request.uid !== requestId));
+    } catch (err) {
+      console.error("Error declining friend request:", err);
     }
   };
 
@@ -86,7 +127,7 @@ function Notifications() {
           ) : (
             <ul className="space-y-4">
               {invites.map(invite => (
-                <InviteItem invite={invite} onAccept={handleAccept} onDecline={handleDecline} />
+                <InviteItem invite={invite} onAccept={handleAcceptRoomInvite} onDecline={handleDeclineRoomInvite} />
               ))}
             </ul>
           )}
@@ -102,7 +143,7 @@ function Notifications() {
           ) : (
             <ul className="space-y-4">
               {friendRequests.map(request => (
-                <p>TODO</p>
+                <FriendRequestItem request={request} onAccept={handleAcceptFriendRequest} onDecline={handleDeclineFriendRequest} />
               ))}
             </ul>
           )}

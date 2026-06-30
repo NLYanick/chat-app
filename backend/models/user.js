@@ -66,6 +66,13 @@ userSchema.virtual('rooms', {
   justOne: false
 });
 
+userSchema.virtual('friends_details', {
+  ref: 'User',
+  localField: 'uid',
+  foreignField: 'friends',
+  justOne: false
+});
+
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });
 

@@ -112,10 +112,22 @@ router.post('/:id/status', async function (req, res, next) {
     }
 
     const user = await User.findOneAndUpdate({ uid: userId }, { status: status }, { returnDocument: 'after' });
-
     if (!user) return res.status(404).json({ error: "User not found", success: false });
 
     res.status(200).json({ message: "User status updated", success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.get('/:id/friends', async function (req, res, next) {
+  try {
+    const userId = req.params.id;
+
+    const user = await User.findOne({ uid: userId }).populate('friends_details');
+    if (!user) return res.status(404).json({ error: "User not found", success: false });
+
+    res.status(200).json({ message: "Successfully retrieved friends", friends: user.friends_details, success: true });
   } catch (err) {
     next(err);
   }
