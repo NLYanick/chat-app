@@ -133,4 +133,28 @@ router.get('/:id/friends', async function (req, res, next) {
   }
 });
 
+router.delete('/:id/friends/:friend_id', async function (req, res, next) {
+  try {
+    const { id, friend_id } = req.params;
+
+    const user = await User.findOneAndUpdate(
+      { uid: id },
+      { $pull: { friends: friend_id } },
+      { returnDocument: 'after' }
+    );
+
+    const friend = await User.findOneAndUpdate(
+      { uid: friend_id },
+      { $pull: { friends: id } },
+      { returnDocument: 'after' }
+    );
+
+    if (!user || !friend) return res.status(404).json({ error: "User not found", success: false });
+
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

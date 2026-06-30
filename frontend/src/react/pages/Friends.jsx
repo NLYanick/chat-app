@@ -3,6 +3,8 @@ import { useAuth } from "../AuthUserContext";
 import { sendRequest } from "../utils/requests";
 import Button from "../components/Button";
 import FriendItem from "../components/FriendItem";
+import { emitEvent } from "../utils/socket-client";
+import Modal from "../components/Modal";
 
 function Friends() {
   const [friends, setFriends] = useState([]);
@@ -10,6 +12,9 @@ function Friends() {
   const [addFriendName, setAddFriendName] = useState("");
   const [addFriendError, setAddFriendError] = useState(null);
   const [addFriendSuccess, setAddFriendSuccess] = useState("");
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState(null);
 
   const { user } = useAuth();
 
@@ -45,9 +50,12 @@ function Friends() {
         return;
       }
 
+      emitEvent('notification', { user_id: json.friend_request.recipient, notification: `You have a new friend request from ${user.username}` });
+
       setAddFriendError(null);
       setAddFriendSuccess("Friend request sent successfully!");
       setAddFriendName("");
+      setSelectedFriend(null);
 
       setTimeout(() => {
         setAddFriendSuccess("");
@@ -56,6 +64,27 @@ function Friends() {
       console.error("Error adding friend:", error);
       setAddFriendError("Failed to add friend. Please try again.");
     }
+  }
+
+  const removeFriend = async (friendId) => {
+    try {
+      const { json } = await sendRequest(`/users/${user.uid}/friends/${friendId}`, "DELETE");
+
+      if (!json.success) {
+        console.error("Failed to remove friend:", json.error);
+        return;
+      }
+      
+      setFriends(friends.filter(friend => friend.uid !== friendId));
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error removing friend:", error);
+    }
+  };
+  
+  const onRemoveClick = (friendId) => {
+    setShowModal(true);
+    setSelectedFriend(friendId);
   }
 
   return (
@@ -69,11 +98,28 @@ function Friends() {
           {friends.length === 0 ? (
             <p>You have no friends yet. Add some!</p>
           ) : (
-            <ul className="">
-              {friends.map(friend => (
-                <FriendItem key={friend.uid} friend={friend} />
-            ))}
-          </ul>
+            <>
+              <ul className="">
+                {friends.map(friend => (
+                  <FriendItem key={friend.uid} friend={friend} onRemove={onRemoveClick} />
+                ))}
+              </ul>
+
+              {showModal && (
+                <Modal 
+                  onClose={() => setShowModal(false)}
+                  footer={
+                    <div className="flex justify-end gap-4">
+                      <Button label="Close" type="secondary" onClick={() => setShowModal(false)} />
+                      <Button label="Remove" type="error" onClick={() => removeFriend(selectedFriend)} />
+                    </div>
+                  }
+                >
+                  <h3 className="text-xl font-semibold mb-4">Removing Friend</h3>
+                  <p>Are you sure you want to remove <strong>{friends.find(f => f.uid === selectedFriend)?.username}</strong> from your friends list?</p>
+                </Modal>
+              )}
+            </>
           )}
         </div>
 
