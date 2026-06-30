@@ -1,14 +1,12 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
-- Users can only log in if their account is not disabled
 
 # Functionality
 - Room authorization in backend
 - File upload (or at least image upload)
 - See Users Profile
 - Logging service
-- Delete user account (or disable)
 - Automatically log in Users
 
 # Tidiness
