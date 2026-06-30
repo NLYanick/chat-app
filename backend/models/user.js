@@ -49,7 +49,8 @@ const userSchema = new mongoose.Schema({
     disabled: {
         type: Boolean,
         default: false
-    }
+    },
+    old_username: String
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 // Hash the password

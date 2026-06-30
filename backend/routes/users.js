@@ -105,9 +105,14 @@ router.patch('/:id', async function (req, res, next) {
 router.delete('/:id', async function (req, res, next) {
   try {
     const newName = `deleted_user_${Math.floor(Math.random() * 1000000)}`;
-    const updatedUser = await User.findOneAndUpdate({ uid: req.params.id }, { disabled: true, username: newName }, { returnDocument: 'after' });
+    
+    const oldUser = await User.findOne({ uid: req.params.id });
+    if(!oldUser) return res.status(404).json({ error: "User not found", success: false });
 
-    if(!updatedUser) return res.status(404).json({ error: "User not found", success: false });
+    oldUser.old_username = oldUser.username;
+    oldUser.username = newName;
+    oldUser.disabled = true;
+    await oldUser.save();
 
     res.status(204).send();
   } catch (err) {
