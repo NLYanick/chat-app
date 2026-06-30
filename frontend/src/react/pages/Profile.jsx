@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { sendRequest } from '../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import Button from "../components/Button"
@@ -12,13 +13,16 @@ function Profile() {
   const [error, setError] = useState(null);
   const [userError, setUserError] = useState("");
 
-  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [showAvatarModal, setShowAvatarModal] = useState(false);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+
   const [image, setImage] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState("");
   const [avatarPreviewIsReady, setAvatarPreviewIsReady] = useState(false);
   const profileEditorRef = useRef(null);
 
-  const { user, login } = useAuth();
+  const { user, login, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!image) {
@@ -39,7 +43,7 @@ function Profile() {
     setImage(newImage);
 
     if (newImage) {
-      setModalIsOpen(true);
+      setShowAvatarModal(true);
       e.target.value = ''; // Reset the file input
     }
   }
@@ -71,7 +75,7 @@ function Profile() {
   }
 
   const handleCloseModal = () => {
-    setModalIsOpen(false);
+    setShowAvatarModal(false);
     setUserError(null);
 
     const croppedCanvas = profileEditorRef.current?.getCroppedImage();
@@ -94,19 +98,39 @@ function Profile() {
       return <span className="text-sm text-slate-500">No Preview Image</span>
   }
 
+  const handleDeleteAccount = async () => {
+    try {
+      const { json } = await sendRequest(`/users/${user.uid}`, 'DELETE');
+
+      if (!json.success) {
+        console.error(json.error);
+        setRemoveError('Failed to delete account. Please try again later.');
+        return;
+      }
+
+      setShowDeleteAccountModal(false);
+      logout();
+      navigate("/auth/login");
+    } catch (err) {
+      setError(err.message || 'Failed to delete account. Please try again later.');
+    }
+  }
+
   return (
     <>
-      {modalIsOpen && <Modal 
-        onClose={handleCloseModal}
-        footer={<Button label="Apply" type="success" onClick={handleCloseModal} />}
-      >
-        <ProfileEditor
-          ref={profileEditorRef}
-          imageSrc={avatarPreview}
-        />
-      </Modal> }
+      {showAvatarModal && 
+        <Modal 
+          onClose={handleCloseModal}
+          footer={<Button label="Apply" type="success" onClick={handleCloseModal} />}
+        >
+          <ProfileEditor
+            ref={profileEditorRef}
+            imageSrc={avatarPreview}
+          />
+        </Modal> 
+      }
 
-      <div className='flex flex-col gap-8 pb-8'>
+      <div className='flex flex-col gap-8 pb-8 min-w-96'>
         <h1 className='text-4xl font-semibold mt-16 sm:mt-8 mb-4'>Profile</h1>
 
         <ProfileDetails user={user} />
@@ -131,6 +155,28 @@ function Profile() {
 
             <Button label="Upload Avatar" type="success" disabled={!image} />
           </form>
+        </div>
+
+        <div className='bg-(--primary-color-light) rounded-lg shadow-lg p-6 text-left flex flex-col gap-8'>
+          <h2 className='text-2xl'>Delete Account</h2>
+          <p className='text-red-500'>Deleting your account cannot be undone!</p>
+
+          <Button label="Delete Account" type="error" onClick={() => setShowDeleteAccountModal(true)} />
+
+          {showDeleteAccountModal && 
+            <Modal 
+              onClose={() => setShowDeleteAccountModal(false)}
+              footer={
+                <div className='flex justify-end gap-4'>
+                  <Button label="Cancel" type="secondary" onClick={() => setShowDeleteAccountModal(false)} />
+                  <Button label="Remove" type="error" onClick={handleDeleteAccount} />
+                </div>
+              }
+            >
+              <h3 className='text-2xl font-bold'>Confirm Account Deletion</h3>
+              <p className='text-center'>Are you sure you want to delete your account? This action cannot be undone.</p>
+            </Modal> 
+          }
         </div>
       </div>
     </>

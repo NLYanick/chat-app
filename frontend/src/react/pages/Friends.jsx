@@ -99,7 +99,7 @@ function Friends() {
             <p>You have no friends yet. Add some!</p>
           ) : (
             <>
-              <ul className="">
+              <ul className="flex flex-col gap-4">
                 {friends.map(friend => (
                   <FriendItem key={friend.uid} friend={friend} onRemove={onRemoveClick} />
                 ))}

@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: undefined,
         select: false 
+    },
+    disabled: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
