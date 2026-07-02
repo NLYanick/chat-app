@@ -10,3 +10,4 @@ require('./message');
 require('./room');
 require('./room-invite');
 require('./friend-request');
+require('./file');

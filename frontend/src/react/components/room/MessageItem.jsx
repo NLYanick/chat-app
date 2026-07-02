@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../../AuthUserContext";
 import { sendRequest } from "../../utils/requests";
+import { emitEvent } from "../../utils/socket-client";
 import ProfileIcon from "../profile/ProfileIcon";
 import MessageToolsBubble from "./MessageToolsBubble";
 import Button from "../Button";
-import { emitEvent } from "../../utils/socket-client";
+import AttachmentPreview from "./AttachmentPreview";
 
 function MessageItem({ message, member, onOpenModal }) {
   const [barVisible, setBarVisible] = useState(false);
@@ -87,9 +88,24 @@ function MessageItem({ message, member, onOpenModal }) {
             </div>
           </div>
         ) : (
-          <div className="bg-(--primary-color-light) py-2 px-3 rounded-lg w-fit max-w-full">
-            <p className="text-left">{message.text}</p>
-          </div>
+          <>
+            {message.text && (
+              <div className="bg-(--primary-color-light) py-2 px-3 rounded-lg w-fit max-w-full">
+                <p className="text-left">{message.text}</p>
+              </div>
+            )}
+ 
+            {message.attachments?.length > 0 && (
+              <div className="flex flex-wrap gap-2 w-fit max-w-full">
+                {message.attachments.map((attachment, index) => (
+                  <AttachmentPreview
+                    key={`${message.uid}-attachment-${index}`}
+                    attachment={attachment}
+                  />
+                ))}
+              </div>
+            )}
+          </>
         )}
 
         {message.created_at !== message.updated_at && (

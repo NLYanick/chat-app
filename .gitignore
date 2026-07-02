@@ -1,3 +1,5 @@
 **/node_modules
-backend/public/images/*
 */.env
+
+backend/public/images/*
+backend/public/files/*

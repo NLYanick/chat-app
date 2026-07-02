@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const uploads = require('../middleware/uploads');
+const uploads = require('../services/image-uploads');
 
 const Room = mongoose.model("Room");
 const User = mongoose.model("User");

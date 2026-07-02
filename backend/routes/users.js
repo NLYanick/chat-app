@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const uploads = require('../middleware/uploads');
+const uploads = require('../services/image-uploads');
 const { userExistsInDb } = require('../utils');
 const UserStatus = require('../models/enums/user-status');
 

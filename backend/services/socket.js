@@ -82,9 +82,9 @@ function handleSocket(io, socket, userRooms, userFriends, allRooms) {
   });
 
   socket.on('send_message', (data) => {
-    const { message, room_id } = data;
+    const { message, room_id, attachments } = data;
 
-    io.to(`room:${room_id}`).emit('message_sent', { message, room_id });
+    io.to(`room:${room_id}`).emit('message_sent', { message, room_id, attachments });
   });
   socket.on('edit_message', (data) => {
     const { message_id, text, room_id, updated_at } = data;

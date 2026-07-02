@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
 const { sendResetPasswordEmail } = require("./services/mail");
+const FileType = require('./models/enums/file-type');
 
 const User = mongoose.model('User');
 
@@ -37,8 +38,16 @@ function saveParseJson(textBody) {
     }
 }
 
+function resolveFileType(mimetype) {
+    if (mimetype.startsWith('image/')) return FileType.IMAGE;
+    if (mimetype.startsWith('video/')) return FileType.VIDEO;
+    if (mimetype.startsWith('audio/')) return FileType.AUDIO;
+    return FileType.FILE;
+}
+
 module.exports = { 
     setResetTokenAndSendEmail,
     userExistsInDb,
-    saveParseJson
+    saveParseJson,
+    resolveFileType
 };
