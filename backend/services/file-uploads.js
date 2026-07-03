@@ -41,4 +41,4 @@ const fileUpload = multer({
     }
 });
 
-module.exports = { fileUpload, MAX_FILES_AMOUNT };
+module.exports = { fileUpload, MAX_FILES_AMOUNT, UPLOAD_DIR, ALLOWED_MIME };

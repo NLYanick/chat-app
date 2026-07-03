@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const { fileUpload, MAX_FILES_AMOUNT } = require('../services/file-uploads');
+const fs = require('fs');
+const { fileUpload, MAX_FILES_AMOUNT, UPLOAD_DIR } = require('../services/file-uploads');
 const { resolveFileType } = require('../utils');
 
 const Message = mongoose.model("Message");
@@ -81,6 +82,20 @@ router.delete('/:id', async function(req, res, next) {
 
     if (!deletedMessage) {
       return res.status(404).json({ message: "Not Found", error: "Message not found", success: false });
+    }
+
+    if (deletedMessage.attachments && deletedMessage.attachments.length > 0) {
+      const filesToDelete = await File.find({ uid: { $in: deletedMessage.attachments } });
+      await File.deleteMany({ uid: { $in: deletedMessage.attachments } });
+
+      filesToDelete.forEach(file => {
+        const filePath = UPLOAD_DIR + '/' + file.storedName;
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(`Failed to delete file ${filePath}:`, err);
+          }
+        });
+      });
     }
 
     res.status(204).send();

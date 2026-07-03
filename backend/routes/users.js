@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
+const fs = require('fs');
 const uploads = require('../services/image-uploads');
 const { userExistsInDb } = require('../utils');
 const UserStatus = require('../models/enums/user-status');
@@ -65,6 +67,16 @@ router.post('/:id/upload-avatar', uploads.single('avatar_url'), async function (
     if (!req.file) return res.status(400).json({ error: "No image uploaded", success: false });
 
     const imagePath = req.file ? `/images/${req.file.filename}` : '';
+
+    const oldUser = await User.findOne({ uid: req.params.id });
+    if (oldUser && oldUser.avatar_url) {
+      const filePath = path.join(__dirname, '..', 'public', oldUser.avatar_url);
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error(`Failed to delete file ${filePath}:`, err);
+        }
+      });
+    }
 
     const user = await User.findOneAndUpdate(
       { uid: req.params.id },
