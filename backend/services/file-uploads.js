@@ -12,7 +12,7 @@ const ALLOWED_MIME = new Set([
     'audio/mpeg', 'audio/wav', 'audio/ogg',
     'application/pdf',
     'text/plain',
-    'application/zip',
+    'application/zip', 'application/x-zip-compressed', 'application/x-rar-compressed',
 ]);
 
 const storage = multer.diskStorage({
