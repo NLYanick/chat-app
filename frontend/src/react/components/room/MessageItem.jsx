@@ -6,26 +6,36 @@ import ProfileIcon from "../profile/ProfileIcon";
 import MessageToolsBubble from "./MessageToolsBubble";
 import Button from "../Button";
 import AttachmentPreview from "./AttachmentPreview";
+import FileUploadItem from "./FileUploadItem";
 
 function MessageItem({ message, member, onOpenModal }) {
   const [barVisible, setBarVisible] = useState(false);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.text);
+  const [editFiles, setEditFiles] = useState(message.attachments_details || []);
 
   const { user } = useAuth();
 
   const createdDate = new Date(message.created_at);
   const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
+  const canNotEdit = () => {
+    return (
+        (!editText.trim() && !message.attachments) 
+        || (editText.trim() === message.text && editFiles.length === message.attachments_details?.length)
+        || (!editText.trim() && editFiles.length === 0)
+      )
+  }
   const onEdit = async () => {
-    if ((!editText.trim() && !message.attachments) || editText.trim() === message.text) {
+    if (canNotEdit()) {
       setIsEditing(false);
+      setEditText(message.text);
       return;
     }
 
     try {
-      const { json } = await sendRequest(`/messages/${message.uid}`, 'PUT', { text: editText });
+      const { json } = await sendRequest(`/messages/${message.uid}`, 'PUT', { text: editText, attachments: editFiles.map(file => file.uid) });
 
       if (!json.success) {
         console.error("Failed to edit message:", json.error);
@@ -53,12 +63,19 @@ function MessageItem({ message, member, onOpenModal }) {
   const onCancelEdit = () => {
     setIsEditing(false);
     setEditText(message.text);
+    setEditFiles(message.attachments_details || []);
   }
 
   const onEditInputKeyDown = (e) => {
     if (e.key === 'Enter') onEdit();
     if (e.key === 'Escape') { setIsEditing(false); setEditText(message.text); }
   }
+
+  const removeFileFromMessage = (index) => {
+    if (!canNotEdit()) {
+      setEditFiles(prev => prev.filter((_, i) => i !== index));
+    }
+  };
   
   return (
     <div 
@@ -74,20 +91,38 @@ function MessageItem({ message, member, onOpenModal }) {
         <span className="text-left">{member?.username || "Unknown User"} <span className="text-sm text-gray-300">| {formattedDate}</span></span>
         
         {isEditing ? (
-          <div className="flex flex-col gap-2 w-full">
-            <input 
-              type="text"
-              className="bg-gray-700 p-2 rounded-md border-2 border-gray-500 focus:outline-none w-full"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              onKeyDown={onEditInputKeyDown}
-              autoFocus
-            />
-            <div className="flex gap-2 text-xs">
-              <button className="text-green-400 font-semibold cursor-pointer" onClick={onEdit}>Save</button>
-              <button className="text-gray-400 cursor-pointer" onClick={onCancelEdit}>Cancel</button>
+          <>
+            {editFiles?.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {editFiles.map((file, index) => (
+                  <FileUploadItem 
+                    key={`${file.name}-${file.size}-${index}`}
+                    file={file} 
+                    onRemove={removeFileFromMessage} 
+                    index={index} 
+                  />
+                ))}
+              </div>
+            )}
+            <div className="flex flex-col gap-2 w-full">
+              <input 
+                type="text"
+                className="bg-gray-700 p-2 rounded-md border-2 border-gray-500 focus:outline-none w-full"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                onKeyDown={onEditInputKeyDown}
+                autoFocus
+              />
+              <div className="flex gap-2 text-xs">
+                <button className={`text-green-400 font-semibold cursor-pointer ${canNotEdit() ? 'opacity-50 cursor-not-allowed' : ''}`} onClick={onEdit} disabled={canNotEdit()}>
+                  Save
+                </button>
+                <button className="text-gray-400 cursor-pointer" onClick={onCancelEdit}>
+                  Cancel
+                </button>
+              </div>
             </div>
-          </div>
+          </>
         ) : (
           <>
             {message.text && (
@@ -96,9 +131,9 @@ function MessageItem({ message, member, onOpenModal }) {
               </div>
             )}
  
-            {message.attachments_details?.length > 0 && (
+            {editFiles?.length > 0 && (
               <div className="flex flex-wrap gap-2 w-fit max-w-full relative">
-                {message.attachments_details.map((attachment, index) => (
+                {editFiles.map((attachment, index) => (
                   <AttachmentPreview
                     key={`${message.uid}-attachment-${index}`}
                     attachment={attachment}

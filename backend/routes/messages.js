@@ -59,7 +59,11 @@ router.put('/:id', async function(req, res, next) {
   const { text } = req.body;
 
   try {
-    const updatedMessage = await Message.findOneAndUpdate({ uid: req.params.id }, { text }, { new: true });
+    const updatedMessage = await Message.findOneAndUpdate(
+      { uid: req.params.id }, 
+      { text, attachments: req.body.attachments }, 
+      { new: true }
+    ).populate('attachments_details');
 
     if (!updatedMessage) {
       return res.status(404).json({ message: "Not Found", error: "Message not found", success: false });
