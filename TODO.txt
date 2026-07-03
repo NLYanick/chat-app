@@ -1,12 +1,12 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with showing the status, but I don't know what's wrong
-- You can't correctly edit a message now. You can't add text to a file-only message and can't add a file to a text-only message 
-- Make it possible for images and video's to be made larger (for showing only)
-- Error handling for file-upload
+- You can't edit a file right now
 - Check if a user is a member of the room, before it can access the files
 - When deleting a file upload (or room image or avatar), remove it from the storage
+- Right now, you can edit multiple messages at the same time. Fix it.
 - You should be able to download all files, not only files (also images, videos, audio, etc.)
+- Make it possible for images and video's to be made larger (for showing only)
 
 # Functionality
 - Room authorization in backend

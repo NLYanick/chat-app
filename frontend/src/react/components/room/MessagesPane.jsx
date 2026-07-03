@@ -168,9 +168,9 @@ function MessagesPane({ room, members }) {
       }
 
       const { json } = await sendRequest(`/messages/rooms/${room?.uid}`, 'POST', formData);
-
+      
       if (!json.success) {
-        setError("Failed to send message:", json.error);
+        setError("Failed to send message: " + (json.error || "Unknown error"));
         return;
       }
 
@@ -228,7 +228,6 @@ function MessagesPane({ room, members }) {
       <div className='flex flex-col gap-4 py-4 h-full overflow-y-scroll overflow-x-hidden app-scrollbar'>
         <h1 className='text-3xl sm:text-4xl font-bold my-6'>Welcome to {room?.name || 'the room'}</h1>
         
-        {error && <p className='text-red-500'>{error}</p>}
         {messages.length === 0 && (
           <p>No messages yet. Start the conversation!</p>
         )} 
@@ -242,6 +241,7 @@ function MessagesPane({ room, members }) {
             />
           ))
         )}
+        {error && <p className='text-red-500'>{error}</p>}
  
         <div ref={messagesEndRef} />
  
@@ -300,6 +300,7 @@ function MessagesPane({ room, members }) {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
             disabled={isUploading}
+            autoComplete="off"
           />
  
           <Button

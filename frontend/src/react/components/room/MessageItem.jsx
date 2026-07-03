@@ -15,10 +15,11 @@ function MessageItem({ message, member, onOpenModal }) {
 
   const { user } = useAuth();
 
-  const formattedDate = new Date(message.created_at).toLocaleString().slice(0, 16).replace(',', ' ');
+  const createdDate = new Date(message.created_at);
+  const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   const onEdit = async () => {
-    if (!editText.trim() || editText.trim() === message.text) {
+    if ((!editText.trim() && !message.attachments) || editText.trim() === message.text) {
       setIsEditing(false);
       return;
     }
@@ -96,7 +97,7 @@ function MessageItem({ message, member, onOpenModal }) {
             )}
  
             {message.attachments_details?.length > 0 && (
-              <div className="flex flex-wrap gap-2 w-fit max-w-full">
+              <div className="flex flex-wrap gap-2 w-fit max-w-full relative">
                 {message.attachments_details.map((attachment, index) => (
                   <AttachmentPreview
                     key={`${message.uid}-attachment-${index}`}

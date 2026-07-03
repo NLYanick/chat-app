@@ -31,7 +31,7 @@ function handleError(err, req, res, next) {
     if(err.status && err.status < 500) {
         res.status(err.status).send({ error: err.message, success: false });
     } else {
-        res.status(500).send({ error: "Internal Server Error", success: false });
+        res.status(500).send({ error: err.message || "Internal Server Error", success: false });
     }
 }
 
