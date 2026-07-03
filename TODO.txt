@@ -1,14 +1,12 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
-- Change the message architecture: message needs a connection to files called "attachments"
-- Right now, you can't add text to an file only message. Fix it
+- You can't correctly edit a message now. You can't add text to a file only message and can't add a file to a text only message 
 - Make it possible for images and video's to be made larger (for showing only)
 - Error handling for file-upload
 - Real-time file adding
 - Check if a user is a member of the room, before it can access the files
 - When deleting a file upload (or room image or avatar), remove it from the storage
-- Maybe do file upload and text upload in same API call
 
 # Functionality
 - Room authorization in backend

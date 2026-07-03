@@ -9,7 +9,7 @@ import Modal from "../Modal";
 
 function MessagesPane({ room, members }) {
   const [messages, setMessages] = useState([]);
-  const [files, setFiles] = useState([]);
+  // const [files, setFiles] = useState([]);
 
   const [newMessage, setNewMessage] = useState("");
   const [newFiles, setNewFiles] = useState([]);
@@ -43,10 +43,11 @@ function MessagesPane({ room, members }) {
           return;
         }
 
-        json.messages[0].attachments = json.files;
+        // json.messages[0].attachments = json.files;
+        console.log("Fetched messages:", json.messages);
 
         setMessages(json.messages);
-        setFiles(json.files);
+        // setFiles(json.files);
 
         unsubscribeSend = subscribeToEvent('message_sent', ({ message, room_id, attachments }) => {
           if (room_id === room?.uid) {
@@ -55,12 +56,12 @@ function MessagesPane({ room, members }) {
               if (exists) return prev;
               return [...prev, message];
             });
-            if (attachments && attachments.length > 0) {
-              setFiles(prev => {
-                const newFiles = attachments.filter(att => !prev.some(f => f.uid === att.uid));
-                return [...prev, ...newFiles];
-              });
-            }
+            // if (attachments && attachments.length > 0) {
+            //   setFiles(prev => {
+            //     const newFiles = attachments.filter(att => !prev.some(f => f.uid === att.uid));
+            //     return [...prev, ...newFiles];
+            //   });
+            // }
           }
         });
         unsubscribeEdit = subscribeToEvent('message_edited', ({ message_id, text, room_id, updated_at }) => {
@@ -75,9 +76,9 @@ function MessagesPane({ room, members }) {
             setMessages(prev => {
               return prev.filter(m => m.uid !== message_id);
             });
-            setFiles(prev => {
-              return prev.filter(f => f.uid !== message_id);
-            });
+            // setFiles(prev => {
+            //   return prev.filter(f => f.uid !== message_id);
+            // });
           }
         });
       } catch (error) {
@@ -172,27 +173,32 @@ function MessagesPane({ room, members }) {
     setError(null);
 
     try {
-      const { json } = await sendRequest(`/messages/rooms/${room?.uid}`, 'POST', {
-        text: newMessage.trim(),
-        sender: user.uid,
-      });
+      const formData = new FormData();
+      formData.append('text', trimmed);
+      formData.append('sender', user.uid);
+      
+      if (newFiles.length > 0) {
+        newFiles.forEach(file => formData.append('files', file));
+      }
+
+      const { json } = await sendRequest(`/messages/rooms/${room?.uid}`, 'POST', formData);
 
       if (!json.success) {
         setError("Failed to send message:", json.error);
         return;
       }
 
-      if (newFiles.length > 0) {
-        const formData = new FormData();
-        newFiles.forEach(file => formData.append('files', file));
-        formData.append('sender', user.uid);
+      // if (newFiles.length > 0) {
+      //   const formData = new FormData();
+      //   newFiles.forEach(file => formData.append('files', file));
+      //   formData.append('sender', user.uid);
 
-        const { json: filesJson } = await sendRequest(`/messages/rooms/${room?.uid}/files`, 'POST', formData, true);
-        if (!filesJson.success) {
-          setError("Failed to upload files:", filesJson.error);
-          return;
-        }
-      }
+      //   const { json: filesJson } = await sendRequest(`/messages/rooms/${room?.uid}/files`, 'POST', formData, true);
+      //   if (!filesJson.success) {
+      //     setError("Failed to upload files:", filesJson.error);
+      //     return;
+      //   }
+      // }
 
       emitEvent('send_message', { message: json.data, room_id: room?.uid });
 
@@ -249,7 +255,8 @@ function MessagesPane({ room, members }) {
         <h1 className='text-3xl sm:text-4xl font-bold my-6'>Welcome to {room?.name || 'the room'}</h1>
         
         {error && <p className='text-red-500'>{error}</p>}
-        {messages.length === 0 && files.length === 0 && (
+        {messages.length === 0 && (
+        // {messages.length === 0 && files.length === 0 && (
           <p>No messages yet. Start the conversation!</p>
         )} 
         {messages.length > 0 && (

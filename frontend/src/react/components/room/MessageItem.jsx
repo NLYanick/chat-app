@@ -95,9 +95,9 @@ function MessageItem({ message, member, onOpenModal }) {
               </div>
             )}
  
-            {message.attachments?.length > 0 && (
+            {message.attachments_details?.length > 0 && (
               <div className="flex flex-wrap gap-2 w-fit max-w-full">
-                {message.attachments.map((attachment, index) => (
+                {message.attachments_details.map((attachment, index) => (
                   <AttachmentPreview
                     key={`${message.uid}-attachment-${index}`}
                     attachment={attachment}

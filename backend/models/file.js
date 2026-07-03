@@ -20,15 +20,7 @@ const fileSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: FileType.ALL,
-        default: 'file'
-    },
-    room: { 
-        type: String, 
-        required: true 
-    },
-    sender: { 
-        type: String, 
-        required: true 
+        default: FileType.FILE
     }
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
