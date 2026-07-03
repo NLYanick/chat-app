@@ -11,8 +11,6 @@ router.get('/rooms/:room_id', async function(req, res, next) {
   try {
     const messages = await Message.find({ room: req.params.room_id }).populate('attachments_details').sort({ created_at: 1 });
     if(!messages) return res.status(404).json({ message: "Not Found", error: "No messages found for this room", success: false });
-    
-    // const files = await File.find({ room: req.params.room_id }).sort({ created_at: 1 });
 
     res.status(200).json({ messages, message: "Messages retrieved successfully", success: true });
   } catch (error) {
@@ -23,7 +21,7 @@ router.get('/rooms/:room_id', async function(req, res, next) {
 router.post('/rooms/:room_id', fileUpload.array('files', MAX_FILES_AMOUNT), async function(req, res, next) {
   const { text, sender } = req.body;
 
-  if (!text || !sender) return res.status(400).json({ message: "Bad Request", error: "The fields 'text' and 'sender' are required.", success: false });
+  if (!sender || (!text && !req.files)) return res.status(400).json({ message: "Bad Request", error: "The field 'sender' is required and at least one of 'text' or 'files' is required.", success: false });
   
   try {
     let files = [];
@@ -49,39 +47,13 @@ router.post('/rooms/:room_id', fileUpload.array('files', MAX_FILES_AMOUNT), asyn
       room: req.params.room_id,
       attachments: files.map(file => file.uid),
     });
+    newMessage.attachments_details = files;
   
     res.status(201).json({ message: "Message created successfully", data: newMessage, success: true });
   } catch (error) {
     next(error);
   }
 });
-
-// router.post('/rooms/:room_id/files', fileUpload.array('files', MAX_FILES_AMOUNT), async function(req, res, next) {
-//   const { sender } = req.body;
-
-//   if (!sender) return res.status(400).json({ message: "Bad Request", error: "The field 'sender' is required.", success: false });
-
-//   try {
-//     const filePromises = req.files.map(async (file) => {
-//       return await File.create({
-//         url: `/files/${file.filename}`,
-//         filename: file.originalname,
-//         storedName: file.filename,
-//         mimetype: file.mimetype,
-//         size: file.size,
-//         type: resolveFileType(file.mimetype),
-//         sender,
-//         room: req.params.room_id
-//       });
-//     });
-  
-//     const files = await Promise.all(filePromises);
-  
-//     res.status(201).json({ message: "Files added successfully", files, success: true });
-//   } catch (error) {
-//     next(error);
-//   }
-// });
 
 router.put('/:id', async function(req, res, next) {
   const { text } = req.body;
