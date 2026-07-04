@@ -14,6 +14,9 @@ router.post('/', async function(req, res, next) {
         const recipient = await User.findOne({ username: recipient_name });
         if (!sender || !recipient) return res.status(404).json({ message: "User not found", error: "The specified user does not exist", success: false });
 
+        if (sender.uid === recipient.uid) return res.status(400).json({ message: "Invalid friend request", error: "You cannot send a friend request to yourself", success: false });
+        if (sender.friends.includes(recipient.uid)) return res.status(400).json({ message: "Already friends", error: "You are already friends with this user", success: false });
+
         const existingRequest = await FriendRequest.findOne({ sender: sender.uid, recipient: recipient.uid, status: InviteStatus.PENDING });
         if (existingRequest) return res.status(409).json({ message: "Friend request already sent", error: "A friend request has already been sent to this user", success: false });
 

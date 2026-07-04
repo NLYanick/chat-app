@@ -1,3 +1,4 @@
+const Logger = require("../services/logger");
 const { saveParseJson } = require("../utils");
 
 function verifyApiKey(req, res, next) {
@@ -27,6 +28,8 @@ function handleError(err, req, res, next) {
 
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+    Logger.logError(err);
 
     if(err.status && err.status < 500) {
         res.status(err.status).send({ error: err.message, success: false });
