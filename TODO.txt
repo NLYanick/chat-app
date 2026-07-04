@@ -5,8 +5,8 @@
 - You should be able to download all files, not only files (also images, videos, audio, etc.)
 - Make it possible for images and video's to be made larger (for showing only)
 - Friendslist status changes must be real-time
-- User Profile must have an Add Friend button
-- In rooms and friends list, there must be a button to check out the user's Profile 
+- When a user logs in and has a notification, it should add the red circle too
+- When a user has a notification and is on the notification page, it should be removed
 
 # Functionality
 - Logging service
