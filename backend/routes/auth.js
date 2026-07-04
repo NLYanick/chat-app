@@ -43,7 +43,8 @@ router.post('/register', async function (req, res, next) {
       username: user.username,
       email: user.email, 
       avatar_url: user.avatar_url, 
-      created_at: user.created_at
+      created_at: user.created_at,
+      disabled: user.disabled
     }
 
     res.status(201).json({ message: "Registered!", success: true, user: userData });
@@ -75,7 +76,8 @@ router.post('/login', async function (req, res, next) {
       username: user.username,
       email: user.email, 
       avatar_url: user.avatar_url, 
-      created_at: user.created_at
+      created_at: user.created_at,
+      disabled: user.disabled
     }
     
     res.status(200).json({ message: "Logged In!", success: true, user: userData });

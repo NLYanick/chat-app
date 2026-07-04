@@ -63,7 +63,16 @@ function Profile() {
       const { json, status } = await sendRequest(`/users/${user.uid}/upload-avatar`, 'POST', formData);
 
       if (status === 201 && json.user) {
-        login(json.user);
+        const userData = {
+          uid: json.user.uid,
+          avatar_url: json.user.avatar_url,
+          username: json.user.username,
+          email: json.user.email,
+          created_at: json.user.created_at,
+          disabled: json.user.disabled,
+        }
+
+        login(userData);
         setUserError(null);
       } else {
         console.error(json.error);

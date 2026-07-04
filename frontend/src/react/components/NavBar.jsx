@@ -64,7 +64,7 @@ function NavBar() {
           <DropDownMenu buttonContent={
             <ProfileIcon imgSrc={user.avatar_url} />
           }>
-            <DropDownLink label="Profile" to="/profile"/>
+            <DropDownLink label="Profile" to="/profile/me"/>
             <DropDownLink label="Logout" type="error" action={handleLogout} />
           </DropDownMenu>
         </div>

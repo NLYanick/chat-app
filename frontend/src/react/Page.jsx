@@ -4,6 +4,7 @@ import ProtectedRoute from './ProtectedRoute';
 import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
+import UserProfile from './pages/UserProfile';
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
 import ResetPassword from './pages/auth/ResetPassword';
@@ -26,7 +27,10 @@ function Page() {
           <Route path='/forgot-password' element={<ForgotPassword />}></Route>
 
           <Route path='/' element={<ProtectedRoute><Home /></ProtectedRoute>}></Route>
-          <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
+          <Route path='/profile'>
+            <Route path='me' index element={<ProtectedRoute><Profile /></ProtectedRoute>}></Route>
+            <Route path=':userId' index element={<ProtectedRoute><UserProfile /></ProtectedRoute>}></Route>
+          </Route>
           <Route path='/notifications' element={<ProtectedRoute><Notifications /></ProtectedRoute>}></Route>
           <Route path='/friends' element={<ProtectedRoute><Friends /></ProtectedRoute>}></Route>
 
