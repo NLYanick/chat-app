@@ -1,9 +1,13 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+
 const { sendResetPasswordEmail } = require("./services/mail");
 const FileType = require('./models/enums/file-type');
 
 const User = mongoose.model('User');
+
+const COOKIE_MAX_AGE = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 async function setResetTokenAndSendEmail(user) {
     user.password_reset_token = crypto.randomBytes(32).toString("hex");
@@ -45,9 +49,30 @@ function resolveFileType(mimetype) {
     return FileType.FILE;
 }
 
+function createAccessToken(user) {
+    return jwt.sign({ uid: user.uid }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+}
+
+function createRefreshToken(user, remember) {
+    return jwt.sign({ uid: user.uid, remember }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+}
+
+function addCookieOptions(res, token, remember) {
+    const cookieOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: remember ? COOKIE_MAX_AGE : undefined,
+    };
+    res.cookie('refresh_token', token, cookieOptions);
+}
+
 module.exports = { 
     setResetTokenAndSendEmail,
     userExistsInDb,
     saveParseJson,
-    resolveFileType
+    resolveFileType,
+    createAccessToken,
+    createRefreshToken,
+    addCookieOptions
 };

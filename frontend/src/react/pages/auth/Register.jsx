@@ -36,7 +36,7 @@ function Register() {
     const { json, status } = await sendRequest('/authenticate/register', 'POST', { email, username, password, confirmPassword, staySignedIn: staySignedIn ?? false });
 
     if (json.success) {
-      login(json.user);
+      login(json.user, json.accessToken);
       navigate("/");
     } else if (json.error && status < 500) {
       setUserErrors([json.error]);

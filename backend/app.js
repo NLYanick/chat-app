@@ -18,7 +18,7 @@ const messagesRouter = require('./routes/messages');
 const roomInvitesRouter = require('./routes/room-invites');
 const friendRequestRouter = require('./routes/friend-requests');
 
-const { handleError, verifyApiKey } = require('./middleware/middleware');
+const { handleError, verifyApiKey, requireAuth } = require('./middleware/middleware');
 
 const app = express();
 
@@ -28,7 +28,10 @@ app.use(express.json());
 app.use(express.text({ type: "text/plain" }));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+}));
 
 
 const v1Router = express.Router();
@@ -36,8 +39,10 @@ const v1Router = express.Router();
 v1Router.use('/public', express.static(path.join(__dirname, 'public')));
 v1Router.use(verifyApiKey);
 
-v1Router.use('/', indexRouter);
 v1Router.use('/authenticate', authRouter);
+v1Router.use(requireAuth);
+
+v1Router.use('/', indexRouter);
 v1Router.use('/users', usersRouter);
 v1Router.use('/mails', mailRouter);
 v1Router.use('/rooms', roomsRouter);

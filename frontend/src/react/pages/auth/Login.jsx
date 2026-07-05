@@ -33,7 +33,7 @@ function Login() {
     const { json, status } = await sendRequest('/authenticate/login', 'POST', { username, password, staySignedIn: staySignedIn ?? false });
 
     if (json.success) {
-      login(json.user);
+      login(json.user, json.accessToken);
       navigate("/");
     } else if (json.error && status < 500) {
       setUserErrors([json.error]);

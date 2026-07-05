@@ -29,7 +29,7 @@ function NavBar() {
   }, [user]);
 
   const handleLogout = async () => {
-    const { json } = await sendRequest('/authenticate/logout', 'POST', { username: user.username });
+    const { json } = await sendRequest('/authenticate/logout', 'POST', { user_id: user.uid });
 
     if(json.success) {
       logout();
