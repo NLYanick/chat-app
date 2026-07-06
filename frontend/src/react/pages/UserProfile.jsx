@@ -52,7 +52,6 @@ function UserProfile() {
   if (error) throw new Error(error);
 
   const addFriend = async (username) => {
-    console.log("Adding friend:", username);
     try {
       const { json, status } = await sendRequest(`/friend-requests`, "POST", { sender_id: user.uid, recipient_name: username });
 

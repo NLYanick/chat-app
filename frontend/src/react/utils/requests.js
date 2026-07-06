@@ -1,4 +1,4 @@
-import { getAccessToken } from './token-store';
+import { getAccessToken, setAccessToken } from './token-store';
 
 export async function sendRequest(endpoint, method = 'GET', body = null, headers = {}, keepalive = false, credentials = 'include', _isRetry = false) {
   try {

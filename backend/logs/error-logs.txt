@@ -46,3 +46,8 @@
     at model.save (C:\Users\yanic\VS-Code\JavaScript projecten\Chat-App\backend\node_modules\mongoose\lib\model.js:600:28)
     at C:\Users\yanic\VS-Code\JavaScript projecten\Chat-App\backend\routes\auth.js:162:16
     at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-07-06T14:25:53.378Z] VersionError: No matching document found for id "699887b030a74debe382b6ac" version 17 modifiedPaths "refreshTokens"
+    at generateVersionError (C:\Users\yanic\VS-Code\JavaScript projecten\Chat-App\backend\node_modules\mongoose\lib\model.js:539:10)
+    at model.save (C:\Users\yanic\VS-Code\JavaScript projecten\Chat-App\backend\node_modules\mongoose\lib\model.js:600:28)
+    at C:\Users\yanic\VS-Code\JavaScript projecten\Chat-App\backend\routes\auth.js:159:16
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)

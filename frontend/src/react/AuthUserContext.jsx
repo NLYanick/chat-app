@@ -19,8 +19,6 @@ export function AuthUserProvider({ children }) {
   }, [user]);
 
   const login = (userData, accessToken) => {
-    console.log("Logging in user:", userData);
-    console.log("Access token:", accessToken);
     setUser(userData);
     setAccessToken(accessToken);
     sessionStorage.setItem("user", JSON.stringify(userData));
