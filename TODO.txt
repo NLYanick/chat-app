@@ -8,7 +8,6 @@
 - When a user has a notification and is on the notification page, it should be removed
 
 # Tidiness
-- Good Homepage
 - Resizable
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
@@ -17,10 +16,8 @@
 
 # Extra
 - Better error handling
-- Use JWT Tokens to access the backend, since everything in the frontend is public
 - Check if a user is a member of the room, before it can access the files
 - Room authorization in backend
-- Better avatar naming, so the old avatar can be removed after changing
 - You can see if someone is typing
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
 - Searchable Dropdown for user inviting
