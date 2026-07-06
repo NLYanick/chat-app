@@ -2,7 +2,10 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+
 const UserStatus = require('../models/enums/user-status');
+const { createAccessToken, createRefreshToken, addCookieOptions } = require('../utils');
 
 const router = express.Router();
 
@@ -28,6 +31,8 @@ router.post('/register', async function (req, res, next) {
     if (existingUser) return res.status(400).json({ message: "Registration failed", error: "Username already exists.", success: false });
 
     const passwordResetToken = crypto.randomBytes(32).toString("hex");
+    const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user, staySignedIn);
 
     const user = await User.create({
       username,
@@ -35,18 +40,22 @@ router.post('/register', async function (req, res, next) {
       avatar_url: '',
       password: password,
       password_reset_token: passwordResetToken,
-      status: UserStatus.ONLINE
+      status: UserStatus.ONLINE,
+      refreshTokens: [refreshToken]
     });
+
+    addCookieOptions(res, refreshToken, staySignedIn);
 
     const userData = { 
       uid: user.uid,
       username: user.username,
       email: user.email, 
       avatar_url: user.avatar_url, 
-      created_at: user.created_at
+      created_at: user.created_at,
+      disabled: user.disabled
     }
 
-    res.status(201).json({ message: "Registered!", success: true, user: userData });
+    res.status(201).json({ message: "Registered!", success: true, user: userData, accessToken });
   } catch (err) {
     next(err);
   }
@@ -65,18 +74,29 @@ router.post('/login', async function (req, res, next) {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ message: "Login failed", error: "Invalid username or password", success: false });
 
+    if (user.disabled) return res.status(404).json({ message: "Login failed", error: "Invalid username or password", success: false });
+
     user.status = UserStatus.ONLINE;
+
+    const accessToken = createAccessToken(user);
+    const refreshToken = createRefreshToken(user, staySignedIn);
+
+    const maxRefreshTokens = 5;
+    user.refreshTokens = [...(user.refreshTokens || []), refreshToken].slice(-maxRefreshTokens);
     await user.save();
+
+    addCookieOptions(res, refreshToken, staySignedIn);
 
     const userData = { 
       uid: user.uid,
       username: user.username,
       email: user.email, 
       avatar_url: user.avatar_url, 
-      created_at: user.created_at
+      created_at: user.created_at,
+      disabled: user.disabled
     }
     
-    res.status(200).json({ message: "Logged In!", success: true, user: userData });
+    res.status(200).json({ message: "Logged In!", success: true, user: userData, accessToken });
   } catch (err) {
     next(err);
   }
@@ -84,15 +104,72 @@ router.post('/login', async function (req, res, next) {
 
 router.post('/logout', async function (req, res, next) {
   try {
-    const { username } = req.body;
+    const { user_id } = req.body;
+    const token = req.cookies.refresh_token;
 
-    // Extra backend validation
-    if (!username) return res.status(400).json({ message: "Login failed", error: "The fields \"username\" and \"password\" are invalid.", success: false });
+    if (!user_id) return res.status(400).json({ message: "Logout failed", error: "The field \"user_id\" is invalid.", success: false });
     
-    // TODO
-    await User.findOneAndUpdate({ username }, { status: UserStatus.OFFLINE });
+    const update = { status: UserStatus.OFFLINE };
+    if (token) {
+      update.$pull = { refreshTokens: token };
+    }
+
+    await User.findOneAndUpdate({ uid: user_id }, update);
     
+    res.clearCookie('refresh_token');
     res.status(200).json({ message: "Logged Out!", success: true });
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+router.post('/refresh', async function (req, res, next) {
+  try {
+    const token = req.cookies.refresh_token;
+    if (!token) return res.status(401).json({ message: "Not signed in", error: "No refresh token found", success: false });
+
+    let payload;
+    try {
+      payload = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
+    } catch (err) {
+      return res.status(401).json({ message: "Session expired", error: "Expired refresh token", success: false });
+    }
+
+    const user = await User.findOne({ uid: payload.uid });
+    if (!user || !user.refreshTokens?.includes(token)) {
+      return res.status(401).json({ message: "Session invalid", error: "Invalid refresh token", success: false });
+    }
+
+    if (!user.refreshTokens?.includes(token)) {
+      user.refreshTokens = [];
+      await user.save();
+
+      res.clearCookie('refresh_token');
+      return res.status(401).json({ message: "Session invalid, please log in again", success: false });
+    }
+
+    const accessToken = createAccessToken(user);
+    const newRefreshToken = createRefreshToken(user, payload.remember);
+
+    user.refreshTokens = user.refreshTokens
+      .filter(t => t !== token)
+      .concat(newRefreshToken)
+      .slice(-5);
+    await user.save();
+
+    addCookieOptions(res, newRefreshToken, payload.remember);
+
+    const userData = { 
+      uid: user.uid,
+      username: user.username,
+      email: user.email, 
+      avatar_url: user.avatar_url, 
+      created_at: user.created_at,
+      disabled: user.disabled
+    }
+
+    res.status(200).json({ message: "Token refreshed", success: true, user: userData, accessToken });
   } catch (err) {
     next(err);
   }

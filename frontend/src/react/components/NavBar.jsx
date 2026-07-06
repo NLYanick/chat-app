@@ -29,7 +29,7 @@ function NavBar() {
   }, [user]);
 
   const handleLogout = async () => {
-    const { json } = await sendRequest('/authenticate/logout', 'POST', { username: user.username });
+    const { json } = await sendRequest('/authenticate/logout', 'POST', { user_id: user.uid });
 
     if(json.success) {
       logout();
@@ -64,7 +64,7 @@ function NavBar() {
           <DropDownMenu buttonContent={
             <ProfileIcon imgSrc={user.avatar_url} />
           }>
-            <DropDownLink label="Profile" to="/profile"/>
+            <DropDownLink label="Profile" to="/profile/me"/>
             <DropDownLink label="Logout" type="error" action={handleLogout} />
           </DropDownMenu>
         </div>

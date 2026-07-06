@@ -12,6 +12,12 @@ class UserStatus {
     static containsStatus(value) {
         return UserStatus.ALL.includes(value);
     }
+
+    static STATUS_STYLES = {
+        online: "bg-green-500",
+        offline: "bg-gray-500",
+        away: "bg-yellow-500",
+    }
 }
 
 export default UserStatus;

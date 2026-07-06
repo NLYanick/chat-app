@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
-const uploads = require('../middleware/uploads');
+const path = require('path');
+const fs = require('fs');
+const uploads = require('../services/image-uploads');
 
 const Room = mongoose.model("Room");
 const User = mongoose.model("User");
@@ -69,8 +71,19 @@ router.patch('/:id', uploads.single('room_image'), async function(req, res, next
   try {
     const updateFields = { name, description, color_hex };
 
-    if(req.file) 
+    if(req.file) { 
       updateFields.image = req.file ? `/images/${req.file.filename}` : '';
+
+      const oldRoom = await Room.findOne({ uid: req.params.id });
+      if (oldRoom && oldRoom.image) {
+        const filePath = path.join(__dirname, '..', 'public', oldRoom.image);
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.error(`Failed to delete file ${filePath}:`, err);
+          }
+        });
+      }
+    }
 
     const room = await Room.findOneAndUpdate({ uid: req.params.id }, updateFields, { new: true });
 

@@ -1,19 +1,13 @@
 # Now
+- For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
-
-# Functionality
-- Room authorization in backend
-- Receiving & Accepting Friend Requests in the website (and mail)
-- File upload (or at least image upload)
-- See Users Profile
-- Add Friends
-- Friendslist
-- Logging service
-- Delete user account (or disable)
-- Automatically log in Users
+- There might still be issues with the automatic login and refresh tokens. Test and fix bugs
+- Make it possible for images and video's to be made larger (for showing only)
+- Friendslist status changes must be real-time
+- When a user logs in and has a notification, it should add the red circle too
+- When a user has a notification and is on the notification page, it should be removed
 
 # Tidiness
-- Good Homepage
 - Resizable
 - Sort the files, espescially the frontend components
 - Move package.json dependencies to devDependencies if they are supposed to be there
@@ -22,30 +16,15 @@
 
 # Extra
 - Better error handling
-- Use JWT Tokens to access the backend, since everything in the frontend is public
-- Better avatar naming, so the old avatar can be removed after changing
+- Check if a user is a member of the room, before it can access the files
+- Room authorization in backend
+- You can see if someone is typing
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
 - Searchable Dropdown for user inviting
 - Invite Friends to room (easier then searching for username)
 - Send an email when the user gets an invite
 - Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
+- Real-time friends
+- Real-time rooms (you can be invited to them)
 
-(- DevOps, zoals Docker, Prometheus & Grafana, GitHub Actions)
-
-# Styling
-- Required *'s
-- Login + Register pages
-- Password inputs need an eye icon for seeing password
-- Dropdown menu and links 
-- Navigation bar
-- Modal
-- UserErrorsBox
-- Button (hover)
-- Profile Editor
-- Profile Details
-- Rooms
-- RoomItem
-- Create Room
-- ToolTip
-- Invites
-- InviteItem
+(- DevOps, like Docker, Prometheus & Grafana, GitHub Actions)

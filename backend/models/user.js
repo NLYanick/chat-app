@@ -45,7 +45,15 @@ const userSchema = new mongoose.Schema({
         type: Date,
         default: undefined,
         select: false 
-    }
+    },
+    disabled: {
+        type: Boolean,
+        default: false
+    },
+    refreshTokens: [{ 
+        type: String 
+    }],
+    old_username: String
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
 // Hash the password
@@ -63,6 +71,13 @@ userSchema.virtual('rooms', {
   ref: 'Room',
   localField: 'uid',
   foreignField: 'members',
+  justOne: false
+});
+
+userSchema.virtual('friends_details', {
+  ref: 'User',
+  localField: 'uid',
+  foreignField: 'friends',
   justOne: false
 });
 
