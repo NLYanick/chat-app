@@ -17,6 +17,8 @@ function MessagesPane({ room, members }) {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  const [editingMessageId, setEditingMessageId] = useState(null);
+
   const [showModal, setShowModal] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
 
@@ -238,6 +240,8 @@ function MessagesPane({ room, members }) {
               message={message} 
               member={members?.find(m => m.uid === message.sender)} 
               onOpenModal={onOpenModal}
+              isEditing={editingMessageId === message.uid}
+              setIsEditing={(editing) => setEditingMessageId(editing ? message.uid : null)}
             />
           ))
         )}

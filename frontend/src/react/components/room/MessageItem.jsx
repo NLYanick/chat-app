@@ -8,10 +8,9 @@ import Button from "../Button";
 import AttachmentPreview from "./AttachmentPreview";
 import FileUploadItem from "./FileUploadItem";
 
-function MessageItem({ message, member, onOpenModal }) {
+function MessageItem({ message, member, onOpenModal, isEditing, setIsEditing }) {
   const [barVisible, setBarVisible] = useState(false);
 
-  const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(message.text);
   const [editFiles, setEditFiles] = useState(message.attachments_details || []);
 
@@ -21,12 +20,11 @@ function MessageItem({ message, member, onOpenModal }) {
   const formattedDate = createdDate.toLocaleDateString() + ' ' + createdDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   const canNotEdit = () => {
-    return (
-        (!editText.trim() && !message.attachments) 
+    return (!editText.trim() && !message.attachments) 
         || (editText.trim() === message.text && editFiles.length === message.attachments_details?.length)
         || (!editText.trim() && editFiles.length === 0)
-      )
   }
+  
   const onEdit = async () => {
     if (canNotEdit()) {
       setIsEditing(false);
@@ -149,7 +147,7 @@ function MessageItem({ message, member, onOpenModal }) {
         )}
       </div>
 
-      {barVisible && member?.uid === user?.uid && (
+      {barVisible && member?.uid === user?.uid && !isEditing && (
         <MessageToolsBubble onEdit={onEditClicked} onDelete={onDeleteClick} />
       )}
     </div>
