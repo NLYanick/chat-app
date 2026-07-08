@@ -4,7 +4,7 @@ import { sendRequest } from '../utils/requests';
 import ProfileIcon from "./profile/ProfileIcon"
 import DropDownMenu from "./DropDownMenu";
 import DropDownLink from "./DropDownLink";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { subscribeToEvent } from "../utils/socket-client";
 
 const noBarRoutes = ['/login', '/register'];
@@ -15,6 +15,8 @@ function NavBar() {
   const navigate = useNavigate();
 
   const [hasNotifications, setHasNotifications] = useState(false);
+  
+  const previousPathRef = useRef(location.pathname);
 
   useEffect(() => {
     if (!user) return;
@@ -27,6 +29,31 @@ function NavBar() {
 
     return () => unsubsribe();
   }, [user]);
+
+  useEffect(() => {
+    if (hasNotifications && previousPathRef.current === "/notifications" && location.pathname !== "/notifications") {
+      setHasNotifications(false);
+    }
+
+    async function checkNotifications() {
+      if (previousPathRef.current === "/login") {
+        const { json: friendRequestsData } = await sendRequest('/friend-requests/user/' + user?.uid, 'GET');
+        const { json: roomInvitesData } = await sendRequest('/room-invites/user/' + user?.uid, 'GET');
+
+        if (!roomInvitesData.success || !friendRequestsData.success) {
+          console.error("Failed to fetch notifications:", roomInvitesData.error || friendRequestsData.error);
+          return;
+        }
+
+        if (friendRequestsData.friend_requests.length > 0 || roomInvitesData.room_invites.length > 0) {
+          setHasNotifications(true);
+        }
+      }
+    }
+    checkNotifications();
+
+    previousPathRef.current = location.pathname;
+  }, [location.pathname]);
 
   const handleLogout = async () => {
     const { json } = await sendRequest('/authenticate/logout', 'POST', { user_id: user.uid });
