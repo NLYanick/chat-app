@@ -5,7 +5,6 @@
 # Tidiness
 - Resizable
 - Sort the files, espescially the frontend components
-- Move package.json dependencies to devDependencies if they are supposed to be there
 - Skeleton pages
 - Make reusable layouts for certain page groups like Auth, Rooms, etc.
 
