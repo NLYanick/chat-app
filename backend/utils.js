@@ -53,16 +53,16 @@ function createAccessToken(user) {
     return jwt.sign({ uid: user.uid }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 }
 
-function createRefreshToken(user, remember) {
-    return jwt.sign({ uid: user.uid, remember }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+function createRefreshToken(user) {
+    return jwt.sign({ uid: user.uid }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
 }
 
-function addCookieOptions(res, token, remember) {
+function addCookieOptions(res, token) {
     const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: remember ? COOKIE_MAX_AGE : undefined,
+      maxAge: COOKIE_MAX_AGE,
     };
     res.cookie('refresh_token', token, cookieOptions);
 }

@@ -1,7 +1,6 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
-- There might still be issues with the automatic login and refresh tokens. Test and fix bugs
 
 # Tidiness
 - Resizable
