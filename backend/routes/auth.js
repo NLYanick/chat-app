@@ -27,12 +27,18 @@ router.post('/register', async function (req, res, next) {
     if (username.length > maximumUsernameLength) return res.status(400).json({ message: "Registration failed", error: `Username must be maximum ${maximumUsernameLength} characters long.`, success: false });
 
     const existingUser = await User.findOne({ username });
-
     if (existingUser) return res.status(400).json({ message: "Registration failed", error: "Username already exists.", success: false });
 
     const passwordResetToken = crypto.randomBytes(32).toString("hex");
+    
     const accessToken = createAccessToken(user);
-    const refreshToken = createRefreshToken(user, staySignedIn);
+    let refreshToken = undefined;
+
+    if(staySignedIn) {
+      refreshToken = createRefreshToken(user);
+  
+      addCookieOptions(res, refreshToken);
+    }
 
     const user = await User.create({
       username,
@@ -41,10 +47,8 @@ router.post('/register', async function (req, res, next) {
       password: password,
       password_reset_token: passwordResetToken,
       status: UserStatus.ONLINE,
-      refreshTokens: [refreshToken]
+      refreshToken: refreshToken
     });
-
-    addCookieOptions(res, refreshToken, staySignedIn);
 
     const userData = { 
       uid: user.uid,
@@ -79,13 +83,16 @@ router.post('/login', async function (req, res, next) {
     user.status = UserStatus.ONLINE;
 
     const accessToken = createAccessToken(user);
-    const refreshToken = createRefreshToken(user, staySignedIn);
-
-    const maxRefreshTokens = 5;
-    user.refreshTokens = [...(user.refreshTokens || []), refreshToken].slice(-maxRefreshTokens);
+    let refreshToken; 
+    
+    if (staySignedIn) {
+      refreshToken = createRefreshToken(user);
+  
+      user.refreshToken = refreshToken;
+      addCookieOptions(res, refreshToken);
+    }
+    
     await user.save();
-
-    addCookieOptions(res, refreshToken, staySignedIn);
 
     const userData = { 
       uid: user.uid,
@@ -108,13 +115,11 @@ router.post('/logout', async function (req, res, next) {
     const token = req.cookies.refresh_token;
 
     if (!user_id) return res.status(400).json({ message: "Logout failed", error: "The field \"user_id\" is invalid.", success: false });
-    
-    const update = { status: UserStatus.OFFLINE };
-    if (token) {
-      update.$pull = { refreshTokens: token };
-    }
 
-    await User.findOneAndUpdate({ uid: user_id }, update);
+    await User.findOneAndUpdate({ uid: user_id }, { 
+      status: UserStatus.OFFLINE,
+      refreshToken: null
+    });
     
     res.clearCookie('refresh_token');
     res.status(200).json({ message: "Logged Out!", success: true });
@@ -137,12 +142,10 @@ router.post('/refresh', async function (req, res, next) {
     }
 
     const user = await User.findOne({ uid: payload.uid });
-    if (!user || !user.refreshTokens?.includes(token)) {
-      return res.status(401).json({ message: "Session invalid", error: "Invalid refresh token", success: false });
-    }
+    if (!user) return res.status(401).json({ message: "Session invalid", error: "Invalid refresh token", success: false });
 
-    if (!user.refreshTokens?.includes(token)) {
-      user.refreshTokens = [];
+    if (user.refreshToken !== token) {
+      user.refreshToken = [];
       await user.save();
 
       res.clearCookie('refresh_token');
@@ -152,13 +155,10 @@ router.post('/refresh', async function (req, res, next) {
     const accessToken = createAccessToken(user);
     const newRefreshToken = createRefreshToken(user, payload.remember);
 
-    user.refreshTokens = user.refreshTokens
-      .filter(t => t !== token)
-      .concat(newRefreshToken)
-      .slice(-5);
-    await user.save();
-
+    user.refreshToken = newRefreshToken;
     addCookieOptions(res, newRefreshToken, payload.remember);
+    
+    await user.save();
 
     const userData = { 
       uid: user.uid,

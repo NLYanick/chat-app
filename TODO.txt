@@ -1,16 +1,10 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
-- There might still be issues with the automatic login and refresh tokens. Test and fix bugs
-- Make it possible for images and video's to be made larger (for showing only)
-- Friendslist status changes must be real-time
-- When a user logs in and has a notification, it should add the red circle too
-- When a user has a notification and is on the notification page, it should be removed
 
 # Tidiness
 - Resizable
 - Sort the files, espescially the frontend components
-- Move package.json dependencies to devDependencies if they are supposed to be there
 - Skeleton pages
 - Make reusable layouts for certain page groups like Auth, Rooms, etc.
 

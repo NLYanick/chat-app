@@ -6,6 +6,7 @@ import Button from "../Button";
 import MessageItem from "./MessageItem";
 import FileUploadItem from "./FileUploadItem";
 import Modal from "../Modal";
+import AttachmentPreview from "./AttachmentPreview";
 
 function MessagesPane({ room, members }) {
   const [messages, setMessages] = useState([]);
@@ -21,6 +22,7 @@ function MessagesPane({ room, members }) {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [selectedAttachment, setSelectedAttachment] = useState(null);
 
   const { user } = useAuth();
 
@@ -242,6 +244,7 @@ function MessagesPane({ room, members }) {
               onOpenModal={onOpenModal}
               isEditing={editingMessageId === message.uid}
               setIsEditing={(editing) => setEditingMessageId(editing ? message.uid : null)}
+              setSelectedAttachment={setSelectedAttachment}
             />
           ))
         )}
@@ -263,6 +266,12 @@ function MessagesPane({ room, members }) {
             <p>Are you sure you want to delete this message?</p>
             <p className="text-sm text-gray-300 italic truncate w-full">"{selectedMessage?.text}"</p>
           </Modal>
+        )}
+
+        {selectedAttachment && (
+          <div className='fixed inset-0 bg-[#000000AA] flex justify-center items-center' onClick={() => setSelectedAttachment(null)}>
+            <AttachmentPreview attachment={selectedAttachment} previewSize="large" />
+          </div>
         )}
       </div>
  

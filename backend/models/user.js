@@ -50,9 +50,7 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    refreshTokens: [{ 
-        type: String 
-    }],
+    refreshToken: String,
     old_username: String
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
 
