@@ -3,7 +3,7 @@ import { useAuth } from "../AuthUserContext";
 import { sendRequest } from "../utils/requests";
 import Button from "../components/Button";
 import FriendItem from "../components/FriendItem";
-import { emitEvent } from "../utils/socket-client";
+import { emitEvent, subscribeToEvent } from "../utils/socket-client";
 import Modal from "../components/Modal";
 
 function Friends() {
@@ -35,6 +35,16 @@ function Friends() {
     };
 
     fetchFriends();
+
+    const unsubscribe = subscribeToEvent('user_status_change', ({ userId, status }) => {
+      setFriends(prev =>
+        prev.map(f => f.uid === userId ? { ...f, status } : f)
+      );
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    }
   }, [user.uid]);
 
   const addFriend = async (e) => {
