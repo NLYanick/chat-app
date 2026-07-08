@@ -2,7 +2,13 @@ import { useState } from "react";
 import DownloadBubble from "../DownloadBubble";
 import { handleDownload } from "../../utils/download";
 
-function AttachmentPreview({ attachment }) {
+const AttachmentSize = {
+  small: "max-w-60 max-h-60",
+  medium: "max-w-100 max-h-100",
+  large: "max-w-150 max-h-150",
+}
+
+function AttachmentPreview({ attachment, onClick, previewSize = "small" }) {
   const { url, filename, type, size } = attachment;
 
   const [showDownload, setShowDownload] = useState(false);
@@ -10,6 +16,7 @@ function AttachmentPreview({ attachment }) {
   const [error, setError] = useState(false);
 
   const fullUrl = `${import.meta.env.VITE_BACKEND_URL}/public${url}`;
+  const sizeClass = AttachmentSize[previewSize] || AttachmentSize.small;
 
   if (type === 'image') {
     return (
@@ -17,11 +24,12 @@ function AttachmentPreview({ attachment }) {
         className="relative" 
         onMouseEnter={() => setShowDownload(true)} 
         onMouseLeave={() => setShowDownload(false)}
+        onClick={onClick}
       >
         <img
           src={fullUrl}
           alt={filename}
-          className="max-w-60 max-h-60 rounded-md object-cover"
+          className={`${sizeClass} rounded-md object-cover`}
         />
         {showDownload && <DownloadBubble filename={filename} fullUrl={fullUrl} />}
       </div>
@@ -34,8 +42,9 @@ function AttachmentPreview({ attachment }) {
         className="relative" 
         onMouseEnter={() => setShowDownload(true)} 
         onMouseLeave={() => setShowDownload(false)}
+        onClick={onClick}
       >
-        <video src={fullUrl} controls className="max-w-70 max-h-70 rounded-md" />
+        <video src={fullUrl} controls className={`${sizeClass} rounded-md`} />
         {showDownload && <DownloadBubble filename={filename} fullUrl={fullUrl} />}
       </div>
     );
@@ -48,8 +57,7 @@ function AttachmentPreview({ attachment }) {
         onMouseEnter={() => setShowDownload(true)} 
         onMouseLeave={() => setShowDownload(false)}
       >
-        <audio src={fullUrl} controls className="max-w-60" />
-        {showDownload && <DownloadBubble filename={filename} fullUrl={fullUrl} />}
+        <audio src={fullUrl} controls className={`${AttachmentSize.medium}`} />
       </div>
     );
   }

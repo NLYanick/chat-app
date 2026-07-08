@@ -8,7 +8,7 @@ import Button from "../Button";
 import AttachmentPreview from "./AttachmentPreview";
 import FileUploadItem from "./FileUploadItem";
 
-function MessageItem({ message, member, onOpenModal, isEditing, setIsEditing }) {
+function MessageItem({ message, member, onOpenModal, isEditing, setIsEditing, setSelectedAttachment }) {
   const [barVisible, setBarVisible] = useState(false);
 
   const [editText, setEditText] = useState(message.text);
@@ -135,6 +135,7 @@ function MessageItem({ message, member, onOpenModal, isEditing, setIsEditing }) 
                   <AttachmentPreview
                     key={`${message.uid}-attachment-${index}`}
                     attachment={attachment}
+                    onClick={() => setSelectedAttachment(attachment)}
                   />
                 ))}
               </div>
