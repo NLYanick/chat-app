@@ -21,8 +21,6 @@ function UserProfile() {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-
-
   const isFriend = user && userShowing && userShowing.friends.includes(user.uid);
 
   useEffect(() => {
