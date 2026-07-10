@@ -31,6 +31,15 @@ router.post('/register', async function (req, res, next) {
 
     const passwordResetToken = crypto.randomBytes(32).toString("hex");
     
+    const user = await User.create({
+      username,
+      email,
+      avatar_url: '',
+      password: password,
+      password_reset_token: passwordResetToken,
+      status: UserStatus.ONLINE
+    });
+
     const accessToken = createAccessToken(user);
     let refreshToken = undefined;
 
@@ -39,16 +48,9 @@ router.post('/register', async function (req, res, next) {
   
       addCookieOptions(res, refreshToken);
     }
-
-    const user = await User.create({
-      username,
-      email,
-      avatar_url: '',
-      password: password,
-      password_reset_token: passwordResetToken,
-      status: UserStatus.ONLINE,
-      refreshToken: refreshToken
-    });
+    
+    user.refreshToken = refreshToken;
+    await user.save();
 
     const userData = { 
       uid: user.uid,
