@@ -102,6 +102,17 @@ function handleSocket(io, socket, userRooms, userFriends, allRooms) {
 
     socket.to(`user:${user_id}`).emit('notification_received', { user_id, notification });
   });
+
+  socket.on('started_typing', (data) => {
+    const { room_id, username } = data;
+
+    socket.to(`room:${room_id}`).emit('typing_started', { room_id, username });
+  });
+  socket.on('stopped_typing', (data) => {
+    const { room_id, username } = data;
+
+    socket.to(`room:${room_id}`).emit('typing_stopped', { room_id, username });
+  });
 }
 
 module.exports = initializeSocket

@@ -21,13 +21,15 @@ function UserProfile() {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  if (user && userId === user.uid) {
-    navigate("/profile/me");
-  }
+
 
   const isFriend = user && userShowing && userShowing.friends.includes(user.uid);
 
   useEffect(() => {
+    if (user && userId === user.uid) {
+      navigate("/profile/me");
+    }
+
     async function fetchUser() {
       try {
         const { json } = await sendRequest(`/users/${userId}`, 'GET');

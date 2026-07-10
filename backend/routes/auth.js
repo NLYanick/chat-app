@@ -41,13 +41,9 @@ router.post('/register', async function (req, res, next) {
     });
 
     const accessToken = createAccessToken(user);
-    let refreshToken = undefined;
-
-    if(staySignedIn) {
-      refreshToken = createRefreshToken(user);
+    const refreshToken = createRefreshToken(user, staySignedIn);
   
-      addCookieOptions(res, refreshToken);
-    }
+    addCookieOptions(res, refreshToken);
     
     user.refreshToken = refreshToken;
     await user.save();
@@ -85,15 +81,11 @@ router.post('/login', async function (req, res, next) {
     user.status = UserStatus.ONLINE;
 
     const accessToken = createAccessToken(user);
-    let refreshToken; 
-    
-    if (staySignedIn) {
-      refreshToken = createRefreshToken(user);
+    const refreshToken = createRefreshToken(user, staySignedIn);
   
-      user.refreshToken = refreshToken;
-      addCookieOptions(res, refreshToken);
-    }
+    addCookieOptions(res, refreshToken);
     
+    user.refreshToken = refreshToken;
     await user.save();
 
     const userData = { 
@@ -147,7 +139,7 @@ router.post('/refresh', async function (req, res, next) {
     if (!user) return res.status(401).json({ message: "Session invalid", error: "Invalid refresh token", success: false });
 
     if (user.refreshToken !== token) {
-      user.refreshToken = [];
+      user.refreshToken = null;
       await user.save();
 
       res.clearCookie('refresh_token');
