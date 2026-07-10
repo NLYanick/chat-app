@@ -11,6 +11,8 @@ const router = express.Router();
 
 const User = mongoose.model('User');
 
+const MAX_COOKIES = 5;
+
 router.post('/register', async function (req, res, next) {
   try {
     const { email, username, password, confirmPassword, staySignedIn } = req.body;
@@ -45,7 +47,7 @@ router.post('/register', async function (req, res, next) {
   
     addCookieOptions(res, refreshToken);
     
-    user.refreshToken = refreshToken;
+    user.refreshTokens = [...(user.refreshTokens || []), refreshToken].slice(-MAX_COOKIES);
     await user.save();
 
     const userData = { 
@@ -85,7 +87,7 @@ router.post('/login', async function (req, res, next) {
   
     addCookieOptions(res, refreshToken);
     
-    user.refreshToken = refreshToken;
+    user.refreshTokens = [...(user.refreshTokens || []), refreshToken].slice(-MAX_COOKIES);
     await user.save();
 
     const userData = { 
@@ -110,10 +112,10 @@ router.post('/logout', async function (req, res, next) {
 
     if (!user_id) return res.status(400).json({ message: "Logout failed", error: "The field \"user_id\" is invalid.", success: false });
 
-    await User.findOneAndUpdate({ uid: user_id }, { 
-      status: UserStatus.OFFLINE,
-      refreshToken: null
-    });
+    const update = { status: UserStatus.OFFLINE };
+    if (token) update.$pull = { refreshTokens: token };
+
+    await User.findOneAndUpdate({ uid: user_id }, update);
     
     res.clearCookie('refresh_token');
     res.status(200).json({ message: "Logged Out!", success: true });
@@ -126,6 +128,7 @@ router.post('/logout', async function (req, res, next) {
 router.post('/refresh', async function (req, res, next) {
   try {
     const token = req.cookies.refresh_token;
+    console.log("Refresh token received:", token);
     if (!token) return res.status(401).json({ message: "Not signed in", error: "No refresh token found", success: false });
 
     let payload;
@@ -138,8 +141,8 @@ router.post('/refresh', async function (req, res, next) {
     const user = await User.findOne({ uid: payload.uid });
     if (!user) return res.status(401).json({ message: "Session invalid", error: "Invalid refresh token", success: false });
 
-    if (user.refreshToken !== token) {
-      user.refreshToken = null;
+    if (!user.refreshTokens?.includes(token)) {
+      user.refreshTokens = user.refreshTokens?.filter(t => t !== token) || [];
       await user.save();
 
       res.clearCookie('refresh_token');
@@ -149,10 +152,13 @@ router.post('/refresh', async function (req, res, next) {
     const accessToken = createAccessToken(user);
     const newRefreshToken = createRefreshToken(user, payload.remember);
 
-    user.refreshToken = newRefreshToken;
+    const refreshTokens = user.refreshTokens
+      .filter(t => t !== token)
+      .concat(newRefreshToken)
+      .slice(-MAX_COOKIES);
+
     addCookieOptions(res, newRefreshToken, payload.remember);
-    
-    await user.save();
+    await User.findOneAndUpdate({ uid: user.uid }, { refreshTokens: refreshTokens }).exec();
 
     const userData = { 
       uid: user.uid,

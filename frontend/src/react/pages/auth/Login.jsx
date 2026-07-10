@@ -19,10 +19,6 @@ function Login() {
   const [password, setPassword] = useState('');
   const [staySignedIn, setStaySignedIn] = useState(null);
 
-  useEffect(() => {
-    if (user) navigate("/");
-  });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

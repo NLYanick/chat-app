@@ -22,10 +22,6 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [staySignedIn, setStaySignedIn] = useState(null);
 
-  useEffect(() => {
-    if (user) navigate("/");
-  });
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

@@ -45,7 +45,7 @@ function NavBar() {
           return;
         }
 
-        if (friendRequestsData?.friend_requests.length > 0 || roomInvitesData?.room_invites.length > 0) {
+        if (friendRequestsData?.friend_requests?.length > 0 || roomInvitesData?.room_invites?.length > 0) {
           setHasNotifications(true);
         }
       }

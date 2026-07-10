@@ -17,22 +17,31 @@ import Friends from './pages/Friends';
 import { sendRequest } from '../utils/requests'
 import { useAuth } from './AuthUserContext';
 import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 function Page() {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
 
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
+  const hasRefreshed = useRef(false);
+
   useEffect(() => {
+    if (hasRefreshed.current) return;
+    hasRefreshed.current = true;
+    
     async function refreshToken() {
       try {
         const { json } = await sendRequest('/authenticate/refresh', 'POST');
+        console.log('Refresh token response:', json);
 
         if (json.success && json.user && json.accessToken) {
           login(json.user, json.accessToken);
           navigate("/");
+        } else {
+          logout();
+          navigate("/login");
         }
       } catch (error) {
         console.error('Error refreshing token:', error);

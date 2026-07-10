@@ -50,9 +50,9 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    refreshToken: String,
+    refreshTokens: [String],
     old_username: String
-}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+}, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }, optimisticConcurrency: false });
 
 // Hash the password
 userSchema.pre('save', async function () {
