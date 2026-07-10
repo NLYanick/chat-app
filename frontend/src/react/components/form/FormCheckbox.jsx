@@ -16,6 +16,12 @@ function FormCheckBox({ label, onChange, ...props }) {
         className="sr-only peer"
         checked={checked}
         onChange={handleToggle} 
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            handleToggle();
+          }
+        }}
         {...props}
       />
       

@@ -1,6 +1,6 @@
 import Button from "../Button";
 
-function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSubmit = {} }) {
+function AuthForm({ children, formLabel = 'Form', backgroundColor = '#181818', onSubmit = () =>{} }) {
   return (
     <>
       <form className="p-12 rounded-lg shadow-lg flex flex-col gap-8 w-88 sm:w-96"
@@ -19,4 +19,4 @@ function Form({ children, formLabel = 'Form', backgroundColor = '#181818', onSub
   );
 }
 
-export default Form
+export default AuthForm

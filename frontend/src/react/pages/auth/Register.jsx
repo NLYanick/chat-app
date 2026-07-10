@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { sendRequest } from '../../utils/requests';
 import { useAuth } from '../../AuthUserContext';
-import Form from '../../components/form/AuthForm';
+import AuthForm from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
@@ -50,7 +50,7 @@ function Register() {
   return (
     <>
       <div className='flex flex-col gap-12'>
-        <Form formLabel='Register' onSubmit={handleSubmit}>
+        <AuthForm formLabel='Register' onSubmit={handleSubmit}>
           {userErrors.length > 0 && (
             <UserErrorsBox userErrors={userErrors} />
           )}
@@ -61,7 +61,7 @@ function Register() {
             <FormInput label="Confirm Password" subtext="Must be equal to 'Password'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
           </div>
           <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
-        </Form>
+        </AuthForm>
         
         <Link to="/login" className='text-sm hover:underline self-end'>Already have an account?</Link>
       </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { sendRequest } from '../../utils/requests';
-import Form from '../../components/form/AuthForm';
+import AuthForm from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
@@ -47,14 +47,14 @@ function Login() {
   return (
     <>
       <div className='flex flex-col gap-12'>
-        <Form formLabel='Login' onSubmit={handleSubmit}>
+        <AuthForm formLabel='Login' onSubmit={handleSubmit}>
           {userErrors.length > 0 && (
             <UserErrorsBox userErrors={userErrors} />
           )}
           <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
           <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
           <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
-        </Form>
+        </AuthForm>
 
         <div className='flex justify-between'>
           <Link to="/forgot-password" className='text-sm hover:underline self-end'>Forgot Your Password?</Link>
