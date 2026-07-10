@@ -7,6 +7,7 @@ import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
 import { useEffect } from 'react';
+import AuthLayout from '../../layouts/AuthLayout';
 
 function Register() {
   const navigate = useNavigate();
@@ -48,24 +49,24 @@ function Register() {
   if (error) throw new Error(error.message);
 
   return (
-    <>
-      <div className='flex flex-col gap-12'>
-        <AuthForm formLabel='Register' onSubmit={handleSubmit}>
-          {userErrors.length > 0 && (
-            <UserErrorsBox userErrors={userErrors} />
-          )}
-          <FormInput label="Email" type="email" name="email" placeholder="Enter your email..." required autoFocus onChange={(e) => setEmail(e.target.value)} />
-          <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
-          <div>
-            <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
-            <FormInput label="Confirm Password" subtext="Must be equal to 'Password'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
-          </div>
-          <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
-        </AuthForm>
-        
-        <Link to="/login" className='text-sm hover:underline self-end'>Already have an account?</Link>
+    <AuthLayout>
+      <AuthForm formLabel='Register' onSubmit={handleSubmit}>
+        {userErrors.length > 0 && (
+          <UserErrorsBox userErrors={userErrors} />
+        )}
+        <FormInput label="Email" type="email" name="email" placeholder="Enter your email..." required autoFocus onChange={(e) => setEmail(e.target.value)} />
+        <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
+        <div>
+          <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
+          <FormInput label="Confirm Password" subtext="Must be equal to 'Password'" type="password" name="confirm_password" required autoCorrect='false' onChange={(e) => setConfirmPassword(e.target.value)} />
+        </div>
+        <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
+      </AuthForm>
+      
+      <div className='flex justify-center w-full'>
+        <Link to="/login" className='text-sm hover:underline self-end text-gray-100'>Already have an account?</Link>
       </div>
-    </>
+    </AuthLayout>
   );
 }
 

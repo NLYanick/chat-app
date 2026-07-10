@@ -5,6 +5,7 @@ import Button from "../components/Button";
 import FriendItem from "../components/FriendItem";
 import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
 import Modal from "../components/Modal";
+import SinglePageLayout from "../layouts/SinglePageLayout";
 
 function Friends() {
   const [friends, setFriends] = useState([]);
@@ -98,8 +99,7 @@ function Friends() {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-10">Friends</h1>
+    <SinglePageLayout title="Friends">
       
       <div className="flex gap-8">
         <div className="bg-(--primary-color-light) p-8 rounded-lg shadow-md w-md">
@@ -151,7 +151,7 @@ function Friends() {
           </form>
         </div>
       </div>
-    </div>
+    </SinglePageLayout>
   );
 }
 

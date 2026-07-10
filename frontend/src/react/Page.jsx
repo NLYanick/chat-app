@@ -49,9 +49,9 @@ function Page() {
   }
 
   return (
-    <div>
+    <>
       <NavBar />
-      <div className='min-h-screen flex flex-col items-center justify-center text-center pt-15'>
+      <main className='min-h-screen flex flex-col items-center justify-center text-center pt-15'>
         <Routes>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
@@ -76,8 +76,8 @@ function Page() {
 
           <Route path='*' element={<NotFound />}></Route>
         </Routes>
-      </div>
-    </div>
+      </main>
+    </>
   );
 }
 

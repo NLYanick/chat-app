@@ -4,6 +4,7 @@ import { sendRequest } from "../../utils/requests";
 import InviteItem from "../components/invites/InviteItem";
 import Button from "../components/Button";
 import FriendRequestItem from "../components/invites/FriendRequestItem";
+import SinglePageLayout from "../layouts/SinglePageLayout";
 
 function Notifications() {
   const [invites, setInvites] = useState([]);
@@ -115,11 +116,9 @@ function Notifications() {
   };
 
   return (
-    <div className="space-y-12 mb-4 w-full">
-      <h1 className='text-4xl sm:text-5xl'>Notifications</h1>
-      
+    <SinglePageLayout title="Notifications">
       <div className="sm:flex sm:justify-center sm:items-start sm:gap-8 w-full">
-        <div className="w-full sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
+        <div className="w-md bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
           <h2 className="text-2xl sm:text-3xl mb-1">Room Invites</h2>
           
           {invites.length === 0 ? (
@@ -135,7 +134,7 @@ function Notifications() {
           <Button type="primary" label="Refresh" onClick={fetchInvites} />
         </div>
 
-        <div className="w-full sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
+        <div className="w-md sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
           <h2 className="text-2xl sm:text-3xl mb-1">Friend Requests</h2>
           
           {friendRequests.length === 0 ? (
@@ -151,7 +150,7 @@ function Notifications() {
           <Button type="primary" label="Refresh" onClick={fetchFriendRequests} />
         </div>
       </div>
-    </div>
+    </SinglePageLayout>
   )
 }
 

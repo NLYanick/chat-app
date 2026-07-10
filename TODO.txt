@@ -5,7 +5,6 @@
 # Tidiness
 - Resizable
 - Skeleton pages
-- Make reusable layouts for certain page groups like Auth, Rooms, etc.
 
 # Extra
 - Better error handling

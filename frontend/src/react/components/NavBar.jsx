@@ -36,7 +36,7 @@ function NavBar() {
     }
 
     async function checkNotifications() {
-      if (previousPathRef.current === "/login") {
+      if (previousPathRef.current === "/login" && location.pathname !== "/login" && location.pathname !== "/register" && user) {
         const { json: friendRequestsData } = await sendRequest('/friend-requests/user/' + user?.uid, 'GET');
         const { json: roomInvitesData } = await sendRequest('/room-invites/user/' + user?.uid, 'GET');
 
@@ -67,7 +67,7 @@ function NavBar() {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15 bg-(--primary-color)" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
+    <nav className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15 bg-(--primary-color)" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
       <div>
         <Link to='/'>ChatApp</Link>
       </div>
@@ -105,7 +105,7 @@ function NavBar() {
           </Link>
         </div>
       )}
-    </div>
+    </nav>
   )
 }
 
