@@ -81,8 +81,10 @@ function ResetPassword() {
 function checkUserInput(password, confirmPassword) {
   const errors = []
 
-  if (!password || !confirmPassword)
-    return errors.push('Fill in the passwords');
+  if (!password || !confirmPassword) {
+    errors.push('Fill in the passwords');
+    return errors;
+  }
 
   if (password.length < 5) errors.push("Password must be at least 5 characters long");
   if (password !== confirmPassword) errors.push("'Confirm Password' must be equal to 'Password'");

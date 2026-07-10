@@ -69,8 +69,10 @@ function Register() {
 function checkUserInput(username, password, confirmPassword, email) {
   const errors = []
 
-  if (!username || !password || !email)
-    return errors.push('Fill in your registration credentials');
+  if (!username || !password || !email) {
+    errors.push('Fill in your registration credentials');
+    return errors;
+  }
 
   if (password.length < 5) errors.push("Password must be at least 5 characters long");
   if (password !== confirmPassword) errors.push("'Confirm Password' must be equal to 'Password'");

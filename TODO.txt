@@ -8,7 +8,6 @@
 
 # Extra
 - Better error handling
-- Check if a user is a member of the room, before it can access the files
 - Room authorization in backend
 - Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
 - Searchable Dropdown for user inviting

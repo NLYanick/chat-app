@@ -32,7 +32,7 @@ function initializeSocket(server) {
 
     socket.join(`user:${userId}`);
 
-    const user = await User.findOne({ uid: userId }).populate('rooms');
+    const user = await User.findOneAndUpdate({ uid: userId }, { status: UserStatus.ONLINE }, { new: true }).populate('rooms');
     user.rooms.forEach(room => socket.join(`room:${room.uid}`));
 
     const rooms = await Room.find();

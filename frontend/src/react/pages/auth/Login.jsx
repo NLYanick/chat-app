@@ -63,8 +63,10 @@ function Login() {
 function checkUserInput(username, password) {
   const errors = []
 
-  if (!username || !password)
-    return errors.push('Fill in your login credentials');
+  if (!username || !password) {
+    errors.push('Fill in your login credentials');
+    return errors;
+  }
 
   if (password.length < 5) errors.push("Password must be at least 5 characters long");
 
