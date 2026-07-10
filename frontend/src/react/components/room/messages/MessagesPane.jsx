@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "../../AuthUserContext";
-import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
-import { sendRequest } from "../../utils/requests";
-import Button from "../Button";
+import { useAuth } from "../../../AuthUserContext";
+import { emitEvent, subscribeToEvent } from "../../../../utils/socket-client";
+import { sendRequest } from "../../../../utils/requests";
+import Button from "../../Button";
 import MessageItem from "./MessageItem";
 import FileUploadItem from "./FileUploadItem";
-import Modal from "../Modal";
+import Modal from "../../Modal";
 import AttachmentPreview from "./AttachmentPreview";
 
 function MessagesPane({ room, members }) {

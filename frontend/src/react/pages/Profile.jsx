@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import Button from "../components/Button"
 import ProfileIcon from "../components/profile/ProfileIcon"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { sendRequest } from '../../utils/requests';
+import { sendRequest } from '../../../utils/requests';
 import AuthForm from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';

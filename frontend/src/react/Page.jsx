@@ -14,7 +14,7 @@ import Room from './pages/rooms/Room';
 import EditRoom from './pages/rooms/EditRoom';
 import Notifications from './pages/Notifications';
 import Friends from './pages/Friends';
-import { sendRequest } from './utils/requests'
+import { sendRequest } from '../utils/requests'
 import { useAuth } from './AuthUserContext';
 import { useEffect } from 'react';
 import { useState } from 'react';

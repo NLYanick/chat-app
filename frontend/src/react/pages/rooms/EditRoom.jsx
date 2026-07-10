@@ -3,7 +3,7 @@ import Button from "../../components/Button"
 import FormColorField from "../../components/form/FormColorField"
 import FormInput from "../../components/form/FormInput"
 import FormTextField from "../../components/form/FormTextField"
-import { sendRequest } from "../../utils/requests";
+import { sendRequest } from "../../../utils/requests";
 import { useNavigate, useParams } from "react-router-dom";
 import UserErrorsBox from "../../components/form/UserErrorsBox";
 import FormFileInput from "../../components/form/FormFileInput";

@@ -6,7 +6,7 @@ import LinkButton from "../LinkButton";
 import { useState } from "react";
 import Modal from "../Modal";
 import { useAuth } from "../../AuthUserContext";
-import { sendRequest } from "../../utils/requests";
+import { sendRequest } from "../../../utils/requests";
 
 function RoomDetails({ room, userIsOwner }) {
   const [modalOpen, setModalOpen] = useState(false);

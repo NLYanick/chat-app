@@ -1,4 +1,4 @@
-import Button from "../components/Button";
+import Button from "../Button";
 
 function InviteItem({ invite, onAccept, onDecline }) {
   return (

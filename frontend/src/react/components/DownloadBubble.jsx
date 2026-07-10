@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { handleDownload } from "../utils/download";
+import { handleDownload } from "../../utils/download";
 
 function DownloadBubble({ filename, fullUrl }) {
   const [isDownloading, setIsDownloading] = useState(false);

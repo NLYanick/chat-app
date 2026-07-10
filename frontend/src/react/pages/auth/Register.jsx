@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { sendRequest } from '../../utils/requests';
+import { sendRequest } from '../../../utils/requests';
 import { useAuth } from '../../AuthUserContext';
 import AuthForm from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';

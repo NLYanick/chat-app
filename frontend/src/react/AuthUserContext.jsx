@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import initializeSocket, { disconnectSocket } from "./utils/socket-client";
-import { getAccessToken, setAccessToken } from "./utils/token-store";
+import initializeSocket, { disconnectSocket } from "../utils/socket-client";
+import { getAccessToken, setAccessToken } from "../utils/token-store";
 
 const AuthUserContext = createContext(null);
 

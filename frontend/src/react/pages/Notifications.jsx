@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../AuthUserContext";
-import { sendRequest } from "../utils/requests";
-import InviteItem from "../components/InviteItem";
+import { sendRequest } from "../../utils/requests";
+import InviteItem from "../components/invites/InviteItem";
 import Button from "../components/Button";
-import FriendRequestItem from "../components/FriendRequestItem";
+import FriendRequestItem from "../components/invites/FriendRequestItem";
 
 function Notifications() {
   const [invites, setInvites] = useState([]);

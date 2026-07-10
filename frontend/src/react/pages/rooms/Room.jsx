@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { sendRequest } from "../../utils/requests";
+import { sendRequest } from "../../../utils/requests";
 import RoomsList from "./RoomsList";
 import RoomDetails from "../../components/room/RoomDetails";
 import RoomMembers from "../../components/room/RoomMembers";
 import { useAuth } from "../../AuthUserContext";
-import { subscribeToEvent } from "../../utils/socket-client";
-import MessagesPane from "../../components/room/MessagesPane";
+import { subscribeToEvent } from "../../../utils/socket-client";
+import MessagesPane from "../../components/room/messages/MessagesPane";
 
 function Room() {
   const { roomId } = useParams();

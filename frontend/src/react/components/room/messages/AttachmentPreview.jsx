@@ -1,6 +1,6 @@
 import { useState } from "react";
-import DownloadBubble from "../DownloadBubble";
-import { handleDownload } from "../../utils/download";
+import DownloadBubble from "../../DownloadBubble";
+import { handleDownload } from "../../../../utils/download";
 
 const AttachmentSize = {
   small: "max-w-60 max-h-60",

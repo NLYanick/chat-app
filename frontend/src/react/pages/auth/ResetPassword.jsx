@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { sendRequest } from '../../utils/requests';
+import { sendRequest } from '../../../utils/requests';
 import { useAuth } from '../../AuthUserContext';
 import Form from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import Button from "../components/Button";
 import ProfileIcon from "../components/profile/ProfileIcon";
 import ProfileDetails from '../components/profile/ProfileDetails';
 import Modal from '../components/Modal';
-import { emitEvent } from '../utils/socket-client';
+import { emitEvent } from '../../utils/socket-client';
 
 function UserProfile() {
   const [error, setError] = useState(null);

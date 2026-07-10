@@ -4,7 +4,6 @@
 
 # Tidiness
 - Resizable
-- Sort the files, espescially the frontend components
 - Skeleton pages
 - Make reusable layouts for certain page groups like Auth, Rooms, etc.
 

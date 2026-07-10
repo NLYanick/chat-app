@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthUserContext";
-import { sendRequest } from "../utils/requests";
+import { sendRequest } from "../../utils/requests";
 import Button from "../components/Button";
 import FriendItem from "../components/FriendItem";
-import { emitEvent, subscribeToEvent } from "../utils/socket-client";
+import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
 import Modal from "../components/Modal";
 
 function Friends() {

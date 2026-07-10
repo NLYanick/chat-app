@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { sendRequest } from "../../utils/requests";
+import { sendRequest } from "../../../utils/requests";
 import Button from "../../components/Button";
 import RoomItem from "../../components/room/RoomItem";
 import { useAuth } from "../../AuthUserContext";

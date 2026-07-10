@@ -1,11 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthUserContext";
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import ProfileIcon from "./profile/ProfileIcon"
 import DropDownMenu from "./DropDownMenu";
 import DropDownLink from "./DropDownLink";
 import { useEffect, useRef, useState } from "react";
-import { subscribeToEvent } from "../utils/socket-client";
+import { subscribeToEvent } from "../../utils/socket-client";
 
 const noBarRoutes = ['/login', '/register'];
 

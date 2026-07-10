@@ -4,10 +4,10 @@ import Modal from "../Modal";
 import MemberItem from "./MemberItem";
 import FormInput from "../form/FormInput";
 import { useAuth } from "../../AuthUserContext";
-import { sendRequest } from "../../utils/requests";
+import { sendRequest } from "../../../utils/requests";
 import { useParams } from "react-router-dom";
 import MembersChoiceChipGrid from "./MembersChoiceChipGrid";
-import { emitEvent } from "../../utils/socket-client";
+import { emitEvent } from "../../../utils/socket-client";
 
 function RoomMembers({ members, userIsOwner, owner }) {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
