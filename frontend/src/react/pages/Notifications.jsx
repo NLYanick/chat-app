@@ -22,7 +22,7 @@ function Notifications() {
         return;
       }
 
-      setInvites(json.data);
+      setInvites(json.invites);
     } catch (err) {
       console.error("Error fetching invites:", err);
     }
@@ -57,31 +57,33 @@ function Notifications() {
     }
   }, [user.uid]);
 
-  const handleAcceptRoomInvite = async (inviteId) => {
+  const handleAcceptRoomInvite = async (invite) => {
     try {
-      const { json } = await sendRequest(`/room-invites/${inviteId}/accept`, 'POST', { userUid: user.uid });
+      const { json } = await sendRequest(`/room-invites/${invite.uid}/accept`, 'POST', { userUid: user.uid });
       
       if (!json.success) {
         console.error("Failed to accept invite:", json.error);
         return;
       }
       
-      setInvites(prev => prev.filter(invite => invite.uid !== inviteId));
+      setInvites(prev => prev.filter(inv => inv.uid !== invite.uid));
+
+      emitEvent('joined_room', { room: invite.room_details, user: invite.invited_user_details });
     } catch (err) {
       console.error("Error accepting invite:", err);
     }
   };
 
-  const handleDeclineRoomInvite = async (inviteId) => {
+  const handleDeclineRoomInvite = async (invite) => {
     try {
-      const { json } = await sendRequest(`/room-invites/${inviteId}/decline`, 'POST', { userUid: user.uid });
+      const { json } = await sendRequest(`/room-invites/${invite.uid}/decline`, 'POST', { userUid: user.uid });
       
       if (!json.success) {
         console.error("Failed to decline invite:", json.error);
         return;
       }
 
-      setInvites(prev => prev.filter(invite => invite.uid !== inviteId));
+      setInvites(prev => prev.filter(inv => inv.uid !== invite.uid));
     } catch (err) {
       console.error("Error declining invite:", err);
     }

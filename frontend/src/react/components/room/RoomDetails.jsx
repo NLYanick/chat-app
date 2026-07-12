@@ -7,6 +7,7 @@ import { useState } from "react";
 import Modal from "../Modal";
 import { useAuth } from "../../AuthUserContext";
 import { sendRequest } from "../../../utils/requests";
+import { emitEvent } from "../../../utils/socket-client";
 
 function RoomDetails({ room, userIsOwner }) {
   const [modalOpen, setModalOpen] = useState(false);
@@ -24,6 +25,9 @@ function RoomDetails({ room, userIsOwner }) {
     }
 
     setModalOpen(false);
+
+    emitEvent('left_room', { room_id: room.uid, user_id: user.uid });
+
     navigate('/rooms');
   }
 

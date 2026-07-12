@@ -134,11 +134,13 @@ function handleSocket(io, socket, userRooms, userFriends, allRooms) {
     const { room, user } = data;
 
     io.to(`user:${user.uid}`).emit('room_joined', { room, user });
+    io.to(`room:${room.uid}`).emit('user_joined', { room, user });
   });
   socket.on('left_room', (data) => {
     const { room_id, user_id } = data;
 
     io.to(`user:${user_id}`).emit('room_left', { room_id, user_id });
+    io.to(`room:${room_id}`).emit('user_left', { room_id, user_id });
   });
 }
 

@@ -89,13 +89,13 @@ router.post('/:inviteId/decline', async function(req, res, next) {
 router.get('/user/:userId', async function(req, res, next) {
     try {
         const { userId } = req.params;
-        console.log("Fetching invites for user:", userId);
 
         const invites = await RoomInvite.find({ invited: userId, status: InviteStatus.PENDING })
                                 .populate('room_details')
-                                .populate('inviter_details');
+                                .populate('inviter_details')
+                                .populate('invited_user_details');
 
-        res.status(200).json({ message: "Invites fetched", data: invites, success: true });
+        res.status(200).json({ message: "Invites fetched", invites, success: true });
     } catch (err) {
         next(err);
     }

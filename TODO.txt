@@ -1,6 +1,8 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
+- Invites and Frien Request need to be removed after 3 days when ACCEPTED or DECLINED
+- Backend crashes when incorrect data is send via the Web Socket. Fix it
 
 # Tidiness
 - Resizable
@@ -10,6 +12,5 @@
 - Better error handling
 - Room authorization in backend
 - Rooms middleware in backend
-- Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
 
 (- DevOps, like Docker, Prometheus & Grafana, GitHub Actions)
