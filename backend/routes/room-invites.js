@@ -16,9 +16,11 @@ router.post('/rooms/:roomId', async function(req, res, next) {
 
         const room = await Room.findOne({ uid: roomId });
         if (!room) return res.status(404).json({ message: "Room not found", error: "The specified room does not exist", success: false });
-
+        if (!room.members.includes(invited_by)) return res.status(403).json({ message: "Forbidden", error: "You are not a member of this room", success: false });
+        
         const invitedUser = await User.findOne({ username });
         if (!invitedUser) return res.status(404).json({ message: "User not found", error: "The specified user does not exist", success: false });
+        if (room.members.includes(invitedUser.uid)) return res.status(409).json({ message: "User already a member", error: "The specified user is already a member of this room", success: false });
 
         const invitedByUser = await User.findOne({ uid: invited_by });
         if (!invitedByUser) return res.status(404).json({ message: "Inviter not found", error: "The user who is inviting does not exist", success: false });

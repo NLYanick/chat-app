@@ -50,7 +50,7 @@ router.get('/:id', async function(req, res, next) {
 
     if (!room) return res.status(404).json({ message: "Not Found", error: "Room not found", success: false });
     
-    const members = await User.find({ uid: { $in: room.members } });
+    const members = await User.find({ uid: { $in: room.members } }).populate('friends_details');
 
     res.status(200).json({ message: "Room retrieved successfully", room, members, success: true });
   } catch (error) {
