@@ -52,6 +52,7 @@ router.post('/:inviteId/accept', async function(req, res, next) {
         if (invite.status !== InviteStatus.PENDING) return res.status(400).json({ message: "Invalid invite status", error: "This invite has already been responded to", success: false });
 
         invite.status = InviteStatus.ACCEPTED;
+        invite.processed_at = new Date();
         await invite.save();
 
         const room = await Room.findOne({ uid: invite.room });
@@ -78,6 +79,7 @@ router.post('/:inviteId/decline', async function(req, res, next) {
         if (invite.status !== InviteStatus.PENDING) return res.status(400).json({ message: "Invalid invite status", error: "This invite has already been responded to", success: false });
 
         invite.status = InviteStatus.DECLINED;
+        invite.processed_at = new Date();
         await invite.save();
 
         res.status(200).json({ message: "Invite declined", success: true });

@@ -55,6 +55,7 @@ router.post('/:id/accept', async function(req, res, next) {
         if (request.status !== InviteStatus.PENDING) return res.status(400).json({ message: "Invalid friend request status", error: "This friend request has already been responded to", success: false });
 
         request.status = InviteStatus.ACCEPTED;
+        request.processed_at = new Date();
         await request.save();
 
         await User.findOneAndUpdate({ uid: request.sender }, { $addToSet: { friends: request.recipient } });
@@ -76,6 +77,7 @@ router.post('/:id/decline', async function(req, res, next) {
         if (request.status !== InviteStatus.PENDING) return res.status(400).json({ message: "Invalid friend request status", error: "This friend request has already been responded to", success: false });
 
         request.status = InviteStatus.DECLINED;
+        request.processed_at = new Date();
         await request.save();
 
         res.status(200).json({ message: "Friend request declined", success: true });

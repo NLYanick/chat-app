@@ -26,7 +26,14 @@ const roomInviteSchema = new mongoose.Schema({
         enum: InviteStatus.ALL,
         default: InviteStatus.PENDING,
     },
+    processed_at: {
+        type: Date,
+        default: null,
+    },
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+
+const seconds = 2 * 24 * 60 * 60; // 2 days in seconds
+roomInviteSchema.index({ processed_at: 1 }, { expireAfterSeconds: seconds });
 
 roomInviteSchema.set('toObject', { virtuals: true });
 roomInviteSchema.set('toJSON', { virtuals: true });
