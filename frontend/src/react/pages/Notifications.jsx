@@ -5,6 +5,7 @@ import InviteItem from "../components/invites/InviteItem";
 import Button from "../components/Button";
 import FriendRequestItem from "../components/invites/FriendRequestItem";
 import SinglePageLayout from "../layouts/SinglePageLayout";
+import { emitEvent } from "../../utils/socket-client";
 
 function Notifications() {
   const [invites, setInvites] = useState([]);
@@ -86,30 +87,32 @@ function Notifications() {
     }
   };
 
-  const handleAcceptFriendRequest = async (requestId) => {
+  const handleAcceptFriendRequest = async (request) => {
     try {
-      const { json } = await sendRequest(`/friend-requests/${requestId}/accept`, 'POST');
+      const { json } = await sendRequest(`/friend-requests/${request.uid}/accept`, 'POST');
 
       if (!json.success) {
         console.error("Failed to accept friend request:", json.error);
         return;
       }
 
-      setFriendRequests(prev => prev.filter(request => request.uid !== requestId));
+      setFriendRequests(prev => prev.filter(request => request.uid !== request.uid));
+
+      emitEvent('add_friend', { user_id: request.sender, my_id: user.uid });
     } catch (err) {
       console.error("Error accepting friend request:", err);
     }
   };
 
-  const handleDeclineFriendRequest = async (requestId) => {
+  const handleDeclineFriendRequest = async (request) => {
     try {
-      const { json } = await sendRequest(`/friend-requests/${requestId}/decline`, 'POST');
+      const { json } = await sendRequest(`/friend-requests/${request.uid}/decline`, 'POST');
 
       if (!json.success) {
         console.error("Failed to decline friend request:", json.error);
         return;
       }
-      setFriendRequests(prev => prev.filter(request => request.uid !== requestId));
+      setFriendRequests(prev => prev.filter(request => request.uid !== request.uid));
     } catch (err) {
       console.error("Error declining friend request:", err);
     }

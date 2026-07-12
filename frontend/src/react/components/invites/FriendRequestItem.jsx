@@ -7,8 +7,8 @@ function FriendRequestItem({ request, onAccept, onDecline }) {
         <strong>{request.sender_details.username}</strong> wants to be friends with you!
       </p>
       <div className="flex gap-2">
-        <Button type="success" label="Accept" onClick={() => onAccept(request.uid)} />
-        <Button type="error" label="Decline" onClick={() => onDecline(request.uid)} />
+        <Button type="success" label="Accept" onClick={() => onAccept(request)} />
+        <Button type="error" label="Decline" onClick={() => onDecline(request)} />
       </div>
     </li>
   )

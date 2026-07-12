@@ -10,10 +10,7 @@
 - Better error handling
 - Room authorization in backend
 - Rooms middleware in backend
-- Searchable Dropdown for user inviting
-- Send an email when the user gets an invite
 - Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
-- Real-time friends
 - Real-time rooms (you can be invited to them)
 
 (- DevOps, like Docker, Prometheus & Grafana, GitHub Actions)
