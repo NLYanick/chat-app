@@ -67,6 +67,8 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
 
     setRemoveUsername("");
     setRemoveUserModalOpen(false);
+
+    emitEvent('left_room', { room_id: roomId, user_id: userToRemove.uid });
   }
 
   const onInviteClose = () => {
@@ -144,7 +146,7 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
                       <div className="shrink-0" key={friend.uid}>
                         <Button 
                           key={friend.uid}
-                          type="secondary"
+                          type={inviteUsername === friend.username ? "primary" : "secondary"}
                           label={friend.username}
                           onClick={() => setInviteUsername(friend.username)}
                         />

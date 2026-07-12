@@ -124,6 +124,22 @@ function handleSocket(io, socket, userRooms, userFriends, allRooms) {
 
     io.to(`user:${user_id}`).emit('friend_removed', { user_id, my_id });
   });
+
+  socket.on('update_room', (data) => {
+    const { room } = data;
+
+    io.to(`room:${room.uid}`).emit('room_updated', { room });
+  });
+  socket.on('joined_room', (data) => {
+    const { room, user } = data;
+
+    io.to(`user:${user.uid}`).emit('room_joined', { room, user });
+  });
+  socket.on('left_room', (data) => {
+    const { room_id, user_id } = data;
+
+    io.to(`user:${user_id}`).emit('room_left', { room_id, user_id });
+  });
 }
 
 module.exports = initializeSocket

@@ -4,6 +4,7 @@ import Button from "../../components/Button";
 import RoomItem from "../../components/room/RoomItem";
 import { useAuth } from "../../AuthUserContext";
 import LinkButton from "../../components/LinkButton";
+import { subscribeToEvent } from "../../../utils/socket-client";
 
 function RoomsList() {
     const [loading, setLoading] = useState(false);
@@ -36,6 +37,18 @@ function RoomsList() {
       };
 
       fetchRooms();
+
+      const unsubscribeUpdated = subscribeToEvent('room_updated', ({ room }) => {
+        setRooms(prev => prev.map(r => r.uid === room.uid ? room : r));
+      });
+      const unsubscribeDeleted = subscribeToEvent('room_left', ({ room_id }) => {
+        setRooms(prev => prev.filter(r => r.uid !== room_id));
+      });
+
+      return () => {
+        if (unsubscribeUpdated) unsubscribeUpdated();
+        if (unsubscribeDeleted) unsubscribeDeleted();
+      }
     }, []);
 
     if(loading) return (<p className='font-bold'>Loading...</p>); 

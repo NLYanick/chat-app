@@ -11,6 +11,7 @@ import Modal from "../../components/Modal";
 import { useAuth } from "../../AuthUserContext";
 import { useImagePreview } from "../../../hooks/useImagePreview";
 import LinkButton from "../../components/LinkButton";
+import { emitEvent } from "../../../utils/socket-client";
 
 function EditRoom() {
   const { roomId } = useParams();
@@ -76,6 +77,8 @@ function EditRoom() {
     }
 
     setUserErrors([]);
+
+    emitEvent('update_room', { room: json.room });
 
     navigate('/rooms/' + json.room.uid);
   }
