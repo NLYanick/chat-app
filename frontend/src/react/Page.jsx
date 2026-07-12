@@ -34,7 +34,6 @@ function Page() {
     async function refreshToken() {
       try {
         const { json } = await sendRequest('/authenticate/refresh', 'POST');
-        console.log('Refresh token response:', json);
 
         if (json.success && json.user && json.accessToken) {
           login(json.user, json.accessToken);

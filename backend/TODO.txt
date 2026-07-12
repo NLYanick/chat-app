@@ -3,5 +3,4 @@ If I really want to:
 Micro-Services
 API Gateway
 Message Broker
-JWT auth
 Circuit Breaker

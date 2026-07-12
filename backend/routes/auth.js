@@ -128,7 +128,6 @@ router.post('/logout', async function (req, res, next) {
 router.post('/refresh', async function (req, res, next) {
   try {
     const token = req.cookies.refresh_token;
-    console.log("Refresh token received:", token);
     if (!token) return res.status(401).json({ message: "Not signed in", error: "No refresh token found", success: false });
 
     let payload;
