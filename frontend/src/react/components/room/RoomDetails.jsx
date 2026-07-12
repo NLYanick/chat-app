@@ -27,6 +27,16 @@ function RoomDetails({ room, userIsOwner }) {
     navigate('/rooms');
   }
 
+  const onRestoreRoom = async () => {
+    const { json } = await sendRequest(`/rooms/${room.uid}/restore`, 'PATCH', { sender: user.uid });
+
+    if (!json.success) {
+      console.error("Failed to restore room:", json.error);
+      return;
+    }
+    navigate('/rooms');
+  }
+
   if (!room) return <p>No room details available.</p>;
 
   return (
@@ -37,7 +47,8 @@ function RoomDetails({ room, userIsOwner }) {
       
       <DescriptionBox description={room.description} borderColorHex={room.color_hex} />
 
-      {userIsOwner ? (
+      {userIsOwner ? (room.inactive ? 
+        <Button type="success" label="Restore Room" fullWidth onClick={onRestoreRoom} /> : 
         <LinkButton type="edit" label="Edit" to={`/rooms/${room.uid}/edit`} fullWidth />
       ) : (
         <Button type="error" label="Leave Room" fullWidth onClick={() => setModalOpen(true)} />

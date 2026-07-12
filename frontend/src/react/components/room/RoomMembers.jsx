@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 import MembersChoiceChipGrid from "./MembersChoiceChipGrid";
 import { emitEvent } from "../../../utils/socket-client";
 
-function RoomMembers({ members, userIsOwner, owner }) {
+function RoomMembers({ members, userIsOwner, owner, isInactive }) {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [removeUserModalOpen, setRemoveUserModalOpen] = useState(false);
   
@@ -114,7 +114,7 @@ function RoomMembers({ members, userIsOwner, owner }) {
     <div className="flex flex-col gap-8">
       <h2 className="text-2xl font-bold">Members</h2>
 
-      {userIsOwner && (
+      {userIsOwner && !isInactive && (
         <div className="flex flex-col gap-4">
           <Button type="primary" label="Invite User" onClick={() => setInviteModalOpen(true)} />
 

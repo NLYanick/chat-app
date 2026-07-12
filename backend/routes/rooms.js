@@ -85,7 +85,7 @@ router.patch('/:id', uploads.single('room_image'), async function(req, res, next
       }
     }
 
-    const room = await Room.findOneAndUpdate({ uid: req.params.id }, updateFields, { new: true });
+    const room = await Room.findOneAndUpdate({ uid: req.params.id }, updateFields, { returnDocument: 'after' });
 
     res.status(200).json({ message: "Room updated successfully", room, success: true });
   } catch (err) {
@@ -95,15 +95,35 @@ router.patch('/:id', uploads.single('room_image'), async function(req, res, next
 
 router.delete('/:id', async function(req, res, next) {
   try {
-    const ownedRoom = await Room.findOne({ uid: req.params.id, owner: req.body.sender });
-    if (!ownedRoom || req.body.sender !== ownedRoom.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
-    
-    const room = await Room.findOne({ uid: req.params.id });
-    if (!room) return res.status(404).json({ message: "Not Found", error: "Room not found", success: false });
+    const { sender } = req.body;
+    const { id } = req.params;
 
-    await Room.deleteOne({ uid: req.params.id });
+    if (!sender) return res.status(400).json({ message: "Bad Request", error: "The field 'sender' is required (uid of the user deleting the room)", success: false });
+
+    const ownedRoom = await Room.findOne({ uid: id, owner: sender });
+    if (!ownedRoom || sender !== ownedRoom.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
+
+    await Room.findOneAndUpdate({ uid: id }, { inactive: true, inactive_at: new Date() });
 
     res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.patch('/:id/restore', async function(req, res, next) {
+  try {
+    const { sender } = req.body;
+    const { id } = req.params;
+
+    if (!sender) return res.status(400).json({ message: "Bad Request", error: "The field 'sender' is required (uid of the user restoring the room)", success: false });
+
+    const ownedRoom = await Room.findOne({ uid: id, owner: sender });
+    if (!ownedRoom || sender !== ownedRoom.owner) return res.status(403).json({ message: "Forbidden", error: "You are not the owner of this room", success: false });
+
+    await Room.findOneAndUpdate({ uid: id }, { inactive: false, inactive_at: null });
+
+    res.status(200).json({ message: "Room restored successfully", success: true });
   } catch (err) {
     next(err);
   }

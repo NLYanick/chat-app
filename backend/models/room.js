@@ -29,7 +29,18 @@ const roomSchema = new mongoose.Schema({
         default: DEFAULT_ROOM_COLOR
     },
     image: String,
+    inactive: {
+        type: Boolean, 
+        default: false
+    },
+    inactive_at: {
+        type: Date,
+        default: null
+    }
 }, { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } });
+
+const seconds = 30 * 24 * 60 * 60; // 30 days in seconds
+roomSchema.index({ archivedAt: 1 }, { expireAfterSeconds: seconds });
 
 roomSchema.virtual('members_details', {
   ref: 'User',

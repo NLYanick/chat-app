@@ -9,7 +9,7 @@
 # Extra
 - Better error handling
 - Room authorization in backend
-- Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
+- Rooms middleware in backend
 - Searchable Dropdown for user inviting
 - Send an email when the user gets an invite
 - Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
