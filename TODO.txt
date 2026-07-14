@@ -5,6 +5,7 @@
 # Styling
 - Dropdown menu goes under the Room title, but should go above everything
 - UserErrorBox error styling
+- Homepage
 
 # Tidiness
 - Resizable
