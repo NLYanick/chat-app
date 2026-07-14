@@ -5,7 +5,7 @@ function DropDownMenu({ buttonContent, children }) {
   const items = Children.toArray(children);
 
   return (
-    <div className="relative inline-block text-left h-10">
+    <div className="relative inline-block text-left h-10 z-9999">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="cursor-pointer rounded-full transition-transform duration-150 hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-(--secondary-color)"

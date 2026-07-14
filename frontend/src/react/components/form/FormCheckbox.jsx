@@ -26,12 +26,12 @@ function FormCheckBox({ label, onChange, ...props }) {
       />
       
       <div 
-        className={`w-8 h-8 border-2 rounded-lg flex items-center justify-center 
-          ${checked ? 'bg-(--secondary-color) border-(--secondary-color)' : 'border-slate-300'}
-          peer-focus-visible:ring-2 peer-focus-visible:ring-(--secondary-color) peer-focus-visible:ring-offset-2`}
+        className={`w-6 h-6 border-2 rounded-md flex items-center justify-center transition-all duration-150 ease-out
+          ${checked ? 'bg-(--secondary-color) border-(--secondary-color) scale-105' : 'border-(--border-color) group-hover:border-(--secondary-color)'}
+          peer-focus-visible:ring-2 peer-focus-visible:ring-(--secondary-color) peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-(--primary-color)`}
       >
         {checked && (
-          <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className="w-4 h-4 text-white animate-scale-in" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
           </svg>
         )}

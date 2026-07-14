@@ -2,6 +2,10 @@
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
 
+# Styling
+- Dropdown menu goes under the Room title, but should go above everything
+- UserErrorBox error styling
+
 # Tidiness
 - Resizable
 - Skeleton pages
