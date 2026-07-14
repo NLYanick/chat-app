@@ -13,7 +13,7 @@ function AuthForm({ children, formLabel = 'Form', backgroundColor = '#181818', o
           {children}
         </div>
   
-        <Button label="Versturen" />
+        <Button label="Send" />
       </form>
     </>
   );
