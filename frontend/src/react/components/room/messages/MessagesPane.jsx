@@ -196,6 +196,7 @@ function MessagesPane({ room, members }) {
       }
 
       emitEvent('send_message', { message: json.data, room_id: room?.uid });
+      emitEvent('stopped_typing', { room_id: room?.uid, username: user.username });
 
       setMessages(prev => [...prev, json.data]);
       setNewMessage("");
