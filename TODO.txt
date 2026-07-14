@@ -1,7 +1,7 @@
 # Now
 - For production, remove the Strict Mode in App.jsx
 - Still some issues with the status, but I don't know what's wrong
-- Backend crashes when incorrect data is send via the Web Socket. Fix it
+- `my_id` can be removed, since the socket already has my id
 
 # Tidiness
 - Resizable
