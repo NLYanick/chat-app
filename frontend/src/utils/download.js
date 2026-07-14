@@ -16,7 +16,10 @@ export async function handleDownload (e, fullUrl, filename) {
 
     document.body.removeChild(link);
     setTimeout(() => window.URL.revokeObjectURL(blobUrl), 1000);
+
+    return true;
   } catch (err) {
     console.error("Download failed:", err);
+    return false;
   }
 };

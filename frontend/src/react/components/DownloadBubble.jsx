@@ -10,7 +10,8 @@ function DownloadBubble({ filename, fullUrl }) {
     setIsDownloading(true);
     setError(false);
 
-    await handleDownload(e, fullUrl, filename);
+    const success = await handleDownload(e, fullUrl, filename);
+    setError(!success);
 
     setIsDownloading(false);
   };
@@ -20,9 +21,12 @@ function DownloadBubble({ filename, fullUrl }) {
       onClick={handleDownloadClick}
       disabled={isDownloading}
       title={error ? "Download failed — try again" : filename}
-      className="cursor-pointer w-8 h-8 absolute top-0 right-0 bg-(--primary-color-light) bg-opacity-50 text-white text-xs m-1 rounded-md flex items-center border-none"
+      className={`
+        cursor-pointer w-8 h-8 absolute top-0 right-0 bg-(--primary-color-light)/80 backdrop-blur-sm text-xs m-1 rounded-md flex items-center border-none shadow-md transition-all duration-150 hover:scale-110 active:scale-95 animate-scale-in 
+        ${error ? 'ring-2 ring-(--error-color)' : ''}
+      `}
     >
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className="w-6 h-6 m-auto fill-white">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" className={`w-6 h-6 m-auto ${isDownloading ? 'animate-pulse' : ''} ${error ? 'fill-(--error-color)' : 'fill-white'}`}>
         <path d="M352 96C352 78.3 337.7 64 320 64C302.3 64 288 78.3 288 96L288 306.7L246.6 265.3C234.1 252.8 213.8 252.8 201.3 265.3C188.8 277.8 188.8 298.1 201.3 310.6L297.3 406.6C309.8 419.1 330.1 419.1 342.6 406.6L438.6 310.6C451.1 298.1 451.1 277.8 438.6 265.3C426.1 252.8 405.8 252.8 393.3 265.3L352 306.7L352 96zM160 384C124.7 384 96 412.7 96 448L96 480C96 515.3 124.7 544 160 544L480 544C515.3 544 544 515.3 544 480L544 448C544 412.7 515.3 384 480 384L433.1 384L376.5 440.6C345.3 471.8 294.6 471.8 263.4 440.6L206.9 384L160 384zM464 440C477.3 440 488 450.7 488 464C488 477.3 477.3 488 464 488C450.7 488 440 477.3 440 464C440 450.7 450.7 440 464 440z" />
       </svg>
     </button>

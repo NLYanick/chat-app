@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
-function Tooltip({ children, content, backgroundColor = "bg-slate-800", textColor = "text-white" }) {
+function Tooltip({ children, content, backgroundColor = "bg-(--surface-2)", textColor = "text-(--text-color)" }) {
   const [visible, setVisible] = useState(false);
   
   const triggerRef = useRef(null);
@@ -44,7 +44,7 @@ function Tooltip({ children, content, backgroundColor = "bg-slate-800", textColo
       {visible &&
         createPortal(
           <div
-            className={`fixed wrap-break-word ${backgroundColor} ${textColor} rounded-md p-3 pointer-events-none max-w-40 w-40 z-9999 -translate-x-1/2 -translate-y-full`}
+            className={`fixed wrap-break-word ${backgroundColor} ${textColor} rounded-md p-3 shadow-xl border border-(--border-color) pointer-events-none max-w-40 w-40 z-9999 -translate-x-1/2 -translate-y-full animate-pop-in`}
             style={{
               top: `${absolutePos.top}px`,
               left: `${absolutePos.left}px`,

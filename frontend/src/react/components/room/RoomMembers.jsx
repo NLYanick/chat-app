@@ -107,17 +107,17 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
     setError("");
   }
 
-  if (!members) return <p>Loading members...</p>;
+  if (!members) return <p className="text-(--text-muted)">Loading members...</p>;
 
   const filteredMembers = members.filter(member => member.uid !== user.uid && member.uid !== owner);
   const authUserFriends =  members.filter(member => member.uid === user.uid).map(member => member.friends_details)
 
   return (
     <div className="flex flex-col gap-8">
-      <h2 className="text-2xl font-bold">Members</h2>
+      <h2 className="text-2xl font-bold">Members <span className="text-(--text-muted) text-base font-normal">({members.length})</span></h2>
 
       {userIsOwner && !isInactive && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-3">
           <Button type="primary" label="Invite User" onClick={() => setInviteModalOpen(true)} />
 
           {inviteModalOpen && (
@@ -134,9 +134,9 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
               <p>Enter the username of the user you want to invite to this room.</p>
 
               <div className="flex gap-3 items-center w-full">
-                <hr className="my-4 w-full" />
-                <p className="text-gray-300 w-full">Invite a Friend</p>
-                <hr className="my-4 w-full" />
+                <hr className="my-4 w-full border-(--border-color)" />
+                <p className="text-(--text-muted) w-full whitespace-nowrap text-sm">Invite a Friend</p>
+                <hr className="my-4 w-full border-(--border-color)" />
               </div>
 
               <div className="flex flex-col gap-3 items-center w-full">
@@ -157,9 +157,9 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
               </div>
 
               <div className="flex gap-3 items-center w-full">
-                <hr className="my-4 w-full" />
-                <p className="text-gray-300 w-full">Or a different user</p>
-                <hr className="my-4 w-full" />
+                <hr className="my-4 w-full border-(--border-color)" />
+                <p className="text-(--text-muted) w-full whitespace-nowrap text-sm">Or a different user</p>
+                <hr className="my-4 w-full border-(--border-color)" />
               </div>
 
               <div className="flex gap-3 items-center">
@@ -169,8 +169,8 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
 
               <p>Invite user: <strong>{inviteUsername || "[Not selected]"}</strong></p>
 
-              {error && <p className="text-red-500 mt-2">{error}</p>}
-              {inviteSuccess && <p className="text-green-500 mt-2">{inviteSuccess}</p>}
+              {error && <p className="text-(--error-color) mt-2 animate-rise-in">{error}</p>}
+              {inviteSuccess && <p className="text-(--success-color) mt-2 animate-rise-in">{inviteSuccess}</p>}
             </Modal>
           )}
 
@@ -196,13 +196,13 @@ function RoomMembers({ members, userIsOwner, owner, isInactive }) {
                 label="Click on a member to select them for removal:"
               />
 
-              {error && <p className="text-red-500 mt-2">{error}</p>}
+              {error && <p className="text-(--error-color) mt-2 animate-rise-in">{error}</p>}
             </Modal>
           )}
         </div>
       )}
 
-      <ul className="space-y-4">
+      <ul className="space-y-3">
         {members.map(member => (
           <MemberItem key={member.uid} member={member} isOwner={member.uid === owner} />
         ))}

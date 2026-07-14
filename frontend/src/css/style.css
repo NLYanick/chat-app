@@ -1,13 +1,62 @@
 @import "tailwindcss";
 
+/* ============================================================
+   Design tokens
+   ============================================================ */
 :root {
-    --primary-color: #242424;
-    --primary-color-light: #343434;
-    --secondary-color: #8e51ff;
-    --secondary-color-dark: #604393;
-    --text-color: white;
+    /* Surfaces */
+    --primary-color: #14161d;          /* app background */
+    --primary-color-light: #1e212b;    /* raised surface (cards, inputs) */
+    --surface-2: #262b38;              /* nested / hover surface */
+    --border-color: #333849;
+
+    /* Brand accent */
+    --secondary-color: #7c5cfc;
+    --secondary-color-dark: #5a3fd9;
+    --secondary-color-soft: rgba(124, 92, 252, 0.16);
+
+    /* Text */
+    --text-color: #f1f2f6;
+    --text-muted: #9aa0b4;
+
+    /* Status */
+    --success-color: #34c77b;
+    --error-color: #ef5f6f;
+    --warning-color: #f2b155;
+
+    /* Type */
+    --font-display: "Space Grotesk", "Inter", system-ui, sans-serif;
+    --font-body: "Inter", system-ui, sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+    /* Motion */
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+@theme inline {
+    --font-display: var(--font-display);
+    --font-sans: var(--font-body);
+    --font-mono: var(--font-mono);
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+}
+
+body {
+    font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+}
+
+/* ============================================================
+   Scrollbars
+   ============================================================ */
 .app-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: transparent transparent;
@@ -15,4 +64,126 @@
 
 .app-scrollbar:hover {
     scrollbar-color: var(--secondary-color-dark) transparent;
+}
+
+.app-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.app-scrollbar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 999px;
+}
+
+.app-scrollbar:hover::-webkit-scrollbar-thumb {
+    background-color: var(--secondary-color-dark);
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ============================================================
+   Keyframes — the app's micro-animation vocabulary
+   ============================================================ */
+@keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes rise-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pop-in {
+    from { opacity: 0; transform: scale(0.94) translateY(6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes scale-in {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+    from { background-position: -200% 0; }
+    to { background-position: 200% 0; }
+}
+
+@keyframes pulse-ring {
+    0% { box-shadow: 0 0 0 0 var(--ring-color, rgba(124, 92, 252, 0.55)); }
+    100% { box-shadow: 0 0 0 8px rgba(124, 92, 252, 0); }
+}
+
+@keyframes bounce-dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+    30% { transform: translateY(-4px); opacity: 1; }
+}
+
+@keyframes spin-slow {
+    to { transform: rotate(360deg); }
+}
+
+.animate-fade-in { animation: fade-in 0.25s var(--ease-out) both; }
+.animate-rise-in { animation: rise-in 0.3s var(--ease-out) both; }
+.animate-pop-in { animation: pop-in 0.22s var(--ease-spring) both; }
+.animate-scale-in { animation: scale-in 0.18s var(--ease-out) both; }
+
+.skeleton {
+    background: linear-gradient(90deg, var(--surface-2) 25%, #323848 37%, var(--surface-2) 63%);
+    background-size: 400% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.status-online {
+    animation: pulse-ring 1.8s var(--ease-out) infinite;
+}
+
+.typing-dot {
+    animation: bounce-dot 1.2s ease-in-out infinite;
+}
+
+/* Resizable split-pane divider */
+.split-handle {
+    position: relative;
+    flex-shrink: 0;
+    touch-action: none;
+}
+
+.split-handle::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: var(--border-color);
+    transition: background-color 0.15s var(--ease-out);
+}
+
+.split-handle:hover::after,
+.split-handle[data-dragging="true"]::after {
+    background: var(--secondary-color);
+}
+
+.split-handle-grip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.15s var(--ease-out);
+    pointer-events: none;
+}
+
+.split-handle:hover .split-handle-grip,
+.split-handle[data-dragging="true"] .split-handle-grip {
+    opacity: 1;
 }
