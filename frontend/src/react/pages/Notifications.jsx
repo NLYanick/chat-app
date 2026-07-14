@@ -100,7 +100,7 @@ function Notifications() {
 
       setFriendRequests(prev => prev.filter(request => request.uid !== request.uid));
 
-      emitEvent('add_friend', { user_id: request.sender, my_id: user.uid });
+      emitEvent('add_friend', { user_id: request.sender });
     } catch (err) {
       console.error("Error accepting friend request:", err);
     }

@@ -169,14 +169,14 @@ function handleSocket(io, socket, userRooms = [], userFriends = []) {
     });
 
     socket.on('add_friend', (data) => {
-      const { user_id, my_id } = data;
+      const { user_id } = data;
 
-      io.to(`user:${user_id}`).emit('friend_added', { user_id, my_id });
+      io.to(`user:${user_id}`).emit('friend_added', { user_id, my_id: userId });
     });
     socket.on('remove_friend', (data) => {
-      const { user_id, my_id } = data;
+      const { user_id } = data;
 
-      io.to(`user:${user_id}`).emit('friend_removed', { user_id, my_id });
+      io.to(`user:${user_id}`).emit('friend_removed', { user_id, my_id: userId });
     });
 
     socket.on('update_room', (data) => {

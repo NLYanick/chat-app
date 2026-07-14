@@ -97,7 +97,7 @@ function Friends() {
       setFriends(friends.filter(friend => friend.uid !== friendId));
       setShowModal(false);
 
-      emitEvent('remove_friend', { user_id: friendId, my_id: user.uid });
+      emitEvent('remove_friend', { user_id: friendId });
     } catch (error) {
       console.error("Error removing friend:", error);
     }
