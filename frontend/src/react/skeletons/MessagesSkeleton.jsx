@@ -1,4 +1,4 @@
-import Skeleton, { SkeletonAvatar } from "../Skeleton";
+import Skeleton, { SkeletonAvatar } from "./Skeleton";
 
 function MessagesSkeleton() {
   const rows = [

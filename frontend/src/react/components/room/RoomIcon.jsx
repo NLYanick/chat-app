@@ -12,7 +12,7 @@ function getSizeValue(size) {
 }
 
 function RoomIcon({ roomName, roomImage, size = "SMALL" }) {
-  if (!typeof size === 'string') size = "SMALL";
+  if (typeof size !== 'string') size = "SMALL";
 
   const imageUrl = roomImage ? `${import.meta.env.VITE_BACKEND_URL}/public${roomImage}` : null;
 
@@ -22,14 +22,14 @@ function RoomIcon({ roomName, roomImage, size = "SMALL" }) {
     <>
       {imageUrl ? (
         <img 
-          className={sizeValue.size + ' rounded-full object-cover shrink-0'} 
+          className={sizeValue.size + ' rounded-full object-cover shrink-0 ring-2 ring-(--border-color)'} 
           src={imageUrl} 
           alt={roomName} 
         /> 
       ) : (
-        <div className={sizeValue.size + ' rounded-full bg-gray-300 flex items-center justify-center shrink-0'}>
-          <span className={sizeValue.text + ' text-gray-600 font-bold'}>
-            {roomName.charAt(0)}
+        <div className={sizeValue.size + ' rounded-full bg-(--surface-2) flex items-center justify-center shrink-0 ring-2 ring-(--border-color)'}>
+          <span className={sizeValue.text + ' text-(--text-color) font-bold font-display'}>
+            {roomName.charAt(0).toUpperCase()}
           </span>
         </div>
       )}

@@ -7,7 +7,7 @@ import MessageItem from "./MessageItem";
 import FileUploadItem from "./FileUploadItem";
 import Modal from "../../Modal";
 import AttachmentPreview from "./AttachmentPreview";
-// import MessagesSkeleton from "../../skeletons/MessagesSkeleton";
+import MessagesSkeleton from "../../../skeletons/MessagesSkeleton";
 
 function MessagesPane({ room, members }) {
   const [messages, setMessages] = useState([]);
@@ -267,8 +267,7 @@ function MessagesPane({ room, members }) {
         <h1 className='text-3xl sm:text-4xl font-bold my-6'>Welcome to {room?.name || 'the room'}</h1>
 
         {messagesLoading ? (
-          // <MessagesSkeleton />
-          <p>Loading...</p>
+          <MessagesSkeleton />
         ) : (
           <>
             {messages.length === 0 && (

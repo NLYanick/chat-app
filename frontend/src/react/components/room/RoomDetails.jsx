@@ -41,13 +41,18 @@ function RoomDetails({ room, userIsOwner }) {
     navigate('/rooms');
   }
 
-  if (!room) return <p>No room details available.</p>;
+  if (!room) return <p className="text-(--text-muted)">No room details available.</p>;
 
   return (
-    <div className="p-4 flex flex-col items-center text-center gap-6">
+    <div className="p-4 flex flex-col items-center text-center gap-6 animate-rise-in">
       <h2 className="text-2xl font-bold block w-full wrap-break-word">{room.name}</h2>
       
-      <RoomIcon roomName={room.name} roomImage={room.image} size="LARGE" />
+      <div className="relative">
+        <RoomIcon roomName={room.name} roomImage={room.image} size="LARGE" />
+        {room.inactive && (
+          <span className="absolute -bottom-1 -right-1 text-[10px] font-semibold uppercase tracking-wide bg-(--warning-color) text-(--primary-color) px-2 py-0.5 rounded-full shadow">Inactive</span>
+        )}
+      </div>
       
       <DescriptionBox description={room.description} borderColorHex={room.color_hex} />
 

@@ -16,11 +16,12 @@ function RoomItem({ room }) {
       <Tooltip content={tooltipContent}>
         <Link 
           to={`/rooms/${room.uid}`} 
-          style={{ backgroundColor: room.color_hex, opacity: room.inactive ? 0.5 : 1 }} 
-          className="flex items-center space-x-5 px-6 w-full h-full rounded-lg shadow-lg py-3 cursor-pointer hover:scale-105 transition-transform duration-200 ease-in-out"
+          style={{ '--room-accent': room.color_hex, opacity: room.inactive ? 0.5 : 1 }} 
+          className="group flex items-center gap-4 px-4 w-full h-full rounded-xl shadow-md py-2.5 cursor-pointer border border-(--border-color) bg-(--primary-color-light) transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:border-[var(--room-accent)]"
         >
+          <div className="w-1.5 self-stretch rounded-full shrink-0" style={{ backgroundColor: room.color_hex }} />
           <RoomIcon roomName={room.name} roomImage={room.image} />
-          <p className="truncate w-3/4 text-left">{room.name}</p>
+          <p className="truncate flex-1 text-left font-medium">{room.name}</p>
         </Link>
       </Tooltip>
     </li>
