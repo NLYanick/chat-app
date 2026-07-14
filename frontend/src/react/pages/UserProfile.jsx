@@ -82,6 +82,8 @@ function UserProfile() {
 
       setShowModal(false);
 
+      emitEvent('remove_friend', { user_id: friendId });
+
       window.location.reload();
     } catch (error) {
       console.error("Error removing friend:", error);
