@@ -70,13 +70,13 @@ function initializeSocket(server) {
           if (freshUser) {
             if (freshUser.rooms) {
               freshUser.rooms.forEach(room => {
-                io.to(`room:${room.uid}`).emit("user_status_change", { userId: currentUserId, status: UserStatus.OFFLINE });
+                io.to(`room:${room.uid}`).emit("user_status_change", { userId: userId, status: UserStatus.OFFLINE });
               });
             }
 
             if (freshUser.friends) {
               freshUser.friends.forEach(friend => {
-                io.to(`user:${friend}`).emit("user_status_change", { userId: currentUserId, status: UserStatus.OFFLINE });
+                io.to(`user:${friend}`).emit("user_status_change", { userId: userId, status: UserStatus.OFFLINE });
               });
             }
           }
