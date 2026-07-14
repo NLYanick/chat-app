@@ -124,7 +124,7 @@ function MessageItem({ message, member, onOpenModal, isEditing, setIsEditing, se
         ) : (
           <>
             {message.text && (
-              <div className="bg-(--primary-color-light) py-2 px-3 rounded-lg w-fit max-w-full">
+              <div className={`${member?.uid === user?.uid ? 'bg-(--secondary-color)' : 'bg-(--primary-color-light)'} py-2 px-3 rounded-lg w-fit max-w-full`}>
                 <p className="text-left">{message.text}</p>
               </div>
             )}
