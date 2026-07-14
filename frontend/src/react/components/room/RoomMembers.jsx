@@ -4,12 +4,12 @@ import Modal from "../Modal";
 import MemberItem from "./MemberItem";
 import FormInput from "../form/FormInput";
 import { useAuth } from "../../AuthUserContext";
-import { sendRequest } from "../../utils/requests";
+import { sendRequest } from "../../../utils/requests";
 import { useParams } from "react-router-dom";
 import MembersChoiceChipGrid from "./MembersChoiceChipGrid";
-import { emitEvent } from "../../utils/socket-client";
+import { emitEvent } from "../../../utils/socket-client";
 
-function RoomMembers({ members, userIsOwner, owner }) {
+function RoomMembers({ members, userIsOwner, owner, isInactive }) {
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [removeUserModalOpen, setRemoveUserModalOpen] = useState(false);
   
@@ -67,6 +67,8 @@ function RoomMembers({ members, userIsOwner, owner }) {
 
     setRemoveUsername("");
     setRemoveUserModalOpen(false);
+
+    emitEvent('left_room', { room_id: roomId, user_id: userToRemove.uid });
   }
 
   const onInviteClose = () => {
@@ -108,12 +110,13 @@ function RoomMembers({ members, userIsOwner, owner }) {
   if (!members) return <p>Loading members...</p>;
 
   const filteredMembers = members.filter(member => member.uid !== user.uid && member.uid !== owner);
+  const authUserFriends =  members.filter(member => member.uid === user.uid).map(member => member.friends_details)
 
   return (
     <div className="flex flex-col gap-8">
       <h2 className="text-2xl font-bold">Members</h2>
 
-      {userIsOwner && (
+      {userIsOwner && !isInactive && (
         <div className="flex flex-col gap-4">
           <Button type="primary" label="Invite User" onClick={() => setInviteModalOpen(true)} />
 
@@ -130,10 +133,41 @@ function RoomMembers({ members, userIsOwner, owner }) {
               <h3 className="text-xl font-bold mb-4">Invite User</h3>
               <p>Enter the username of the user you want to invite to this room.</p>
 
+              <div className="flex gap-3 items-center w-full">
+                <hr className="my-4 w-full" />
+                <p className="text-gray-300 w-full">Invite a Friend</p>
+                <hr className="my-4 w-full" />
+              </div>
+
+              <div className="flex flex-col gap-3 items-center w-full">
+                <div className="flex gap-2 w-full overflow-x-scroll app-scrollbar p-1 pb-2">
+                  {
+                    authUserFriends.flat().map(friend => (
+                      <div className="shrink-0" key={friend.uid}>
+                        <Button 
+                          key={friend.uid}
+                          type={inviteUsername === friend.username ? "primary" : "secondary"}
+                          label={friend.username}
+                          onClick={() => setInviteUsername(friend.username)}
+                        />
+                      </div>
+                    ))
+                  }
+                </div>
+              </div>
+
+              <div className="flex gap-3 items-center w-full">
+                <hr className="my-4 w-full" />
+                <p className="text-gray-300 w-full">Or a different user</p>
+                <hr className="my-4 w-full" />
+              </div>
+
               <div className="flex gap-3 items-center">
                 <FormInput label="Username" placeholder="Enter username" onChange={(e) => setInviteUsername(e.target.value)} ref={inviteInputRef} />
                 <Button type="secondary" label="Clear" onClick={() => onClear(inviteInputRef)} />
               </div>
+
+              <p>Invite user: <strong>{inviteUsername || "[Not selected]"}</strong></p>
 
               {error && <p className="text-red-500 mt-2">{error}</p>}
               {inviteSuccess && <p className="text-green-500 mt-2">{inviteSuccess}</p>}

@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import Button from "../components/Button";
 import ProfileIcon from "../components/profile/ProfileIcon";
 import ProfileDetails from '../components/profile/ProfileDetails';
 import Modal from '../components/Modal';
-import { emitEvent } from '../utils/socket-client';
+import { emitEvent } from '../../utils/socket-client';
 
 function UserProfile() {
   const [error, setError] = useState(null);
@@ -21,13 +21,13 @@ function UserProfile() {
   const navigate = useNavigate();
   const { userId } = useParams();
 
-  if (user && userId === user.uid) {
-    navigate("/profile/me");
-  }
-
   const isFriend = user && userShowing && userShowing.friends.includes(user.uid);
 
   useEffect(() => {
+    if (user && userId === user.uid) {
+      navigate("/profile/me");
+    }
+
     async function fetchUser() {
       try {
         const { json } = await sendRequest(`/users/${userId}`, 'GET');
@@ -81,6 +81,8 @@ function UserProfile() {
       }
 
       setShowModal(false);
+
+      emitEvent('remove_friend', { user_id: friendId });
 
       window.location.reload();
     } catch (error) {

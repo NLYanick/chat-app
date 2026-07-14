@@ -1,11 +1,11 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthUserContext";
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import ProfileIcon from "./profile/ProfileIcon"
 import DropDownMenu from "./DropDownMenu";
 import DropDownLink from "./DropDownLink";
 import { useEffect, useRef, useState } from "react";
-import { subscribeToEvent } from "../utils/socket-client";
+import { subscribeToEvent } from "../../utils/socket-client";
 
 const noBarRoutes = ['/login', '/register'];
 
@@ -36,7 +36,7 @@ function NavBar() {
     }
 
     async function checkNotifications() {
-      if (previousPathRef.current === "/login") {
+      if (previousPathRef.current === "/login" && location.pathname !== "/login" && location.pathname !== "/register" && user) {
         const { json: friendRequestsData } = await sendRequest('/friend-requests/user/' + user?.uid, 'GET');
         const { json: roomInvitesData } = await sendRequest('/room-invites/user/' + user?.uid, 'GET');
 
@@ -45,7 +45,7 @@ function NavBar() {
           return;
         }
 
-        if (friendRequestsData.friend_requests.length > 0 || roomInvitesData.room_invites.length > 0) {
+        if (friendRequestsData?.friend_requests?.length > 0 || roomInvitesData?.room_invites?.length > 0) {
           setHasNotifications(true);
         }
       }
@@ -67,7 +67,7 @@ function NavBar() {
   };
 
   return (
-    <div className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15 bg-(--primary-color)" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
+    <nav className="flex items-center justify-between p-4 w-full fixed border-b-2 h-15 bg-(--primary-color)" style={noBarRoutes.includes(location.pathname) ? { display: "none" } : {}}>
       <div>
         <Link to='/'>ChatApp</Link>
       </div>
@@ -105,7 +105,7 @@ function NavBar() {
           </Link>
         </div>
       )}
-    </div>
+    </nav>
   )
 }
 

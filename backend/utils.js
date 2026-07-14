@@ -53,8 +53,9 @@ function createAccessToken(user) {
     return jwt.sign({ uid: user.uid }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
 }
 
-function createRefreshToken(user) {
-    return jwt.sign({ uid: user.uid }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '30d' });
+function createRefreshToken(user, staySignedIn) {
+    const expiresIn = staySignedIn ? '30d' : '1d';
+    return jwt.sign({ uid: user.uid, remember: staySignedIn }, process.env.REFRESH_TOKEN_SECRET, { expiresIn });
 }
 
 function addCookieOptions(res, token) {

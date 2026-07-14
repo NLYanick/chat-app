@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../AuthUserContext";
-import { sendRequest } from "../utils/requests";
+import { sendRequest } from "../../utils/requests";
 import Button from "../components/Button";
 import FriendItem from "../components/FriendItem";
-import { emitEvent, subscribeToEvent } from "../utils/socket-client";
+import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
 import Modal from "../components/Modal";
+import SinglePageLayout from "../layouts/SinglePageLayout";
 
 function Friends() {
   const [friends, setFriends] = useState([]);
@@ -36,14 +37,22 @@ function Friends() {
 
     fetchFriends();
 
-    const unsubscribe = subscribeToEvent('user_status_change', ({ userId, status }) => {
+    const unsubscribeStatus = subscribeToEvent('user_status_change', ({ userId, status }) => {
       setFriends(prev =>
         prev.map(f => f.uid === userId ? { ...f, status } : f)
       );
     });
+    const unsubscribeAdded = subscribeToEvent('friend_added', () => {
+      fetchFriends();
+    });
+    const unsubscribeRemoved = subscribeToEvent('friend_removed', ({ user_id, my_id }) => {
+      setFriends(prev => prev.filter(f => f.uid !== user_id && f.uid !== my_id));
+    });
 
     return () => {
-      if (unsubscribe) unsubscribe();
+      if (unsubscribeStatus) unsubscribeStatus();
+      if (unsubscribeAdded) unsubscribeAdded();
+      if (unsubscribeRemoved) unsubscribeRemoved();
     }
   }, [user.uid]);
 
@@ -87,6 +96,8 @@ function Friends() {
       
       setFriends(friends.filter(friend => friend.uid !== friendId));
       setShowModal(false);
+
+      emitEvent('remove_friend', { user_id: friendId });
     } catch (error) {
       console.error("Error removing friend:", error);
     }
@@ -98,9 +109,7 @@ function Friends() {
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-4xl sm:text-5xl font-bold mb-10">Friends</h1>
-      
+    <SinglePageLayout title="Friends">
       <div className="flex gap-8">
         <div className="bg-(--primary-color-light) p-8 rounded-lg shadow-md w-md">
           <h2 className="text-2xl font-semibold mb-4">Your Friends</h2>
@@ -151,7 +160,7 @@ function Friends() {
           </form>
         </div>
       </div>
-    </div>
+    </SinglePageLayout>
   );
 }
 

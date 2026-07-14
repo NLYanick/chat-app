@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useAuth } from "../../AuthUserContext";
-import { sendRequest } from "../../utils/requests";
-import { emitEvent } from "../../utils/socket-client";
-import ProfileIcon from "../profile/ProfileIcon";
+import { useAuth } from "../../../AuthUserContext";
+import { sendRequest } from "../../../../utils/requests";
+import { emitEvent } from "../../../../utils/socket-client";
+import ProfileIcon from "../../profile/ProfileIcon";
 import MessageToolsBubble from "./MessageToolsBubble";
-import Button from "../Button";
+import Button from "../../Button";
 import AttachmentPreview from "./AttachmentPreview";
 import FileUploadItem from "./FileUploadItem";
 

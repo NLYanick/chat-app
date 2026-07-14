@@ -63,7 +63,7 @@ router.put('/:id', async function(req, res, next) {
     const updatedMessage = await Message.findOneAndUpdate(
       { uid: req.params.id }, 
       { text, attachments: req.body.attachments }, 
-      { new: true }
+      { returnDocument: 'after' }
     ).populate('attachments_details');
 
     if (!updatedMessage) {

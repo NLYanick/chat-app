@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
 import NavBar from './components/NavBar';
 import ProtectedRoute from './ProtectedRoute';
 import NotFound from './pages/NotFound';
@@ -14,25 +14,37 @@ import Room from './pages/rooms/Room';
 import EditRoom from './pages/rooms/EditRoom';
 import Notifications from './pages/Notifications';
 import Friends from './pages/Friends';
-import { sendRequest } from './utils/requests'
+import { sendRequest } from '../utils/requests'
 import { useAuth } from './AuthUserContext';
 import { useEffect } from 'react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 function Page() {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
+  const hasRefreshed = useRef(false);
+
   useEffect(() => {
+    if (hasRefreshed.current) return;
+    hasRefreshed.current = true;
+    
     async function refreshToken() {
       try {
         const { json } = await sendRequest('/authenticate/refresh', 'POST');
 
         if (json.success && json.user && json.accessToken) {
           login(json.user, json.accessToken);
-          navigate("/");
+          
+          if (location.pathname === '/login' || location.pathname === '/register') {
+            navigate("/");
+          }
+        } else {
+          logout();
+          navigate("/login");
         }
       } catch (error) {
         console.error('Error refreshing token:', error);
@@ -49,9 +61,9 @@ function Page() {
   }
 
   return (
-    <div>
+    <>
       <NavBar />
-      <div className='min-h-screen flex flex-col items-center justify-center text-center pt-15'>
+      <main className='min-h-screen flex flex-col items-center justify-center text-center pt-15'>
         <Routes>
           <Route path='/login' element={<Login />}></Route>
           <Route path='/register' element={<Register />}></Route>
@@ -76,8 +88,8 @@ function Page() {
 
           <Route path='*' element={<NotFound />}></Route>
         </Routes>
-      </div>
-    </div>
+      </main>
+    </>
   );
 }
 

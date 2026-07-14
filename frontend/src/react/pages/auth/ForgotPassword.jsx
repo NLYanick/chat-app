@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { sendRequest } from '../../utils/requests';
+import { sendRequest } from '../../../utils/requests';
 import Form from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
@@ -49,8 +49,10 @@ function ForgotPassword() {
 function checkUserInput(email) {
   const errors = []
 
-  if (!email)
-    return errors.push('Fill in your email address');
+  if (!email) {
+    errors.push('Fill in your email address');
+    return errors;
+  }
 
   return errors;
 }

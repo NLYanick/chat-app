@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import RoomsList from './rooms/RoomsList';
 import LinkButton from '../components/LinkButton';

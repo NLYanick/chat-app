@@ -1,4 +1,4 @@
-import Button from "../components/Button";
+import Button from "../Button";
 
 function InviteItem({ invite, onAccept, onDecline }) {
   return (
@@ -7,8 +7,8 @@ function InviteItem({ invite, onAccept, onDecline }) {
         <strong>{invite.inviter_details.username}</strong> invited you to <strong>{invite.room_details ? invite.room_details.name : 'Unknown Room'}</strong>
       </p>
       <div className="flex gap-2">
-        <Button type="success" label="Accept" onClick={() => onAccept(invite.uid)} />
-        <Button type="error" label="Decline" onClick={() => onDecline(invite.uid)} />
+        <Button type="success" label="Accept" onClick={() => onAccept(invite)} />
+        <Button type="error" label="Decline" onClick={() => onDecline(invite)} />
       </div>
     </li>
   )

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../AuthUserContext";
-import { sendRequest } from "../utils/requests";
-import InviteItem from "../components/InviteItem";
+import { sendRequest } from "../../utils/requests";
+import InviteItem from "../components/invites/InviteItem";
 import Button from "../components/Button";
-import FriendRequestItem from "../components/FriendRequestItem";
+import FriendRequestItem from "../components/invites/FriendRequestItem";
+import SinglePageLayout from "../layouts/SinglePageLayout";
+import { emitEvent } from "../../utils/socket-client";
 
 function Notifications() {
   const [invites, setInvites] = useState([]);
@@ -20,7 +22,7 @@ function Notifications() {
         return;
       }
 
-      setInvites(json.data);
+      setInvites(json.invites);
     } catch (err) {
       console.error("Error fetching invites:", err);
     }
@@ -55,71 +57,73 @@ function Notifications() {
     }
   }, [user.uid]);
 
-  const handleAcceptRoomInvite = async (inviteId) => {
+  const handleAcceptRoomInvite = async (invite) => {
     try {
-      const { json } = await sendRequest(`/room-invites/${inviteId}/accept`, 'POST', { userUid: user.uid });
+      const { json } = await sendRequest(`/room-invites/${invite.uid}/accept`, 'POST', { userUid: user.uid });
       
       if (!json.success) {
         console.error("Failed to accept invite:", json.error);
         return;
       }
       
-      setInvites(prev => prev.filter(invite => invite.uid !== inviteId));
+      setInvites(prev => prev.filter(inv => inv.uid !== invite.uid));
+
+      emitEvent('joined_room', { room: invite.room_details, user: invite.invited_user_details });
     } catch (err) {
       console.error("Error accepting invite:", err);
     }
   };
 
-  const handleDeclineRoomInvite = async (inviteId) => {
+  const handleDeclineRoomInvite = async (invite) => {
     try {
-      const { json } = await sendRequest(`/room-invites/${inviteId}/decline`, 'POST', { userUid: user.uid });
+      const { json } = await sendRequest(`/room-invites/${invite.uid}/decline`, 'POST', { userUid: user.uid });
       
       if (!json.success) {
         console.error("Failed to decline invite:", json.error);
         return;
       }
 
-      setInvites(prev => prev.filter(invite => invite.uid !== inviteId));
+      setInvites(prev => prev.filter(inv => inv.uid !== invite.uid));
     } catch (err) {
       console.error("Error declining invite:", err);
     }
   };
 
-  const handleAcceptFriendRequest = async (requestId) => {
+  const handleAcceptFriendRequest = async (request) => {
     try {
-      const { json } = await sendRequest(`/friend-requests/${requestId}/accept`, 'POST');
+      const { json } = await sendRequest(`/friend-requests/${request.uid}/accept`, 'POST');
 
       if (!json.success) {
         console.error("Failed to accept friend request:", json.error);
         return;
       }
 
-      setFriendRequests(prev => prev.filter(request => request.uid !== requestId));
+      setFriendRequests(prev => prev.filter(request => request.uid !== request.uid));
+
+      emitEvent('add_friend', { user_id: request.sender });
     } catch (err) {
       console.error("Error accepting friend request:", err);
     }
   };
 
-  const handleDeclineFriendRequest = async (requestId) => {
+  const handleDeclineFriendRequest = async (request) => {
     try {
-      const { json } = await sendRequest(`/friend-requests/${requestId}/decline`, 'POST');
+      const { json } = await sendRequest(`/friend-requests/${request.uid}/decline`, 'POST');
 
       if (!json.success) {
         console.error("Failed to decline friend request:", json.error);
         return;
       }
-      setFriendRequests(prev => prev.filter(request => request.uid !== requestId));
+      setFriendRequests(prev => prev.filter(request => request.uid !== request.uid));
     } catch (err) {
       console.error("Error declining friend request:", err);
     }
   };
 
   return (
-    <div className="space-y-12 mb-4 w-full">
-      <h1 className='text-4xl sm:text-5xl'>Notifications</h1>
-      
+    <SinglePageLayout title="Notifications">
       <div className="sm:flex sm:justify-center sm:items-start sm:gap-8 w-full">
-        <div className="w-full sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
+        <div className="w-md bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
           <h2 className="text-2xl sm:text-3xl mb-1">Room Invites</h2>
           
           {invites.length === 0 ? (
@@ -135,7 +139,7 @@ function Notifications() {
           <Button type="primary" label="Refresh" onClick={fetchInvites} />
         </div>
 
-        <div className="w-full sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
+        <div className="w-md sm:max-w-lg bg-(--primary-color-light) p-4 sm:p-8 rounded-lg shadow-md flex flex-col gap-8">
           <h2 className="text-2xl sm:text-3xl mb-1">Friend Requests</h2>
           
           {friendRequests.length === 0 ? (
@@ -151,7 +155,7 @@ function Notifications() {
           <Button type="primary" label="Refresh" onClick={fetchFriendRequests} />
         </div>
       </div>
-    </div>
+    </SinglePageLayout>
   )
 }
 

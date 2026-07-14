@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { sendRequest } from '../../utils/requests';
-import Form from '../../components/form/AuthForm';
+import { sendRequest } from '../../../utils/requests';
+import AuthLayout from '../../layouts/AuthLayout';
+import AuthForm from '../../components/form/AuthForm';
 import FormInput from '../../components/form/FormInput';
 import FormCheckBox from '../../components/form/FormCheckbox';
 import UserErrorsBox from '../../components/form/UserErrorsBox';
@@ -17,10 +18,6 @@ function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [staySignedIn, setStaySignedIn] = useState(null);
-
-  useEffect(() => {
-    if (user) navigate("/");
-  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,31 +42,31 @@ function Login() {
   if (error) throw new Error(error);
 
   return (
-    <>
-      <div className='flex flex-col gap-12'>
-        <Form formLabel='Login' onSubmit={handleSubmit}>
-          {userErrors.length > 0 && (
-            <UserErrorsBox userErrors={userErrors} />
-          )}
-          <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
-          <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
-          <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
-        </Form>
+    <AuthLayout>
+      <AuthForm formLabel='Login' onSubmit={handleSubmit}>
+        {userErrors.length > 0 && (
+          <UserErrorsBox userErrors={userErrors} />
+        )}
+        <FormInput label="Username" type="text" name="username" placeholder="Enter your username..." required autoFocus onChange={(e) => setUsername(e.target.value)} />
+        <FormInput label="Password" subtext="Must be at least 5 characters long" type="password" name="password" required autoCorrect='false' onChange={(e) => setPassword(e.target.value)} />
+        <FormCheckBox label="Stay signed in" name="stay-signed-in" onChange={(checked) => setStaySignedIn(checked)} />
+      </AuthForm>
 
-        <div className='flex justify-between'>
-          <Link to="/forgot-password" className='text-sm hover:underline self-end'>Forgot Your Password?</Link>
-          <Link to="/register" className='text-sm hover:underline self-end'>No account yet?</Link>
-        </div>
+      <div className='flex justify-between w-full'>
+        <Link to="/forgot-password" className='text-sm hover:underline self-end text-gray-100'>Forgot Your Password?</Link>
+        <Link to="/register" className='text-sm hover:underline self-end text-gray-100'>No account yet?</Link>
       </div>
-    </>
+    </AuthLayout>
   );
 }
 
 function checkUserInput(username, password) {
   const errors = []
 
-  if (!username || !password)
-    return errors.push('Fill in your login credentials');
+  if (!username || !password) {
+    errors.push('Fill in your login credentials');
+    return errors;
+  }
 
   if (password.length < 5) errors.push("Password must be at least 5 characters long");
 

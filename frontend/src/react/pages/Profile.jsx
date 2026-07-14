@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { sendRequest } from '../utils/requests';
+import { sendRequest } from '../../utils/requests';
 import { useAuth } from "../AuthUserContext";
 import Button from "../components/Button"
 import ProfileIcon from "../components/profile/ProfileIcon"
@@ -8,6 +8,7 @@ import Modal from '../components/Modal';
 import ProfileEditor from '../components/profile/ProfileEditor';
 import ProfileDetails from '../components/profile/ProfileDetails';
 import FormFileInput from '../components/form/FormFileInput';
+import SinglePageLayout from '../layouts/SinglePageLayout';
 
 function Profile() {
   const [error, setError] = useState(null);
@@ -139,8 +140,7 @@ function Profile() {
         </Modal> 
       }
 
-      <div className='flex flex-col gap-8 pb-8 min-w-96'>
-        <h1 className='text-4xl font-semibold mt-16 sm:mt-8 mb-4'>Profile</h1>
+      <SinglePageLayout title="Profile">
 
         <ProfileDetails user={user} />
 
@@ -187,7 +187,7 @@ function Profile() {
             </Modal> 
           }
         </div>
-      </div>
+      </SinglePageLayout>
     </>
   );
 }

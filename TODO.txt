@@ -4,21 +4,11 @@
 
 # Tidiness
 - Resizable
-- Sort the files, espescially the frontend components
 - Skeleton pages
-- Make reusable layouts for certain page groups like Auth, Rooms, etc.
 
 # Extra
 - Better error handling
-- Check if a user is a member of the room, before it can access the files
 - Room authorization in backend
-- You can see if someone is typing
-- Rooms will be inactive or archived instead of deleted and will be removed after 30 days.
-- Searchable Dropdown for user inviting
-- Invite Friends to room (easier then searching for username)
-- Send an email when the user gets an invite
-- Real-time room members (they can join and leave). You also need to be redirected when you are the one removed and your still in the room (with a message).
-- Real-time friends
-- Real-time rooms (you can be invited to them)
+- Rooms middleware in backend
 
-(- DevOps, like Docker, Prometheus & Grafana, GitHub Actions)
+(- DevOps, like Docker, GitHub Actions, etc.)

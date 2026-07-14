@@ -1,8 +1,8 @@
 import { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
-import { sendRequest } from "./utils/requests";
+import { sendRequest } from "../utils/requests";
 import { useAuth } from "./AuthUserContext";
 import UserStatus from "../enums/user-status";
-import { emitEvent } from "./utils/socket-client";
+import { emitEvent } from "../utils/socket-client";
 
 const UserStatusContext = createContext(null);
 

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "../../AuthUserContext";
-import { emitEvent, subscribeToEvent } from "../../utils/socket-client";
-import { sendRequest } from "../../utils/requests";
-import Button from "../Button";
+import { useAuth } from "../../../AuthUserContext";
+import { emitEvent, subscribeToEvent } from "../../../../utils/socket-client";
+import { sendRequest } from "../../../../utils/requests";
+import Button from "../../Button";
 import MessageItem from "./MessageItem";
 import FileUploadItem from "./FileUploadItem";
-import Modal from "../Modal";
+import Modal from "../../Modal";
 import AttachmentPreview from "./AttachmentPreview";
 
 function MessagesPane({ room, members }) {
@@ -24,6 +24,8 @@ function MessagesPane({ room, members }) {
   const [selectedMessage, setSelectedMessage] = useState(null);
   const [selectedAttachment, setSelectedAttachment] = useState(null);
 
+  const [typingUsers, setTypingUsers] = useState([]);
+
   const { user } = useAuth();
 
   const messagesEndRef = useRef(null);
@@ -34,6 +36,9 @@ function MessagesPane({ room, members }) {
     let unsubscribeSend;
     let unsubscribeEdit;
     let unsubscribeDelete;
+
+    let unsubscribeTypingStarted;
+    let unsubscribeTypingStopped;
 
     setNewMessage("");
     setNewFiles([]);
@@ -71,6 +76,16 @@ function MessagesPane({ room, members }) {
             });
           }
         });
+        unsubscribeTypingStarted = subscribeToEvent('typing_started', ({ room_id, username }) => {
+          if (room_id === room?.uid) {
+            setTypingUsers(prev => prev.includes(username) ? prev : [...prev, username]);
+          }
+        });
+        unsubscribeTypingStopped = subscribeToEvent('typing_stopped', ({ room_id, username }) => {
+          if (room_id === room?.uid) {
+            setTypingUsers(prev => prev.filter(u => u !== username));
+          }
+        });
       } catch (error) {
         console.error("Error fetching messages:", error);
       }
@@ -82,6 +97,8 @@ function MessagesPane({ room, members }) {
       if (unsubscribeSend) unsubscribeSend()
       if (unsubscribeEdit) unsubscribeEdit()
       if (unsubscribeDelete) unsubscribeDelete()
+      if (unsubscribeTypingStarted) unsubscribeTypingStarted()
+      if (unsubscribeTypingStopped) unsubscribeTypingStopped()
     };
   }, [room?.uid]);
 
@@ -213,6 +230,17 @@ function MessagesPane({ room, members }) {
     setShowModal(true);
   }
 
+  const onTyping = (e) => {
+    const value = e.target.value;
+    setNewMessage(value);
+
+    if (value.trim() !== "") {
+      emitEvent('started_typing', { room_id: room?.uid, username: user.username });
+    } else {
+      emitEvent('stopped_typing', { room_id: room?.uid, username: user.username });
+    }
+  }
+
   return (
     <div
       className='grid grid-rows-[1fr_auto] h-full relative'
@@ -276,6 +304,16 @@ function MessagesPane({ room, members }) {
       </div>
  
       <div className="p-4 flex flex-col gap-2">
+        {typingUsers.length > 0 && (
+          <p className="text-sm text-gray-300">
+            {typingUsers.length <= 2 
+              ? typingUsers.join(', ').concat(' ') 
+              : typingUsers.slice(0, 2).join(', ') + ` and ${typingUsers.length - 2} more `
+            } 
+            {typingUsers.length === 1 ? 'is' : 'are'} typing...
+          </p>
+        )}
+
         {newFiles.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {newFiles.map((file, index) => (
@@ -310,7 +348,7 @@ function MessagesPane({ room, members }) {
             placeholder="Type a message..." 
             className='bg-gray-300 text-gray-700 placeholder:text-gray-500 border border-gray-400 w-full rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-(--secondary-color)' 
             value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
+            onChange={onTyping}
             onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
             disabled={isUploading}
             autoComplete="off"
