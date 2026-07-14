@@ -1,14 +1,14 @@
 function FileUploadItem({ file, onRemove, index }) {
   return (
-    <div className="flex items-center gap-2 bg-gray-200 text-gray-700 text-sm rounded-md px-3 py-1">
+    <div className="flex items-center gap-2 bg-(--surface-2) text-(--text-color) text-sm rounded-lg px-3 py-1.5 animate-pop-in">
       <span className="truncate max-w-40">{file.name || file.filename}</span>
-      <span className="text-gray-500 text-xs">
+      <span className="text-(--text-muted) text-xs font-mono">
         {(file.size / 1024).toFixed(0)}KB
       </span>
       <button
         type="button"
         onClick={() => onRemove(index)}
-        className="text-gray-500 hover:text-red-500 font-bold leading-none cursor-pointer"
+        className="text-(--text-muted) hover:text-(--error-color) font-bold leading-none cursor-pointer transition-transform duration-150 hover:scale-125"
         aria-label={`Remove ${file.name || file.filename}`}
       >
         ×

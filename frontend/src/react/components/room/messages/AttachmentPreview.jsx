@@ -21,7 +21,7 @@ function AttachmentPreview({ attachment, onClick, previewSize = "small" }) {
   if (type === 'image') {
     return (
       <div 
-        className="relative" 
+        className="relative overflow-hidden rounded-md transition-transform duration-200 hover:scale-[1.02]" 
         onMouseEnter={() => setShowDownload(true)} 
         onMouseLeave={() => setShowDownload(false)}
         onClick={onClick}
@@ -29,7 +29,7 @@ function AttachmentPreview({ attachment, onClick, previewSize = "small" }) {
         <img
           src={fullUrl}
           alt={filename}
-          className={`${sizeClass} rounded-md object-cover`}
+          className={`${sizeClass} rounded-md object-cover cursor-pointer`}
         />
         {showDownload && <DownloadBubble filename={filename} fullUrl={fullUrl} />}
       </div>
@@ -44,7 +44,7 @@ function AttachmentPreview({ attachment, onClick, previewSize = "small" }) {
         onMouseLeave={() => setShowDownload(false)}
         onClick={onClick}
       >
-        <video src={fullUrl} controls className={`${sizeClass} rounded-md`} />
+        <video src={fullUrl} controls className={`${sizeClass} rounded-md shadow-md`} />
         {showDownload && <DownloadBubble filename={filename} fullUrl={fullUrl} />}
       </div>
     );
@@ -67,7 +67,8 @@ function AttachmentPreview({ attachment, onClick, previewSize = "small" }) {
     setIsDownloading(true);
     setError(false);
     
-    await handleDownload(e, fullUrl, filename);
+    const success = await handleDownload(e, fullUrl, filename);
+    setError(!success);
 
     setIsDownloading(false);
   }
@@ -75,14 +76,14 @@ function AttachmentPreview({ attachment, onClick, previewSize = "small" }) {
   return (
     <button
       onClick={handleDownloadClick}
-      className="cursor-pointer flex items-center gap-2 bg-gray-600 hover:bg-gray-500 transition-colors duration-200 py-2 px-3 rounded-md text-sm"
+      className={`cursor-pointer flex items-center gap-2 bg-(--surface-2) hover:bg-(--border-color) transition-all duration-200 py-2 px-3 rounded-lg text-sm ${error ? 'ring-2 ring-(--error-color)' : ''}`}
       title={error ? "Download failed — try again" : filename}
       disabled={isDownloading}
     >
-      <span>📎</span>
+      <span className={isDownloading ? 'animate-bounce' : ''}>📎</span>
       <span className="truncate max-w-40">{filename}</span>
       {size != null && (
-        <span className="text-xs text-gray-300">{(size / 1024).toFixed(0)}KB</span>
+        <span className="text-xs text-(--text-muted)">{(size / 1024).toFixed(0)}KB</span>
       )}
     </button>
   );

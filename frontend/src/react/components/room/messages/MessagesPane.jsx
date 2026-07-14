@@ -7,9 +7,11 @@ import MessageItem from "./MessageItem";
 import FileUploadItem from "./FileUploadItem";
 import Modal from "../../Modal";
 import AttachmentPreview from "./AttachmentPreview";
+// import MessagesSkeleton from "../../skeletons/MessagesSkeleton";
 
 function MessagesPane({ room, members }) {
   const [messages, setMessages] = useState([]);
+  const [messagesLoading, setMessagesLoading] = useState(true);
 
   const [newMessage, setNewMessage] = useState("");
   const [newFiles, setNewFiles] = useState([]);
@@ -42,12 +44,13 @@ function MessagesPane({ room, members }) {
 
     setNewMessage("");
     setNewFiles([]);
+    setMessagesLoading(true);
 
     async function fetchMessages() {
       try {
         const { json } = await sendRequest(`/messages/rooms/${room?.uid}`, 'GET');
         if (!json.success) {
-          setError("Could not load messages:", json.error);
+          setError(`Could not load messages: ${json.error}`);
           return;
         }
 
@@ -88,6 +91,8 @@ function MessagesPane({ room, members }) {
         });
       } catch (error) {
         console.error("Error fetching messages:", error);
+      } finally {
+        setMessagesLoading(false);
       }
     }
 
@@ -251,8 +256,8 @@ function MessagesPane({ room, members }) {
       onDrop={handleDrop}
     >
       {isDragging && (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-(--secondary-color)/20 border-4 border-dashed border-(--secondary-color) rounded-md pointer-events-none">
-          <p className="text-xl font-bold text-gray-700 bg-white/80 px-4 py-2 rounded-md">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-(--secondary-color)/20 border-4 border-dashed border-(--secondary-color) rounded-md pointer-events-none animate-fade-in">
+          <p className="text-xl font-bold text-(--primary-color) bg-white/90 px-4 py-2 rounded-md shadow-xl animate-pop-in">
             Drop files to attach
           </p>
         </div>
@@ -260,24 +265,31 @@ function MessagesPane({ room, members }) {
  
       <div className='flex flex-col gap-4 py-4 h-full overflow-y-scroll overflow-x-hidden app-scrollbar'>
         <h1 className='text-3xl sm:text-4xl font-bold my-6'>Welcome to {room?.name || 'the room'}</h1>
-        
-        {messages.length === 0 && (
-          <p>No messages yet. Start the conversation!</p>
-        )} 
-        {messages.length > 0 && (
-          messages.map((message) => (
-            <MessageItem 
-              key={message.uid} 
-              message={message} 
-              member={members?.find(m => m.uid === message.sender)} 
-              onOpenModal={onOpenModal}
-              isEditing={editingMessageId === message.uid}
-              setIsEditing={(editing) => setEditingMessageId(editing ? message.uid : null)}
-              setSelectedAttachment={setSelectedAttachment}
-            />
-          ))
+
+        {messagesLoading ? (
+          // <MessagesSkeleton />
+          <p>Loading...</p>
+        ) : (
+          <>
+            {messages.length === 0 && (
+              <p className="text-(--text-muted)">No messages yet. Start the conversation!</p>
+            )}
+            {messages.length > 0 && (
+              messages.map((message) => (
+                <MessageItem 
+                  key={message.uid} 
+                  message={message} 
+                  member={members?.find(m => m.uid === message.sender)} 
+                  onOpenModal={onOpenModal}
+                  isEditing={editingMessageId === message.uid}
+                  setIsEditing={(editing) => setEditingMessageId(editing ? message.uid : null)}
+                  setSelectedAttachment={setSelectedAttachment}
+                />
+              ))
+            )}
+          </>
         )}
-        {error && <p className='text-red-500'>{error}</p>}
+        {error && <p className='text-(--error-color) animate-rise-in'>{error}</p>}
  
         <div ref={messagesEndRef} />
  
@@ -293,20 +305,27 @@ function MessagesPane({ room, members }) {
           >
             <h3 className="text-lg font-bold mb-4">Confirm Delete</h3>
             <p>Are you sure you want to delete this message?</p>
-            <p className="text-sm text-gray-300 italic truncate w-full">"{selectedMessage?.text}"</p>
+            <p className="text-sm text-(--text-muted) italic truncate w-full">"{selectedMessage?.text}"</p>
           </Modal>
         )}
 
         {selectedAttachment && (
-          <div className='fixed inset-0 bg-[#000000AA] flex justify-center items-center' onClick={() => setSelectedAttachment(null)}>
-            <AttachmentPreview attachment={selectedAttachment} previewSize="large" />
+          <div className='fixed inset-0 bg-[#000000AA] flex justify-center items-center z-50 animate-fade-in' onClick={() => setSelectedAttachment(null)}>
+            <div className="animate-pop-in">
+              <AttachmentPreview attachment={selectedAttachment} previewSize="large" />
+            </div>
           </div>
         )}
       </div>
  
       <div className="p-4 flex flex-col gap-2">
         {typingUsers.length > 0 && (
-          <p className="text-sm text-gray-300">
+          <p className="text-sm text-(--text-muted) flex items-center gap-2 animate-fade-in">
+            <span className="flex gap-0.5">
+              <span className="typing-dot w-1.5 h-1.5 rounded-full bg-(--secondary-color)" style={{ animationDelay: '0ms' }} />
+              <span className="typing-dot w-1.5 h-1.5 rounded-full bg-(--secondary-color)" style={{ animationDelay: '150ms' }} />
+              <span className="typing-dot w-1.5 h-1.5 rounded-full bg-(--secondary-color)" style={{ animationDelay: '300ms' }} />
+            </span>
             {typingUsers.length <= 2 
               ? typingUsers.join(', ').concat(' ') 
               : typingUsers.slice(0, 2).join(', ') + ` and ${typingUsers.length - 2} more `
@@ -347,7 +366,7 @@ function MessagesPane({ room, members }) {
             name="message"
             type="text" 
             placeholder="Type a message..." 
-            className='bg-gray-300 text-gray-700 placeholder:text-gray-500 border border-gray-400 w-full rounded-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-(--secondary-color)' 
+            className='bg-(--primary-color-light) text-(--text-color) placeholder:text-(--text-muted) border border-(--border-color) w-full rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-(--secondary-color) transition-shadow duration-150' 
             value={newMessage}
             onChange={onTyping}
             onKeyDown={(e) => { if (e.key === 'Enter') handleSendMessage(); }}
